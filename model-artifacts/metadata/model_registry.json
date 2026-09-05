@@ -1,0 +1,1122 @@
+{
+  "BB_A|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7914
+  },
+  "BB_A|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8019
+  },
+  "BB_A|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6258
+  },
+  "BB_A|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6669
+  },
+  "BB_A|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5809
+  },
+  "BB_A|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6713
+  },
+  "BB_A|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4913
+  },
+  "BB_A|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7916
+  },
+  "BB_A|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4977
+  },
+  "BB_A|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5038
+  },
+  "BB_A|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3032
+  },
+  "BB_A|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.595
+  },
+  "BB_A|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1226
+  },
+  "BB_A|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1623
+  },
+  "BB_A|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.075
+  },
+  "BB_A|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2685
+  },
+  "BB_A|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7823
+  },
+  "BB_A|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7037
+  },
+  "BB_A|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5515
+  },
+  "BB_A|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7768
+  },
+  "BB_A|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2334
+  },
+  "BB_A|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4019
+  },
+  "BB_A|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.172
+  },
+  "BB_A|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4796
+  },
+  "BB_A|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4164
+  },
+  "BB_A|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.521
+  },
+  "BB_A|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2731
+  },
+  "BB_A|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6763
+  },
+  "BB_A|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0988
+  },
+  "BB_A|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1193
+  },
+  "BB_A|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0723
+  },
+  "BB_A|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1992
+  },
+  "BB_B|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7048
+  },
+  "BB_B|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7421
+  },
+  "BB_B|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7005
+  },
+  "BB_B|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7383
+  },
+  "BB_B|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5471
+  },
+  "BB_B|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7263
+  },
+  "BB_B|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4898
+  },
+  "BB_B|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7883
+  },
+  "BB_B|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6407
+  },
+  "BB_B|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.785
+  },
+  "BB_B|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4096
+  },
+  "BB_B|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.9666
+  },
+  "BB_B|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1739
+  },
+  "BB_B|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2534
+  },
+  "BB_B|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0931
+  },
+  "BB_B|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3847
+  },
+  "BB_B|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7706
+  },
+  "BB_B|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7236
+  },
+  "BB_B|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4814
+  },
+  "BB_B|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.9103
+  },
+  "BB_B|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3421
+  },
+  "BB_B|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5247
+  },
+  "BB_B|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1891
+  },
+  "BB_B|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6707
+  },
+  "BB_B|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5805
+  },
+  "BB_B|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4548
+  },
+  "BB_B|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4218
+  },
+  "BB_B|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7635
+  },
+  "BB_B|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1285
+  },
+  "BB_B|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2046
+  },
+  "BB_B|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.082
+  },
+  "BB_B|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2951
+  },
+  "HOSP_A|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6783
+  },
+  "HOSP_A|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.798
+  },
+  "HOSP_A|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5686
+  },
+  "HOSP_A|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6797
+  },
+  "HOSP_A|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5553
+  },
+  "HOSP_A|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7942
+  },
+  "HOSP_A|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4382
+  },
+  "HOSP_A|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.746
+  },
+  "HOSP_A|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4581
+  },
+  "HOSP_A|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6118
+  },
+  "HOSP_A|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2949
+  },
+  "HOSP_A|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6481
+  },
+  "HOSP_A|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1322
+  },
+  "HOSP_A|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2055
+  },
+  "HOSP_A|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0792
+  },
+  "HOSP_A|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.194
+  },
+  "HOSP_A|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7293
+  },
+  "HOSP_A|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6728
+  },
+  "HOSP_A|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5642
+  },
+  "HOSP_A|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.832
+  },
+  "HOSP_A|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2858
+  },
+  "HOSP_A|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3075
+  },
+  "HOSP_A|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1747
+  },
+  "HOSP_A|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.357
+  },
+  "HOSP_A|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5667
+  },
+  "HOSP_A|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5673
+  },
+  "HOSP_A|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2751
+  },
+  "HOSP_A|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6166
+  },
+  "HOSP_A|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1114
+  },
+  "HOSP_A|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1419
+  },
+  "HOSP_A|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0736
+  },
+  "HOSP_A|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1501
+  },
+  "HOSP_B|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7228
+  },
+  "HOSP_B|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.983
+  },
+  "HOSP_B|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5787
+  },
+  "HOSP_B|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7061
+  },
+  "HOSP_B|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5941
+  },
+  "HOSP_B|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6216
+  },
+  "HOSP_B|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4622
+  },
+  "HOSP_B|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6461
+  },
+  "HOSP_B|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7772
+  },
+  "HOSP_B|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7514
+  },
+  "HOSP_B|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4281
+  },
+  "HOSP_B|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5999
+  },
+  "HOSP_B|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2148
+  },
+  "HOSP_B|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.271
+  },
+  "HOSP_B|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1203
+  },
+  "HOSP_B|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2873
+  },
+  "HOSP_B|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8673
+  },
+  "HOSP_B|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.9112
+  },
+  "HOSP_B|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6717
+  },
+  "HOSP_B|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.812
+  },
+  "HOSP_B|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.393
+  },
+  "HOSP_B|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4892
+  },
+  "HOSP_B|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2733
+  },
+  "HOSP_B|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4633
+  },
+  "HOSP_B|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5106
+  },
+  "HOSP_B|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8272
+  },
+  "HOSP_B|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4108
+  },
+  "HOSP_B|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7026
+  },
+  "HOSP_B|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1922
+  },
+  "HOSP_B|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.19
+  },
+  "HOSP_B|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0786
+  },
+  "HOSP_B|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1964
+  },
+  "HOSP_C|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 1.025
+  },
+  "HOSP_C|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7044
+  },
+  "HOSP_C|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.641
+  },
+  "HOSP_C|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7815
+  },
+  "HOSP_C|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6524
+  },
+  "HOSP_C|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8265
+  },
+  "HOSP_C|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4825
+  },
+  "HOSP_C|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6766
+  },
+  "HOSP_C|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.71
+  },
+  "HOSP_C|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7173
+  },
+  "HOSP_C|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5349
+  },
+  "HOSP_C|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5569
+  },
+  "HOSP_C|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2675
+  },
+  "HOSP_C|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.281
+  },
+  "HOSP_C|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1473
+  },
+  "HOSP_C|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3568
+  },
+  "HOSP_C|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5621
+  },
+  "HOSP_C|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7207
+  },
+  "HOSP_C|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6465
+  },
+  "HOSP_C|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 1.0164
+  },
+  "HOSP_C|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5128
+  },
+  "HOSP_C|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.585
+  },
+  "HOSP_C|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2968
+  },
+  "HOSP_C|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4657
+  },
+  "HOSP_C|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6569
+  },
+  "HOSP_C|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5873
+  },
+  "HOSP_C|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5065
+  },
+  "HOSP_C|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.549
+  },
+  "HOSP_C|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2113
+  },
+  "HOSP_C|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2809
+  },
+  "HOSP_C|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.0936
+  },
+  "HOSP_C|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3032
+  },
+  "HOSP_D|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.969
+  },
+  "HOSP_D|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.9008
+  },
+  "HOSP_D|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8513
+  },
+  "HOSP_D|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7085
+  },
+  "HOSP_D|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.872
+  },
+  "HOSP_D|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7416
+  },
+  "HOSP_D|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.499
+  },
+  "HOSP_D|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7337
+  },
+  "HOSP_D|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7802
+  },
+  "HOSP_D|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6358
+  },
+  "HOSP_D|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5357
+  },
+  "HOSP_D|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8178
+  },
+  "HOSP_D|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2924
+  },
+  "HOSP_D|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.46
+  },
+  "HOSP_D|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1886
+  },
+  "HOSP_D|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.397
+  },
+  "HOSP_D|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8111
+  },
+  "HOSP_D|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6386
+  },
+  "HOSP_D|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7999
+  },
+  "HOSP_D|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.691
+  },
+  "HOSP_D|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3728
+  },
+  "HOSP_D|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5462
+  },
+  "HOSP_D|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3499
+  },
+  "HOSP_D|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6063
+  },
+  "HOSP_D|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5421
+  },
+  "HOSP_D|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.652
+  },
+  "HOSP_D|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3891
+  },
+  "HOSP_D|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7571
+  },
+  "HOSP_D|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2455
+  },
+  "HOSP_D|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3289
+  },
+  "HOSP_D|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1269
+  },
+  "HOSP_D|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3018
+  },
+  "HOSP_E|AB_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8317
+  },
+  "HOSP_E|AB_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8843
+  },
+  "HOSP_E|AB_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.821
+  },
+  "HOSP_E|AB_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 1.1354
+  },
+  "HOSP_E|AB_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7988
+  },
+  "HOSP_E|AB_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8679
+  },
+  "HOSP_E|AB_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6957
+  },
+  "HOSP_E|AB_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8183
+  },
+  "HOSP_E|A_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6935
+  },
+  "HOSP_E|A_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7694
+  },
+  "HOSP_E|A_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.617
+  },
+  "HOSP_E|A_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.8018
+  },
+  "HOSP_E|A_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.428
+  },
+  "HOSP_E|A_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.4335
+  },
+  "HOSP_E|A_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2225
+  },
+  "HOSP_E|A_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5254
+  },
+  "HOSP_E|B_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6938
+  },
+  "HOSP_E|B_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7511
+  },
+  "HOSP_E|B_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7566
+  },
+  "HOSP_E|B_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 1.1162
+  },
+  "HOSP_E|B_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5126
+  },
+  "HOSP_E|B_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6837
+  },
+  "HOSP_E|B_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5189
+  },
+  "HOSP_E|B_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.6492
+  },
+  "HOSP_E|O_NEGATIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.7292
+  },
+  "HOSP_E|O_NEGATIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.745
+  },
+  "HOSP_E|O_NEGATIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5876
+  },
+  "HOSP_E|O_NEGATIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5911
+  },
+  "HOSP_E|O_POSITIVE|PLASMA": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.2858
+  },
+  "HOSP_E|O_POSITIVE|PLATELETS": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.3885
+  },
+  "HOSP_E|O_POSITIVE|RBC": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.1563
+  },
+  "HOSP_E|O_POSITIVE|WHOLE_BLOOD": {
+    "model": "xgboost",
+    "version": "v1",
+    "val_wape": 0.5535
+  }
+}

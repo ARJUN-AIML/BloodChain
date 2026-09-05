@@ -1,0 +1,50 @@
+date,region,event_name,event_type,impact_weight
+2022-01-01,ALL,New Year's Day,HOLIDAY,0.3
+2022-01-26,ALL,Republic Day,HOLIDAY,0.4
+2022-03-08,ALL,International Women's Day,AWARENESS,0.1
+2022-06-14,ALL,World Blood Donor Day,AWARENESS,0.5
+2022-08-15,ALL,Independence Day,HOLIDAY,0.5
+2022-10-02,ALL,Gandhi Jayanti,HOLIDAY,0.3
+2022-11-14,ALL,Children's Day,AWARENESS,0.1
+2022-12-25,ALL,Christmas,HOLIDAY,0.4
+2022-12-31,ALL,New Year's Eve,HOLIDAY,0.2
+2022-10-24,ALL,Diwali (Synthetic),FESTIVAL,0.7
+2022-03-18,ALL,Holi (Synthetic),FESTIVAL,0.5
+2022-01-13,East,Synthetic Mass Gathering (East),MASS_GATHERING,0.33
+2022-02-22,Central,Synthetic Mass Gathering (Central),MASS_GATHERING,0.55
+2022-01-17,North,Synthetic Mass Gathering (North),MASS_GATHERING,0.33
+2022-09-16,Central,Synthetic Mass Gathering (Central),MASS_GATHERING,0.54
+2023-01-01,ALL,New Year's Day,HOLIDAY,0.3
+2023-01-26,ALL,Republic Day,HOLIDAY,0.4
+2023-03-08,ALL,International Women's Day,AWARENESS,0.1
+2023-06-14,ALL,World Blood Donor Day,AWARENESS,0.5
+2023-08-15,ALL,Independence Day,HOLIDAY,0.5
+2023-10-02,ALL,Gandhi Jayanti,HOLIDAY,0.3
+2023-11-14,ALL,Children's Day,AWARENESS,0.1
+2023-12-25,ALL,Christmas,HOLIDAY,0.4
+2023-12-31,ALL,New Year's Eve,HOLIDAY,0.2
+2023-11-12,ALL,Diwali (Synthetic),FESTIVAL,0.7
+2023-03-08,ALL,Holi (Synthetic),FESTIVAL,0.5
+2023-08-03,South,Synthetic Emergency Sim (South),EMERGENCY_SIM,0.55
+2023-01-04,South,Synthetic Regional Event (South),REGIONAL_EVENT,0.45
+2023-05-23,South,Synthetic Mass Gathering (South),MASS_GATHERING,0.77
+2023-06-22,North,Synthetic Mass Gathering (North),MASS_GATHERING,0.43
+2023-07-03,East,Synthetic Regional Event (East),REGIONAL_EVENT,0.36
+2023-01-23,West,Synthetic Regional Event (West),REGIONAL_EVENT,0.27
+2023-07-13,North,Synthetic Regional Event (North),REGIONAL_EVENT,0.38
+2023-11-18,Central,Synthetic Emergency Sim (Central),EMERGENCY_SIM,0.55
+2024-01-01,ALL,New Year's Day,HOLIDAY,0.3
+2024-01-26,ALL,Republic Day,HOLIDAY,0.4
+2024-03-08,ALL,International Women's Day,AWARENESS,0.1
+2024-06-14,ALL,World Blood Donor Day,AWARENESS,0.5
+2024-08-15,ALL,Independence Day,HOLIDAY,0.5
+2024-10-02,ALL,Gandhi Jayanti,HOLIDAY,0.3
+2024-11-14,ALL,Children's Day,AWARENESS,0.1
+2024-12-25,ALL,Christmas,HOLIDAY,0.4
+2024-12-31,ALL,New Year's Eve,HOLIDAY,0.2
+2024-11-01,ALL,Diwali (Synthetic),FESTIVAL,0.7
+2024-03-25,ALL,Holi (Synthetic),FESTIVAL,0.5
+2024-01-24,South,Synthetic Emergency Sim (South),EMERGENCY_SIM,0.79
+2024-04-29,North,Synthetic Emergency Sim (North),EMERGENCY_SIM,0.37
+2024-11-21,East,Synthetic Mass Gathering (East),MASS_GATHERING,0.42
+2024-04-17,East,Synthetic Regional Event (East),REGIONAL_EVENT,0.76

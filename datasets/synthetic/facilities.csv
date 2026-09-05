@@ -1,0 +1,10 @@
+organization_id,organization_name,organization_type,region,city,latitude,longitude,population_served,bed_capacity,icu_beds,emergency_capacity,is_active
+HOSP_A,Metro General Hospital,HOSPITAL,Central,Metropolis,28.6139,77.209,850000,1200,80,120,True
+HOSP_B,City Care Hospital,HOSPITAL,North,Northville,28.7041,77.1025,550000,800,50,80,True
+HOSP_C,Sunrise Medical Center,HOSPITAL,East,Eastport,28.5355,77.391,420000,600,35,60,True
+HOSP_D,Heritage Multispecialty Hospital,HOSPITAL,South,Southtown,28.4595,77.0266,380000,500,30,50,True
+HOSP_E,Valley Children's Hospital,HOSPITAL,West,Westfield,28.6304,77.0819,290000,350,25,40,True
+BB_A,Regional Blood Center Alpha,BLOOD_BANK,Central,Metropolis,28.628,77.22,1500000,0,0,0,True
+BB_B,Northern Blood Bank,BLOOD_BANK,North,Northville,28.72,77.11,900000,0,0,0,True
+LOG_A,BloodRun Logistics,LOGISTICS,Central,Metropolis,28.61,77.23,0,0,0,0,True
+ADMIN_A,Regional Blood Authority,REGIONAL_ADMIN,Central,Metropolis,28.62,77.21,3400000,0,0,0,True

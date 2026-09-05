@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 45 12% 96%; /* #F7F7F5 */
+    --foreground: 216 19% 13%; /* #1A1F26 */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 216 19% 13%;
+    --primary: 12 55% 52%; /* #C85A3F Rust */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 10% 95%; /* #F4F4F0 */
+    --secondary-foreground: 216 19% 13%;
+    --muted: 45 10% 95%;
+    --muted-foreground: 215 16% 47%; /* #64748B */
+    --accent: 24 67% 96%; /* #FDF6F0 */
+    --accent-foreground: 12 55% 52%;
+    --border: 45 10% 87%; /* #E2E2DC */
+    --input: 45 10% 87%;
+    --ring: 12 55% 52%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    border-color: #E2E2DC;
+  }
+
+  body {
+    background-color: #F7F7F5;
+    color: #1A1F26;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F7F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4D4CE;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A3A39A;
+}
+
+/* Flat Card Base */
+.card-flat {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E2DC;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease-in-out;
+}
+
+.card-flat:hover {
+  border-color: #D4D4CE;
+}
+
+/* Status indicator dots */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.healthy {
+  background-color: #5B8C7A;
+}
+
+.status-dot.warning {
+  background-color: #D99B38;
+}
+
+.status-dot.critical {
+  background-color: #C85A3F;
+}
+
+.status-dot.demo {
+  background-color: #D99B38;
+}
+
+/* Leaflet Container styling for Warm Positron theme */
+.leaflet-container {
+  background-color: #F7F7F5 !important;
+  border-radius: 0.75rem;
+  font-family: inherit;
+}
+
+.leaflet-control-zoom a {
+  background-color: #FFFFFF !important;
+  color: #1A1F26 !important;
+  border-color: #E2E2DC !important;
+}
+
+/* Custom Recharts Tooltip Styling */
+.recharts-default-tooltip {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E2DC !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 12px rgba(26, 31, 38, 0.08) !important;
+  padding: 8px 12px !important;
+}

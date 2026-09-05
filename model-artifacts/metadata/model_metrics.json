@@ -1,0 +1,60 @@
+{
+  "training_date": "2026-09-05T14:50:59.961757",
+  "dataset": "blood_demand_history.csv",
+  "dataset_rows": 245504,
+  "date_range": "2022-01-01 \u2192 2024-12-31",
+  "train_rows": 170240,
+  "val_rows": 36736,
+  "test_rows": 36960,
+  "global_winner": "xgboost",
+  "models": {
+    "seasonal_naive": {
+      "val": {
+        "mae": 1.2568,
+        "rmse": 1.6541,
+        "wape": 0.5466,
+        "bias": 0.0079
+      },
+      "test": {
+        "mae": 1.2494,
+        "rmse": 1.6463,
+        "wape": 0.5236,
+        "bias": -0.0091
+      }
+    },
+    "holt_winters": {
+      "val": {
+        "mae": 1.269,
+        "rmse": 1.6144,
+        "wape": 0.5519,
+        "bias": 0.2174
+      },
+      "test": {
+        "mae": 1.2729,
+        "rmse": 1.6119,
+        "wape": 0.5334,
+        "bias": 0.1305
+      }
+    },
+    "xgboost": {
+      "val": {
+        "mae": 0.769,
+        "rmse": 0.9543,
+        "wape": 0.3344,
+        "bias": -0.0078
+      },
+      "test": {
+        "mae": 0.7706,
+        "rmse": 0.9545,
+        "wape": 0.3229,
+        "bias": -0.0081
+      }
+    }
+  },
+  "prediction_intervals": {
+    "method": "empirical_residuals",
+    "residual_q05": -1.4368818402290344,
+    "residual_q95": 1.6156913042068481,
+    "note": "Empirical prediction intervals for prototype use."
+  }
+}
