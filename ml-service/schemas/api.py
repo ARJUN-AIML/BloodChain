@@ -67,6 +67,10 @@ class ForecastResponse(BaseModel):
     predictedUnits: float
     lowerBound: float
     upperBound: float
+    p10: Optional[float] = None
+    p50: Optional[float] = None
+    p90: Optional[float] = None
+    confidenceInterval: Optional[float] = 0.80
     modelName: str
     modelVersion: str
 

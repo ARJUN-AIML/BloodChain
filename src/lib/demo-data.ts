@@ -122,19 +122,25 @@ export function generateDemoForecasts(orgId?: string): ForecastResult[] {
       const bgF = BG_FREQ[bg];
       for (const comp of COMPONENTS) {
         const cF = compFactor[comp] || 0.25;
-        const predicted = Math.max(0, Math.round((base * bgF * cF) * (0.9 + Math.random() * 0.2) * 10) / 10);
-        const spread = predicted * (0.15 + Math.random() * 0.1);
+        const p50 = Math.max(0, Math.round((base * bgF * cF) * (0.9 + Math.random() * 0.2) * 10) / 10);
+        const spread = p50 * (0.2 + Math.random() * 0.1);
+        const p10 = Math.max(0, Math.round((p50 - spread) * 10) / 10);
+        const p90 = Math.round((p50 + spread) * 10) / 10;
 
         forecasts.push({
           organizationId: org.id,
           bloodGroup: bg,
           componentType: comp,
           forecastDate: tomorrow.toISOString().split('T')[0],
-          predictedUnits: predicted,
-          lowerBound: Math.max(0, Math.round((predicted - spread) * 10) / 10),
-          upperBound: Math.round((predicted + spread) * 10) / 10,
-          modelName: 'XGBoost v1',
-          modelVersion: 'v1',
+          predictedUnits: p50,
+          lowerBound: p10,
+          upperBound: p90,
+          p10,
+          p50,
+          p90,
+          confidenceInterval: 0.80,
+          modelName: 'XGBoost Global v1',
+          modelVersion: 'v1.0.0',
         });
       }
     }
@@ -142,9 +148,12 @@ export function generateDemoForecasts(orgId?: string): ForecastResult[] {
 
   const hospAFc = forecasts.find(f => f.organizationId === 'HOSP_A' && f.bloodGroup === 'O_POSITIVE' && f.componentType === 'RBC');
   if (hospAFc) {
-    hospAFc.predictedUnits = 24.2;
-    hospAFc.lowerBound = 19.1;
-    hospAFc.upperBound = 29.7;
+    hospAFc.predictedUnits = 25.0;
+    hospAFc.p50 = 25.0;
+    hospAFc.p10 = 19.0;
+    hospAFc.p90 = 32.0;
+    hospAFc.lowerBound = 19.0;
+    hospAFc.upperBound = 32.0;
   }
 
   return forecasts;
@@ -312,3 +321,96 @@ export const DEMO_MODEL_STATUS = {
   },
   predictionIntervals: { method: 'empirical_residuals', residual_q05: -3.21, residual_q95: 3.45, note: 'Empirical prediction intervals' },
 };
+
+export const DEMO_INVENTORY_BATCHES = [
+  { id: 'BATCH_001', batchNumber: 'B-2026-O+RBC-01', organizationId: 'HOSP_A', organizationName: 'Metro General Hospital', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-08-25', expiryDate: '2026-09-24', daysToExpiry: 4, quantity: 10, reservedQuantity: 2, status: 'NEAR_EXPIRY' as const, storageLocation: 'Cold Storage Room 2B - Bay 4' },
+  { id: 'BATCH_002', batchNumber: 'B-2026-O+RBC-02', organizationId: 'BB_B', organizationName: 'Northern Blood Bank', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-09-10', expiryDate: '2026-10-15', daysToExpiry: 25, quantity: 50, reservedQuantity: 5, status: 'USABLE' as const, storageLocation: 'Hub Freezer Alpha-1' },
+  { id: 'BATCH_003', batchNumber: 'B-2026-O+RBC-03', organizationId: 'BB_A', organizationName: 'Regional Blood Center Alpha', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-09-12', expiryDate: '2026-10-18', daysToExpiry: 28, quantity: 70, reservedQuantity: 10, status: 'USABLE' as const, storageLocation: 'Vault 1' },
+  { id: 'BATCH_004', batchNumber: 'B-2026-A+PLT-01', organizationId: 'HOSP_A', organizationName: 'Metro General Hospital', bloodGroup: 'A_POSITIVE' as const, componentType: 'PLATELETS' as const, collectionDate: '2026-09-18', expiryDate: '2026-09-23', daysToExpiry: 3, quantity: 4, reservedQuantity: 1, status: 'NEAR_EXPIRY' as const, storageLocation: 'Agitator #3' },
+  { id: 'BATCH_005', batchNumber: 'B-2026-O-RBC-01', organizationId: 'HOSP_E', organizationName: 'Valley Children\'s Hospital', bloodGroup: 'O_NEGATIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-08-30', expiryDate: '2026-09-22', daysToExpiry: 2, quantity: 3, reservedQuantity: 1, status: 'NEAR_EXPIRY' as const, storageLocation: 'Pediatric Bay C' },
+];
+
+export const DEMO_RECOMMENDATIONS = [
+  {
+    id: 'REC_TRF_101',
+    requestId: 'REQ_DEMO_001',
+    sourceOrganizationId: 'BB_B',
+    sourceOrganizationName: 'Northern Blood Bank',
+    destinationOrganizationId: 'HOSP_A',
+    destinationOrganizationName: 'Metro General Hospital',
+    bloodGroup: 'O_POSITIVE' as const,
+    componentType: 'RBC' as const,
+    quantityNeeded: 14,
+    quantityRecommended: 6,
+    reason: 'Metro General O+ RBC projected deficit of 20 units. Northern Blood Bank has 48 safe-to-share units above local P90 protection level (37 units). ETA 18 mins.',
+    sourceSafeToShare: 48,
+    destinationShortageSeverity: 'CRITICAL' as const,
+    expiryUrgency: 'NONE' as const,
+    estimatedTravelMinutes: 18,
+    priority: 'EMERGENCY' as const,
+    status: 'PENDING_APPROVAL' as const,
+  },
+  {
+    id: 'REC_TRF_102',
+    requestId: 'REQ_DEMO_001',
+    sourceOrganizationId: 'HOSP_C',
+    sourceOrganizationName: 'Sunrise Medical Center',
+    destinationOrganizationId: 'HOSP_A',
+    destinationOrganizationName: 'Metro General Hospital',
+    bloodGroup: 'O_POSITIVE' as const,
+    componentType: 'RBC' as const,
+    quantityNeeded: 14,
+    quantityRecommended: 5,
+    reason: 'Sunrise Medical Center has 15 safe-to-share units remaining after reserving 5 units for local P90 demand protection. ETA 24 mins.',
+    sourceSafeToShare: 15,
+    destinationShortageSeverity: 'CRITICAL' as const,
+    expiryUrgency: 'LOW' as const,
+    estimatedTravelMinutes: 24,
+    priority: 'EMERGENCY' as const,
+    status: 'PENDING_APPROVAL' as const,
+  },
+];
+
+export const DEMO_SCENARIOS = [
+  {
+    id: 'SCEN_NORMAL',
+    name: 'Normal Operations (Baseline)',
+    description: 'Standard baseline regional demand and normal donation collection rates.',
+    demandMultiplier: 1.0,
+    donationChangePercent: 0,
+    outageFacilityIds: [],
+    massCasualtyEvent: false,
+    durationDays: 7,
+  },
+  {
+    id: 'SCEN_MASS_CASUALTY',
+    name: 'Mass-Casualty Emergency Event (+100% Emergency Demand)',
+    description: 'Highway pileup / major industrial incident causes sudden emergency surge in O-Negative and O-Positive Red Blood Cell demand across central trauma hospitals.',
+    demandMultiplier: 2.0,
+    donationChangePercent: -10,
+    outageFacilityIds: [],
+    massCasualtyEvent: true,
+    durationDays: 3,
+  },
+  {
+    id: 'SCEN_DONATION_DROP',
+    name: 'Monsoon Flooding Drive Disruption (-40% Donations)',
+    description: 'Severe regional flooding forces cancellation of outdoor donation drives, reducing regional incoming blood supply by 40%.',
+    demandMultiplier: 1.1,
+    donationChangePercent: -40,
+    outageFacilityIds: [],
+    massCasualtyEvent: false,
+    durationDays: 14,
+  },
+  {
+    id: 'SCEN_OUTAGE',
+    name: 'Blood Bank Alpha Power Outage / Quarantine',
+    description: 'Refrigeration equipment failure at Regional Blood Center Alpha forces emergency redistribution of all stored units to avoid spoilage.',
+    demandMultiplier: 1.0,
+    donationChangePercent: 0,
+    outageFacilityIds: ['BB_A'],
+    massCasualtyEvent: false,
+    durationDays: 2,
+  },
+];
+

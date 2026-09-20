@@ -31,6 +31,22 @@ export type Priority = 'ROUTINE' | 'URGENT' | 'EMERGENCY';
 
 export type OrganizationType = 'HOSPITAL' | 'BLOOD_BANK' | 'LOGISTICS' | 'REGIONAL_ADMIN';
 
+export type UserRole = 
+  | 'ADMIN'
+  | 'HOSPITAL_STAFF'
+  | 'BLOOD_BANK_STAFF'
+  | 'LOGISTICS_STAFF'
+  | 'AUTHORIZED_APPROVER';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  organizationId?: string;
+  organizationName?: string;
+}
+
 export interface Organization {
   id: string;
   name: string;
@@ -64,6 +80,22 @@ export interface InventorySummary {
   safetyStockTarget: number;
 }
 
+export interface InventoryBatch {
+  id: string;
+  batchNumber: string;
+  organizationId: string;
+  organizationName?: string;
+  bloodGroup: BloodGroup;
+  componentType: ComponentType;
+  collectionDate: string;
+  expiryDate: string;
+  daysToExpiry: number;
+  quantity: number;
+  reservedQuantity: number;
+  status: 'USABLE' | 'NEAR_EXPIRY' | 'EXPIRED' | 'QUARANTINED';
+  storageLocation: string;
+}
+
 export interface BloodUnit {
   unitCode: string;
   organizationId: string;
@@ -82,9 +114,13 @@ export interface ForecastResult {
   bloodGroup: string;
   componentType: string;
   forecastDate: string;
-  predictedUnits: number;
-  lowerBound: number;
-  upperBound: number;
+  predictedUnits: number; // P50
+  lowerBound: number;    // P10
+  upperBound: number;    // P90
+  p10: number;
+  p50: number;
+  p90: number;
+  confidenceInterval: number; // e.g. 0.80
   modelName: string;
   modelVersion: string;
 }
@@ -124,6 +160,22 @@ export interface SafeShareSnapshot {
   reservedUnits: number;
 }
 
+export interface SafeToShareCalculation {
+  organizationId: string;
+  organizationName: string;
+  bloodGroup: BloodGroup;
+  componentType: ComponentType;
+  currentInventory: number;
+  reservedStock: number;
+  p50Demand: number;
+  p90Demand: number;
+  safetyBuffer: number;
+  protectionLevel: number;
+  safeToShareUnits: number;
+  isSafeToShare: boolean;
+  explanation: string;
+}
+
 export interface BloodRequest {
   id: string;
   organizationId: string;
@@ -148,6 +200,28 @@ export interface AllocationSource {
   sourceRisk: string;
   safeShareRemaining: number;
   explanation: string;
+}
+
+export interface TransferRecommendation {
+  id: string;
+  requestId: string;
+  sourceOrganizationId: string;
+  sourceOrganizationName: string;
+  destinationOrganizationId: string;
+  destinationOrganizationName: string;
+  bloodGroup: BloodGroup;
+  componentType: ComponentType;
+  quantityNeeded: number;
+  quantityRecommended: number;
+  reason: string;
+  sourceSafeToShare: number;
+  destinationShortageSeverity: Severity;
+  expiryUrgency: 'NONE' | 'LOW' | 'HIGH';
+  estimatedTravelMinutes: number;
+  priority: Priority;
+  status: 'PROPOSED' | 'PENDING_APPROVAL' | 'APPROVED' | 'IN_TRANSIT' | 'RECEIVED' | 'REJECTED' | 'CANCELLED';
+  approvedBy?: string;
+  approvedAt?: string;
 }
 
 export interface OptimizationResult {
@@ -250,3 +324,30 @@ export interface ModelMetrics {
   bias: number;
   trainedAt: string;
 }
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  userId: string;
+  userName: string;
+  userRole: UserRole;
+  action: string;
+  entityType: string;
+  entityId: string;
+  oldValue?: string;
+  newValue?: string;
+  reason?: string;
+  recommendationId?: string;
+}
+
+export interface SimulationScenario {
+  id: string;
+  name: string;
+  description: string;
+  demandMultiplier: number;
+  donationChangePercent: number;
+  outageFacilityIds: string[];
+  massCasualtyEvent: boolean;
+  durationDays: number;
+}
+

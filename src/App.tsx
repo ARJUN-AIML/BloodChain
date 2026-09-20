@@ -9,7 +9,11 @@ import { LogisticsDashboard } from '@/features/logistics/LogisticsDashboard';
 import { DonorDashboard } from '@/features/donors/DonorDashboard';
 import { ForecastingPage } from '@/features/forecasting/ForecastingPage';
 import { InventoryPage } from '@/features/inventory/InventoryPage';
+import { SafeToShareDashboard } from '@/features/inventory/SafeToShareDashboard';
+import { ExpiryRescuePage } from '@/features/inventory/ExpiryRescuePage';
 import { RequestsPage } from '@/features/requests/RequestsPage';
+import { EmergencySimulationCenter } from '@/features/simulation/EmergencySimulationCenter';
+import { AuditLogsPage } from '@/features/admin/AuditLogsPage';
 import { AIObservability } from '@/features/admin/AIObservability';
 
 export default function App() {
@@ -25,10 +29,15 @@ export default function App() {
         <Route path="/donors" element={<DonorDashboard />} />
         <Route path="/forecasting" element={<ForecastingPage />} />
         <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/safe-to-share" element={<SafeToShareDashboard />} />
+        <Route path="/expiry-rescue" element={<ExpiryRescuePage />} />
         <Route path="/requests" element={<RequestsPage />} />
+        <Route path="/emergency-simulation" element={<EmergencySimulationCenter />} />
+        <Route path="/audit-logs" element={<AuditLogsPage />} />
         <Route path="/ai-observability" element={<AIObservability />} />
         <Route path="*" element={<Navigate to="/command-center" replace />} />
       </Route>
     </Routes>
   );
 }
+

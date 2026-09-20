@@ -3,10 +3,13 @@ import { useState } from 'react';
 import {
   LayoutDashboard, MapPin, Building2, Droplets, Truck,
   Heart, TrendingUp, Package, FileText, Brain, Bell, Search,
-  ChevronLeft, ChevronRight, CheckCircle2,
+  ChevronLeft, ChevronRight, ShieldCheck, Shield, AlertTriangle,
+  Zap, History, CheckCircle2, UserCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DEMO_NOTIFICATIONS } from '@/lib/demo-data';
+import { useAuthStore, DEMO_USERS } from '@/lib/auth-store';
+import type { UserRole } from '@/types';
 
 const NAV_ITEMS = [
   { path: '/command-center', label: 'Command Center', icon: LayoutDashboard },
@@ -15,9 +18,13 @@ const NAV_ITEMS = [
   { path: '/blood-bank', label: 'Blood Bank Hub', icon: Droplets },
   { path: '/logistics', label: 'Cold Logistics', icon: Truck },
   { path: '/donors', label: 'Donor Registry', icon: Heart },
-  { path: '/forecasting', label: 'AI Forecasting', icon: TrendingUp },
+  { path: '/forecasting', label: 'AI Forecasting (P10/P50/P90)', icon: TrendingUp },
   { path: '/inventory', label: 'Inventory Matrix', icon: Package },
-  { path: '/requests', label: 'Allocation Engine', icon: FileText },
+  { path: '/safe-to-share', label: 'Safe-to-Share Engine', icon: ShieldCheck },
+  { path: '/expiry-rescue', label: 'Expiry Rescue (FEFO)', icon: AlertTriangle },
+  { path: '/requests', label: 'Allocation & Approvals', icon: FileText },
+  { path: '/emergency-simulation', label: 'Emergency Digital Twin', icon: Zap },
+  { path: '/audit-logs', label: 'Audit Trail', icon: History },
   { path: '/ai-observability', label: 'Model Observability', icon: Brain },
 ];
 
@@ -25,6 +32,9 @@ export function AppLayout() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showRoleMenu, setShowRoleMenu] = useState(false);
+  
+  const { currentUser, switchRole } = useAuthStore();
   const unreadCount = DEMO_NOTIFICATIONS.filter(n => !n.isRead).length;
 
   return (
@@ -47,7 +57,7 @@ export function AppLayout() {
                 BloodChain <span className="text-[#C85A3F] font-semibold">AI</span>
               </span>
               <span className="text-[10px] text-[#64748B] font-medium tracking-wider uppercase">
-                Supply Network
+                Decision Support Platform
               </span>
             </div>
           )}
@@ -93,17 +103,17 @@ export function AppLayout() {
             <h1 className="text-base font-bold text-[#1A1F26]">
               {NAV_ITEMS.find(i => i.path === location.pathname)?.label || 'BloodChain AI'}
             </h1>
-            <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#FAF0D6] text-[#BE8226] border border-[#EAEAE5]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D99B38]" />
-              Demo Active
+            <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#E3EFEA] text-[#2C6E49] border border-[#C5E1D4]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2C6E49]" />
+              Local Demo Mode
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Search trigger */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E2E2DC] bg-[#F7F7F5] text-xs text-[#64748B] cursor-pointer hover:border-[#D4D4CE] transition-colors w-48">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E2E2DC] bg-[#F7F7F5] text-xs text-[#64748B] cursor-pointer hover:border-[#D4D4CE] transition-colors w-44">
               <Search className="w-3.5 h-3.5 text-[#64748B]" />
-              <span>Search inventory...</span>
+              <span>Search network...</span>
               <kbd className="ml-auto text-[9px] font-mono px-1 py-0.5 bg-[#FFFFFF] border border-[#E2E2DC] rounded text-[#64748B]">⌘K</kbd>
             </div>
 
@@ -158,12 +168,58 @@ export function AppLayout() {
               )}
             </div>
 
-            {/* Profile pill */}
-            <div className="flex items-center gap-2 pl-2 border-l border-[#E2E2DC]">
-              <div className="w-7 h-7 rounded-full bg-[#E3EFEA] border border-[#5B8C7A]/30 flex items-center justify-center text-[#5B8C7A] text-xs font-bold font-mono">
-                RA
-              </div>
-              <span className="hidden md:inline-block text-xs font-semibold text-[#1A1F26]">R. Administrator</span>
+            {/* Role Switcher Pill */}
+            <div className="relative">
+              <button
+                onClick={() => setShowRoleMenu(!showRoleMenu)}
+                className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-lg border border-[#E2E2DC] bg-[#FAF9F6] hover:bg-[#F4F4F0] transition-colors"
+                title="Click to switch role / user permission"
+              >
+                <div className={cn(
+                  'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold font-mono',
+                  currentUser.role === 'AUTHORIZED_APPROVER' ? 'bg-[#C85A3F] text-white' :
+                  currentUser.role === 'ADMIN' ? 'bg-[#2C6E49] text-white' : 'bg-[#5C768D] text-white'
+                )}>
+                  {currentUser.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-bold text-[#1A1F26] leading-tight">{currentUser.name}</span>
+                  <span className="text-[9px] font-mono text-[#C85A3F] uppercase tracking-wider font-semibold">
+                    {currentUser.role.replace('_', ' ')}
+                  </span>
+                </div>
+                <UserCheck className="w-3.5 h-3.5 text-[#64748B] ml-1" />
+              </button>
+
+              {showRoleMenu && (
+                <div className="absolute right-0 top-11 w-72 rounded-xl border border-[#E2E2DC] bg-[#FFFFFF] shadow-soft z-50 p-2 space-y-1">
+                  <div className="px-3 py-2 border-b border-[#E2E2DC]">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Switch Local Demo User Role</p>
+                    <p className="text-[11px] text-[#1A1F26] font-medium mt-0.5">Authorization permissions dictate transfer approval rights.</p>
+                  </div>
+                  {DEMO_USERS.map(user => (
+                    <button
+                      key={user.id}
+                      onClick={() => {
+                        switchRole(user.role);
+                        setShowRoleMenu(false);
+                      }}
+                      className={cn(
+                        'w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs transition-colors',
+                        currentUser.role === user.role
+                          ? 'bg-[#FDF6F0] font-bold text-[#C85A3F]'
+                          : 'hover:bg-[#F7F7F5] text-[#1A1F26]'
+                      )}
+                    >
+                      <div>
+                        <p className="font-semibold">{user.name}</p>
+                        <p className="text-[10px] text-[#64748B]">{user.role.replace('_', ' ')} • {user.organizationName}</p>
+                      </div>
+                      {currentUser.role === user.role && <CheckCircle2 className="w-4 h-4 text-[#C85A3F]" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </header>
@@ -176,3 +232,4 @@ export function AppLayout() {
     </div>
   );
 }
+

@@ -44,8 +44,8 @@ except ImportError:
 # Metrics
 # ---------------------------------------------------------------------------
 
-def compute_metrics(actual: np.ndarray, predicted: np.ndarray) -> Dict[str, float]:
-    """Compute evaluation metrics."""
+def compute_metrics(actual: np.ndarray, predicted: np.ndarray, season_length: int = 7) -> Dict[str, float]:
+    """Compute evaluation metrics including MAE, RMSE, WAPE, Bias, and MASE."""
     actual = np.array(actual, dtype=float)
     predicted = np.array(predicted, dtype=float)
 
@@ -54,7 +54,7 @@ def compute_metrics(actual: np.ndarray, predicted: np.ndarray) -> Dict[str, floa
     predicted = predicted[mask]
 
     if len(actual) == 0:
-        return {"mae": np.nan, "rmse": np.nan, "wape": np.nan, "bias": np.nan}
+        return {"mae": np.nan, "rmse": np.nan, "wape": np.nan, "mase": np.nan, "bias": np.nan}
 
     mae = float(mean_absolute_error(actual, predicted))
     rmse = float(np.sqrt(mean_squared_error(actual, predicted)))
@@ -64,7 +64,53 @@ def compute_metrics(actual: np.ndarray, predicted: np.ndarray) -> Dict[str, floa
 
     bias = float(np.mean(predicted - actual))
 
-    return {"mae": round(mae, 4), "rmse": round(rmse, 4), "wape": round(wape, 4), "bias": round(bias, 4)}
+    # MASE (Mean Absolute Scaled Error) calculation relative to seasonal naive lag
+    if len(actual) > season_length:
+        naive_errors = np.abs(actual[season_length:] - actual[:-season_length])
+        mean_naive_error = np.mean(naive_errors)
+        mase = float(mae / max(mean_naive_error, 1e-8))
+    else:
+        mase = 1.0
+
+    return {
+        "mae": round(mae, 4),
+        "rmse": round(rmse, 4),
+        "wape": round(wape, 4),
+        "mase": round(mase, 4),
+        "bias": round(bias, 4),
+    }
+
+
+def compute_interval_coverage(
+    actual: np.ndarray,
+    lower_bound: np.ndarray,
+    upper_bound: np.ndarray,
+) -> Dict[str, float]:
+    """
+    Computes Prediction Interval Coverage Probability (PICP) and Mean Interval Width.
+    Explicitly distinguishes estimated prediction intervals from calibrated confidence intervals.
+    """
+    actual = np.array(actual, dtype=float)
+    lower = np.array(lower_bound, dtype=float)
+    upper = np.array(upper_bound, dtype=float)
+
+    mask = ~(np.isnan(actual) | np.isnan(lower) | np.isnan(upper))
+    actual = actual[mask]
+    lower = lower[mask]
+    upper = upper[mask]
+
+    if len(actual) == 0:
+        return {"picp": 0.0, "mean_interval_width": 0.0, "interval_type": "Estimated prediction interval"}
+
+    covered = (actual >= lower) & (actual <= upper)
+    picp = float(np.mean(covered))
+    mean_width = float(np.mean(upper - lower))
+
+    return {
+        "picp": round(picp, 4),
+        "mean_interval_width": round(mean_width, 4),
+        "interval_type": "Estimated prediction interval",
+    }
 
 
 # ---------------------------------------------------------------------------
