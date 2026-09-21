@@ -43,9 +43,10 @@ const VALID_TRANSITIONS: Record<TransferStatus, TransferStatus[]> = {
 
 /**
  * Business logic check: Does the user have permission to authorize transfers?
+ * Enforces strict clinical segregation: only AUTHORIZED_APPROVER holds approval authority.
  */
 export function isAuthorizedApproverRole(role: UserRole): boolean {
-  return role === 'AUTHORIZED_APPROVER' || role === 'ADMIN';
+  return role === 'AUTHORIZED_APPROVER';
 }
 
 /**
@@ -60,18 +61,24 @@ export function transitionTransferState(
   inventory: InventorySummary[],
   reason?: string
 ): TransitionResult {
-  // 1. Authorization check for APPROVED transition
-  if (nextStatus === 'APPROVED' || nextStatus === 'REJECTED') {
-    if (!isAuthorizedApproverRole(actor.role)) {
-      return {
-        success: false,
-        message: `Role ${actor.role} is not authorized to approve/reject transfers. Requires AUTHORIZED_APPROVER or ADMIN. (DEMO LOCAL AUTH)`,
-        errorCode: 'UNAUTHORIZED_ROLE',
-      };
-    }
+  if (!record) {
+    return {
+      success: false,
+      message: 'Invalid transfer record: record is required.',
+      errorCode: 'INVALID_TRANSITION',
+    };
   }
 
-  // 2. State Machine transition check
+  // 1. Prevent duplicate transitions if already terminal
+  if (record.status === 'RECEIVED' || record.status === 'REJECTED' || record.status === 'CANCELLED') {
+    return {
+      success: false,
+      message: `Transfer ${record.id} is already in terminal status ${record.status}. Duplicate processing prevented.`,
+      errorCode: 'ALREADY_COMPLETED',
+    };
+  }
+
+  // 2. State Machine transition graph check (does the edge exist?)
   const allowedNext = VALID_TRANSITIONS[record.status] || [];
   if (!allowedNext.includes(nextStatus)) {
     return {
@@ -79,6 +86,54 @@ export function transitionTransferState(
       message: `Invalid state transition from ${record.status} to ${nextStatus}. Allowed transitions: [${allowedNext.join(', ')}]`,
       errorCode: 'INVALID_TRANSITION',
     };
+  }
+
+  // 3. Authorization checks per status
+  if (nextStatus === 'APPROVED') {
+    if (!isAuthorizedApproverRole(actor.role)) {
+      return {
+        success: false,
+        message: `Role ${actor.role} is not authorized to approve transfers. Clinical review requires AUTHORIZED_APPROVER.`,
+        errorCode: 'UNAUTHORIZED_ROLE',
+      };
+    }
+  }
+
+  if (nextStatus === 'REJECTED') {
+    if (!isAuthorizedApproverRole(actor.role)) {
+      return {
+        success: false,
+        message: `Role ${actor.role} is not authorized to reject transfers. Requires AUTHORIZED_APPROVER.`,
+        errorCode: 'UNAUTHORIZED_ROLE',
+      };
+    }
+    if (!reason || !reason.trim()) {
+      return {
+        success: false,
+        message: 'A mandatory non-empty clinical/operational reason is required when rejecting a transfer request.',
+        errorCode: 'INVALID_TRANSITION',
+      };
+    }
+  }
+
+  if (nextStatus === 'IN_TRANSIT') {
+    if (actor.role !== 'LOGISTICS_STAFF') {
+      return {
+        success: false,
+        message: `Role ${actor.role} is not authorized to dispatch transfers. Only LOGISTICS_STAFF can initiate transit.`,
+        errorCode: 'UNAUTHORIZED_ROLE',
+      };
+    }
+  }
+
+  if (nextStatus === 'RECEIVED') {
+    if (actor.role !== 'LOGISTICS_STAFF' && actor.role !== 'BLOOD_BANK_STAFF') {
+      return {
+        success: false,
+        message: `Role ${actor.role} is not authorized to confirm receipt. Delivery sign-off requires LOGISTICS_STAFF or BLOOD_BANK_STAFF.`,
+        errorCode: 'UNAUTHORIZED_ROLE',
+      };
+    }
   }
 
   // 3. Perform idempotent inventory reconciliation

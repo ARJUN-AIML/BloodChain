@@ -4,7 +4,7 @@ import type { InventoryBatch, BloodGroup, ComponentType } from '../../types';
 
 function runTests() {
   console.log('====================================================');
-  console.log('RUNNING BLOODCHAIN AI CORE LOGIC TEST SUITE');
+  console.log('BLOODCHAIN AI — SAFE-TO-SHARE & FEFO TEST SUITE (TRICHY)');
   console.log('====================================================\n');
 
   let passed = 0;
@@ -25,8 +25,8 @@ function runTests() {
   // TEST CASE 1: Standard Safe-to-Share Calculation
   // ----------------------------------------------------
   const calc1 = calculateSafeToShare({
-    organizationId: 'HOSP_A',
-    organizationName: 'Metro General Hospital',
+    organizationId: 'SIM_HOSP_TRY_MAIN',
+    organizationName: 'Tiruchirappalli Regional Trauma Center (Simulated)',
     bloodGroup: 'O_POSITIVE',
     componentType: 'RBC',
     currentInventory: 50,
@@ -44,8 +44,8 @@ function runTests() {
   // TEST CASE 2: Deficit Protection (Safe-to-Share = 0)
   // ----------------------------------------------------
   const calc2 = calculateSafeToShare({
-    organizationId: 'HOSP_B',
-    organizationName: 'City Care Hospital',
+    organizationId: 'SIM_HOSP_SRIRANGAM',
+    organizationName: 'Srirangam Sub-District Hospital (Simulated)',
     bloodGroup: 'O_POSITIVE',
     componentType: 'RBC',
     currentInventory: 20,
@@ -65,8 +65,8 @@ function runTests() {
   const mockBatches: InventoryBatch[] = [
     {
       id: 'B3',
-      batchNumber: 'BATCH-30',
-      organizationId: 'HOSP_A',
+      batchNumber: 'BATCH-TRY-30',
+      organizationId: 'SIM_HOSP_TRY_MAIN',
       bloodGroup: 'O_POSITIVE',
       componentType: 'RBC',
       collectionDate: '2026-09-01',
@@ -75,12 +75,12 @@ function runTests() {
       quantity: 20,
       reservedQuantity: 0,
       status: 'USABLE',
-      storageLocation: 'Shelf 3',
+      storageLocation: 'Vault Alpha',
     },
     {
       id: 'B1',
-      batchNumber: 'BATCH-2',
-      organizationId: 'HOSP_A',
+      batchNumber: 'BATCH-TRY-2',
+      organizationId: 'SIM_HOSP_TRY_MAIN',
       bloodGroup: 'O_POSITIVE',
       componentType: 'RBC',
       collectionDate: '2026-08-20',
@@ -89,12 +89,12 @@ function runTests() {
       quantity: 5,
       reservedQuantity: 0,
       status: 'NEAR_EXPIRY',
-      storageLocation: 'Shelf 1',
+      storageLocation: 'OT Refrigerator',
     },
     {
       id: 'B2',
-      batchNumber: 'BATCH-10',
-      organizationId: 'HOSP_A',
+      batchNumber: 'BATCH-TRY-10',
+      organizationId: 'SIM_HOSP_TRY_MAIN',
       bloodGroup: 'O_POSITIVE',
       componentType: 'RBC',
       collectionDate: '2026-08-25',
@@ -103,7 +103,7 @@ function runTests() {
       quantity: 15,
       reservedQuantity: 0,
       status: 'USABLE',
-      storageLocation: 'Shelf 2',
+      storageLocation: 'Shelf Beta',
     },
   ];
 
@@ -115,8 +115,8 @@ function runTests() {
   // ----------------------------------------------------
   const rescueMatches = detectExpiryRescueOpportunities(mockBatches, [
     {
-      organizationId: 'HOSP_C',
-      organizationName: 'Sunrise Medical Center',
+      organizationId: 'SIM_HOSP_MANAPPARAI',
+      organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
       bloodGroup: 'O_POSITIVE',
       componentType: 'RBC',
       projectedDeficit: 8,

@@ -55,8 +55,8 @@ class TransferBackendTests(TestCase):
             extra['HTTP_X_USER_ROLE'] = role
         req = self.factory.post(f'/api/transfers/{transfer_id}/{action_name}/', data or {}, format='json', **extra)
         drf_req = viewset.initialize_request(req)
-        viewset.request = drf_req
-        action_method = getattr(viewset, action_name)
+        method_name = 'dispatch_transfer' if action_name == 'dispatch' else action_name
+        action_method = getattr(viewset, method_name)
         return action_method(drf_req, pk=transfer_id)
 
     def _call_create(self, payload, role='HOSPITAL_STAFF'):

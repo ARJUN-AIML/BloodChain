@@ -2,17 +2,19 @@ import { useState } from 'react';
 import {
   AlertTriangle, Clock, ArrowRight, ShieldCheck, CheckCircle2,
   Package, Building2, RefreshCw, Calendar, Sparkles, Filter,
+  Check, Info, RotateCcw
 } from 'lucide-react';
 import { DEMO_INVENTORY_BATCHES, DEMO_SHORTAGES, DEMO_ORGANIZATIONS } from '@/lib/demo-data';
 import { sortBatchesFEFO, detectExpiryRescueOpportunities, type ExpiryRescueMatch } from '@/lib/fefo-engine';
 import { useAuthStore } from '@/lib/auth-store';
 import { useAuditStore } from '@/lib/audit-store';
+import { cn, formatBloodGroup, COMPONENT_LABELS } from '@/lib/utils';
 import type { InventoryBatch, BloodGroup } from '@/types';
 
 export function ExpiryRescuePage() {
   const [batches, setBatches] = useState<InventoryBatch[]>(DEMO_INVENTORY_BATCHES);
   const [selectedBloodGroup, setSelectedBloodGroup] = useState<string>('ALL');
-  const [rescuedIds, setRescuedIds] = useState<Set<string>>(new Set());
+  const [rotatedIds, setRotatedIds] = useState<Set<string>>(new Set());
 
   const { currentUser } = useAuthStore();
   const { logAction } = useAuditStore();
@@ -31,119 +33,166 @@ export function ExpiryRescuePage() {
     daysToShortage: 3,
   }));
 
-  const rescueMatches = detectExpiryRescueOpportunities(batches, shortageInputs);
+  const rotationOpportunities = detectExpiryRescueOpportunities(batches, shortageInputs);
 
-  const handleInitiateRescue = (match: ExpiryRescueMatch) => {
-    setRescuedIds(prev => new Set(prev).add(match.id));
+  const handlePlanRotation = (match: ExpiryRescueMatch) => {
+    setRotatedIds(prev => new Set(prev).add(match.id));
     logAction({
       userId: currentUser.id,
       userName: currentUser.name,
       userRole: currentUser.role,
-      action: 'EXPIRY_RESCUE_INITIATED',
-      entityType: 'EXPIRY_RESCUE',
+      action: 'STOCK_ROTATION_PLANNED',
+      entityType: 'EXPIRY_BATCH',
       entityId: match.id,
-      oldValue: `Expiring at ${match.sourceOrganizationName}`,
-      newValue: `Rescued transfer of ${match.unitsExpiring} units to ${match.destinationOrganizationName}`,
+      oldValue: `Expiring soon at ${match.sourceOrganizationName}`,
+      newValue: `Rotated transfer of ${match.unitsExpiring} units to ${match.destinationOrganizationName}`,
       reason: match.reason,
     });
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-[#8C2D19] to-[#C85A3F] text-white shadow-lg">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* 1. Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-stone-200">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-6 h-6 text-[#FFD166]" />
-            <h2 className="text-xl font-bold tracking-tight">Expiry Rescue & FEFO Inventory Engine</h2>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFD166]/20 text-[#FFD166] border border-[#FFD166]/30 uppercase tracking-wider">
-              Zero Spoilage Target
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#841A2B]">
+              Wastage Prevention
             </span>
+            <span className="text-stone-300">•</span>
+            <span className="text-xs text-stone-500 font-medium">FEFO Inventory Management</span>
           </div>
-          <p className="text-xs text-white/90 max-w-2xl leading-relaxed">
-            Automatically applies <strong className="text-white">First Expiry, First Out (FEFO)</strong> batching and pairs near-expiring blood products with upcoming shortage risks at neighboring hospitals to eliminate wastage.
+          <h1 className="text-2xl font-serif font-bold text-stone-900 tracking-tight">
+            Expiring Blood & Stock Rotation
+          </h1>
+          <p className="text-xs sm:text-sm text-stone-600">
+            Identify blood batches approaching expiry and rotate stock using First Expire, First Out (FEFO) guidance.
           </p>
         </div>
 
-        <div className="flex items-center gap-4 bg-white/10 p-3.5 rounded-xl border border-white/10 backdrop-blur-sm">
-          <div className="text-right">
-            <p className="text-[10px] text-white/80 font-semibold uppercase tracking-wider">Active Rescue Opportunities</p>
-            <p className="text-2xl font-bold text-[#FFD166]">{rescueMatches.length} Batches</p>
+        <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-200 shadow-2xs">
+          <div className="w-9 h-9 rounded-lg bg-[#FDF2F4] text-[#841A2B] flex items-center justify-center font-bold">
+            <Clock className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] text-stone-400 uppercase font-semibold block">Rotation Opportunities</span>
+            <p className="text-lg font-bold font-mono text-stone-900 leading-tight">
+              {rotationOpportunities.length} batches
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Expiry Rescue Matches Section */}
+      {/* 2. Educational Rule Banner */}
+      <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-2xs flex items-start gap-3">
+        <Info className="w-4 h-4 text-[#841A2B] mt-0.5 flex-shrink-0" />
+        <div className="text-xs space-y-1">
+          <p className="font-bold text-stone-900">
+            First Expire, First Out (FEFO) Operational Guidance:
+          </p>
+          <p className="text-stone-600 leading-relaxed text-[11px]">
+            "Use batches with the earliest expiry date first, where clinically and operationally appropriate." Blood products approaching expiry are matched with nearby facilities reporting upcoming demand to prevent discard.
+          </p>
+        </div>
+      </div>
+
+      {/* 3. Recommended Stock Rotation Opportunities */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#1A1F26] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#C85A3F]" />
-            AI-Matched Expiry Rescue Opportunities
+          <h3 className="text-xs font-bold uppercase tracking-wider text-stone-800 flex items-center gap-2">
+            <RotateCcw className="w-4 h-4 text-[#841A2B]" />
+            Recommended Stock Rotations
           </h3>
-          <span className="text-[10px] text-[#64748B] font-mono">Matched by FEFO Expiry & Shortage Window</span>
+          <span className="text-xs text-stone-500">
+            Matched by expiry countdown and deficit need
+          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {rescueMatches.length === 0 ? (
-            <div className="col-span-2 p-6 rounded-xl border border-[#E2E2DC] bg-white text-center text-xs text-[#64748B]">
-              No urgent expiry rescue matches required at this time. All near-expiry units are protected.
+          {rotationOpportunities.length === 0 ? (
+            <div className="col-span-2 p-8 rounded-xl border border-stone-200 bg-white text-center text-xs text-stone-500">
+              No urgent stock rotation matches required at this time. All batches have adequate shelf life.
             </div>
           ) : (
-            rescueMatches.map(match => {
-              const isRescued = rescuedIds.has(match.id);
+            rotationOpportunities.map(match => {
+              const isRotated = rotatedIds.has(match.id);
+
               return (
                 <div
                   key={match.id}
-                  className="p-4 rounded-xl bg-white border border-[#E2E2DC] shadow-sm space-y-3 flex flex-col justify-between hover:border-[#D99B38] transition-colors"
+                  className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-4 hover:border-stone-300 transition-all flex flex-col justify-between"
                 >
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-[#FAF0D6] text-[#BE8226] border border-[#EAEAE5]">
-                        Rescue Opportunity Score: {match.rescueOpportunityScore}/100
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-stone-100 text-stone-800">
+                        {match.id}
                       </span>
-                      <span className="flex items-center gap-1 text-[11px] font-mono text-[#C85A3F] font-bold">
-                        <Clock className="w-3.5 h-3.5" />
-                        {match.daysToExpiry} days to expiry
+                      <span className={cn(
+                        'text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border',
+                        isRotated
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                          : 'bg-amber-50 text-amber-800 border-amber-200'
+                      )}>
+                        {isRotated ? 'Rotation Transfer Planned' : `${match.daysToExpiry * 24} Hours Shelf Life Remaining`}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs pt-1">
-                      <div className="flex items-center gap-1.5 font-bold text-[#1A1F26]">
-                        <Building2 className="w-4 h-4 text-[#64748B]" />
-                        <span>{match.sourceOrganizationName}</span>
+                    <div className="flex items-center justify-between text-xs font-bold text-stone-900 pt-1">
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] uppercase font-semibold text-stone-400 block">Current Location</span>
+                        <p className="flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-stone-400" />
+                          {match.sourceOrganizationName}
+                        </p>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-[#C85A3F]" />
-                      <div className="flex items-center gap-1.5 font-bold text-[#1A1F26]">
-                        <Building2 className="w-4 h-4 text-[#2C6E49]" />
-                        <span>{match.destinationOrganizationName}</span>
+                      <ArrowRight className="w-4 h-4 text-[#841A2B] mx-2" />
+                      <div className="space-y-0.5 text-right">
+                        <span className="text-[10px] uppercase font-semibold text-stone-400 block">Deficit Hospital</span>
+                        <p className="flex items-center gap-1.5 justify-end">
+                          <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                          {match.destinationOrganizationName}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="p-2.5 rounded-lg bg-[#FAF9F6] border border-[#E2E2DC] text-[11px] text-[#64748B] leading-relaxed">
-                      {match.reason}
+                    <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80 text-xs flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] text-stone-400 uppercase font-medium">Product</span>
+                        <p className="font-bold text-stone-900">{formatBloodGroup(match.bloodGroup)} • {COMPONENT_LABELS[match.componentType]}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] text-stone-400 uppercase font-medium">Batch Quantity</span>
+                        <p className="font-bold font-mono text-[#841A2B] text-sm">{match.unitsExpiring} units</p>
+                      </div>
                     </div>
+
+                    <p className="text-[11px] text-stone-600 italic">
+                      "{match.reason}"
+                    </p>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between border-t border-[#E2E2DC]">
-                    <span className="text-xs font-bold text-[#1A1F26]">
-                      Rescue Package: <span className="text-[#C85A3F] font-mono">{match.unitsExpiring} Units</span> {match.bloodGroup.replace('_', ' ')} {match.componentType}
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+                    <span className="text-[11px] text-stone-500">
+                      Creates transfer in "Waiting for approval" state
                     </span>
-
                     <button
-                      disabled={isRescued}
-                      onClick={() => handleInitiateRescue(match)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-[#C85A3F] text-white hover:bg-[#A8432B] disabled:opacity-50 disabled:bg-[#5C768D]"
+                      type="button"
+                      disabled={isRotated}
+                      onClick={() => handlePlanRotation(match)}
+                      className={cn(
+                        'px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5',
+                        isRotated
+                          ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                          : 'bg-[#841A2B] hover:bg-[#701524] text-white shadow-2xs'
+                      )}
                     >
-                      {isRescued ? (
+                      {isRotated ? (
                         <>
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          Rescue Initiated
+                          <Check className="w-3.5 h-3.5" />
+                          Rotation Planned
                         </>
                       ) : (
-                        <>
-                          <RefreshCw className="w-3.5 h-3.5" />
-                          Initiate FEFO Transfer
-                        </>
+                        'Plan Stock Rotation Transfer'
                       )}
                     </button>
                   </div>
@@ -154,95 +203,71 @@ export function ExpiryRescuePage() {
         </div>
       </div>
 
-      {/* FEFO Inventory Batch Table */}
-      <div className="rounded-xl border border-[#E2E2DC] bg-white overflow-hidden shadow-sm space-y-0">
-        <div className="px-5 py-3.5 border-b border-[#E2E2DC] bg-[#FAF9F6] flex items-center justify-between">
-          <h3 className="text-xs font-bold text-[#1A1F26] flex items-center gap-2">
-            <Package className="w-4 h-4 text-[#64748B]" />
-            FEFO Batch Inventory Tracking (Earliest Expiry First)
-          </h3>
+      {/* 4. Complete Inventory Batch Expiry Timeline */}
+      <div className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden">
+        <div className="p-4 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-800">
+              Individual Batch Expiry Schedule
+            </h3>
+            <p className="text-[11px] text-stone-500 mt-0.5">
+              Strictly ordered by earliest expiration date first (FEFO sequence).
+            </p>
+          </div>
 
           <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-[#64748B]" />
+            <Filter className="w-3.5 h-3.5 text-stone-400" />
             <select
               value={selectedBloodGroup}
               onChange={e => setSelectedBloodGroup(e.target.value)}
-              className="px-2.5 py-1 text-xs rounded border border-[#E2E2DC] bg-white font-medium"
+              className="px-2.5 py-1 rounded-lg border border-stone-200 bg-stone-50 text-xs text-stone-900"
             >
               <option value="ALL">All Blood Groups</option>
-              <option value="O_POSITIVE">O+ Positive</option>
-              <option value="O_NEGATIVE">O- Negative</option>
-              <option value="A_POSITIVE">A+ Positive</option>
-              <option value="B_POSITIVE">B+ Positive</option>
+              {['O_POSITIVE', 'O_NEGATIVE', 'A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE'].map(b => (
+                <option key={b} value={b}>{formatBloodGroup(b as BloodGroup)}</option>
+              ))}
             </select>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-[#F4F4F0] border-b border-[#E2E2DC] text-[10px] font-bold uppercase text-[#64748B]">
-                <th className="py-3 px-4">Batch Number</th>
-                <th className="py-3 px-4">Facility</th>
-                <th className="py-3 px-3">Blood Product</th>
-                <th className="py-3 px-3 font-mono">Collection Date</th>
-                <th className="py-3 px-3 font-mono">Expiry Date</th>
-                <th className="py-3 px-3 font-mono text-center">Days Left</th>
-                <th className="py-3 px-3 font-mono text-center">Total Qty</th>
-                <th className="py-3 px-3 font-mono text-center">Reserved</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Storage Location</th>
+              <tr className="bg-stone-50/80 text-stone-500 text-[10px] uppercase font-semibold border-b border-stone-200">
+                <th className="py-2.5 px-4">Batch DIN</th>
+                <th className="py-2.5 px-4">Facility</th>
+                <th className="py-2.5 px-4">Blood Group</th>
+                <th className="py-2.5 px-4">Component</th>
+                <th className="py-2.5 px-4 text-center">Units</th>
+                <th className="py-2.5 px-4">Expiry Date</th>
+                <th className="py-2.5 px-4 text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E2E2DC]">
-              {sortedBatches.map(batch => (
-                <tr key={batch.id} className="hover:bg-[#FAF9F6] transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-[#1A1F26]">
-                    {batch.batchNumber}
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-[#1A1F26]">
-                    {batch.organizationName || batch.organizationId}
-                  </td>
-                  <td className="py-3 px-3 font-bold text-[#C85A3F]">
-                    {batch.bloodGroup.replace('_', ' ')} {batch.componentType}
-                  </td>
-                  <td className="py-3 px-3 font-mono text-[#64748B]">
-                    {batch.collectionDate}
-                  </td>
-                  <td className="py-3 px-3 font-mono font-bold text-[#1A1F26]">
-                    {batch.expiryDate}
-                  </td>
-                  <td className="py-3 px-3 font-mono text-center font-bold">
-                    <span className={batch.daysToExpiry <= 5 ? 'text-[#C85A3F]' : 'text-[#2C6E49]'}>
-                      {batch.daysToExpiry} d
-                    </span>
-                  </td>
-                  <td className="py-3 px-3 font-mono text-center font-bold text-[#1A1F26]">
-                    {batch.quantity}
-                  </td>
-                  <td className="py-3 px-3 font-mono text-center text-[#BE8226]">
-                    {batch.reservedQuantity}
-                  </td>
-                  <td className="py-3 px-4">
-                    {batch.status === 'NEAR_EXPIRY' ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF0D6] text-[#BE8226] border border-[#EAEAE5]">
-                        Near Expiry
+            <tbody className="divide-y divide-stone-100 text-stone-800">
+              {sortedBatches.slice(0, 8).map(batch => {
+                const isNearExpiry = batch.status === 'NEAR_EXPIRY';
+
+                return (
+                  <tr key={batch.id} className="hover:bg-stone-50/50 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-stone-900">{batch.batchNumber}</td>
+                    <td className="py-3 px-4 text-stone-700">{batch.organizationName}</td>
+                    <td className="py-3 px-4 font-semibold">{formatBloodGroup(batch.bloodGroup)}</td>
+                    <td className="py-3 px-4 text-stone-600">{COMPONENT_LABELS[batch.componentType]}</td>
+                    <td className="py-3 px-4 text-center font-mono font-bold text-stone-900">{batch.quantity}</td>
+                    <td className="py-3 px-4 text-stone-600">{new Date(batch.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="py-3 px-4 text-right">
+                      <span className={cn(
+                        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border',
+                        isNearExpiry
+                          ? 'bg-amber-50 text-amber-800 border-amber-200'
+                          : 'bg-stone-50 text-stone-600 border-stone-200'
+                      )}>
+                        {isNearExpiry ? 'Near Expiry (< 48h)' : 'Fresh Stock'}
                       </span>
-                    ) : batch.status === 'EXPIRED' ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FDF6F0] text-[#C85A3F] border border-[#F3D7C8]">
-                        Expired
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E3EFEA] text-[#2C6E49] border border-[#C5E1D4]">
-                        Usable
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-[11px] text-[#64748B]">
-                    {batch.storageLocation}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -133,9 +133,9 @@ def load_models():
             model_state["demand_data"] = df[df["date"] >= cutoff].copy()
 
         model_state["loaded"] = True
-        print("✅ Models loaded successfully")
+        print("[INFO] Models loaded successfully")
     except Exception as e:
-        print(f"⚠ Model loading error: {e}")
+        print(f"[WARNING] Model loading error: {e}")
         traceback.print_exc()
 
 

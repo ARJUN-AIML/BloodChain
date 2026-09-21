@@ -4,31 +4,46 @@
 
 @layer base {
   :root {
-    --background: 45 12% 96%; /* #F7F7F5 */
-    --foreground: 216 19% 13%; /* #1A1F26 */
+    --background: 210 40% 98%; /* #F8FAFC */
+    --foreground: 222 47% 11%; /* #0F172A */
     --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 216 19% 13%;
-    --primary: 12 55% 52%; /* #C85A3F Rust */
+    --card-foreground: 222 47% 11%;
+    --primary: 348 83% 47%; /* #DC2626 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 45 10% 95%; /* #F4F4F0 */
-    --secondary-foreground: 216 19% 13%;
-    --muted: 45 10% 95%;
+    --secondary: 210 40% 96%; /* #F1F5F9 */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%; /* #64748B */
-    --accent: 24 67% 96%; /* #FDF6F0 */
-    --accent-foreground: 12 55% 52%;
-    --border: 45 10% 87%; /* #E2E2DC */
-    --input: 45 10% 87%;
-    --ring: 12 55% 52%;
-    --radius: 0.625rem;
+    --accent: 0 86% 97%; /* #FEF2F2 */
+    --accent-foreground: 348 83% 47%;
+    --border: 214 32% 91%; /* #E2E8F0 */
+    --input: 214 32% 91%;
+    --ring: 348 83% 47%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 47% 7%; /* #090D16 */
+    --foreground: 210 40% 98%; /* #F8FAFC */
+    --card: 222 47% 11%; /* #0F172A */
+    --card-foreground: 210 40% 98%;
+    --primary: 348 83% 47%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
   }
 
   * {
-    border-color: #E2E2DC;
+    border-color: #E7E5E4;
   }
 
   body {
-    background-color: #F7F7F5;
-    color: #1A1F26;
+    background-color: #F9F9F8;
+    color: #1C1917;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -36,80 +51,102 @@
   }
 }
 
-/* Custom scrollbar */
+/* Custom smooth scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F7F5;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4D4CE;
-  border-radius: 4px;
+  background: #CBD5E1;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A3A39A;
+  background: #94A3B8;
 }
 
-/* Flat Card Base */
+/* Flat Clinical Card */
 .card-flat {
   background-color: #FFFFFF;
-  border: 1px solid #E2E2DC;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease-in-out;
+  border: 1px solid #E2E8F0;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-flat:hover {
-  border-color: #D4D4CE;
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.06);
 }
 
-/* Status indicator dots */
+/* Clinical Status Dots */
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .status-dot.healthy {
-  background-color: #5B8C7A;
+  background-color: #10B981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
 .status-dot.warning {
-  background-color: #D99B38;
+  background-color: #F59E0B;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
 }
 
 .status-dot.critical {
-  background-color: #C85A3F;
+  background-color: #EF4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 .status-dot.demo {
-  background-color: #D99B38;
+  background-color: #0EA5E9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
 }
 
-/* Leaflet Container styling for Warm Positron theme */
+/* Pulse animation for active emergency runs */
+@keyframes emergency-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.15);
+  }
+}
+
+.animate-emergency-pulse {
+  animation: emergency-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Leaflet Container styling */
 .leaflet-container {
-  background-color: #F7F7F5 !important;
-  border-radius: 0.75rem;
+  background-color: #F8FAFC !important;
+  border-radius: 0.875rem;
   font-family: inherit;
 }
 
 .leaflet-control-zoom a {
   background-color: #FFFFFF !important;
-  color: #1A1F26 !important;
-  border-color: #E2E2DC !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0 !important;
 }
 
 /* Custom Recharts Tooltip Styling */
 .recharts-default-tooltip {
   background-color: #FFFFFF !important;
-  border: 1px solid #E2E2DC !important;
-  border-radius: 0.5rem !important;
-  box-shadow: 0 4px 12px rgba(26, 31, 38, 0.08) !important;
-  padding: 8px 12px !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 0.625rem !important;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.12) !important;
+  padding: 10px 14px !important;
 }

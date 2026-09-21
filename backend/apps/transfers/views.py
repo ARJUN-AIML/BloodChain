@@ -10,9 +10,10 @@ from apps.inventory.models import BloodInventory, InventoryBatch, BatchStatus
 from apps.inventory.services import calculate_safe_to_share, allocate_fefo
 from apps.audit.services import log_audit_event
 
-AUTHORIZED_APPROVE_ROLES = {'ADMIN', 'AUTHORIZED_APPROVER'}
-AUTHORIZED_DISPATCH_ROLES = {'ADMIN', 'AUTHORIZED_APPROVER', 'LOGISTICS_STAFF'}
-AUTHORIZED_RECEIVE_ROLES = {'ADMIN', 'AUTHORIZED_APPROVER', 'LOGISTICS_STAFF', 'HOSPITAL_STAFF'}
+AUTHORIZED_CREATE_ROLES = {'HOSPITAL_STAFF', 'BLOOD_BANK_STAFF'}
+AUTHORIZED_APPROVE_ROLES = {'AUTHORIZED_APPROVER'}
+AUTHORIZED_DISPATCH_ROLES = {'LOGISTICS_STAFF'}
+AUTHORIZED_RECEIVE_ROLES = {'LOGISTICS_STAFF', 'BLOOD_BANK_STAFF'}
 
 class TransferRequestViewSet(viewsets.ModelViewSet):
     serializer_class = TransferRequestSerializer
@@ -42,6 +43,13 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
         return actor_user or actor_header or 'Dr. Sarah Jenkins (Approver)'
 
     def create(self, request, *args, **kwargs):
+        role = self._get_user_role(request)
+        if role not in AUTHORIZED_CREATE_ROLES:
+            return Response(
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to create transfer requests. Only Hospital Staff and Blood Bank Staff can request blood."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         data = request.data
         src_id = data.get('source_facility') or data.get('sourceFacilityId')
         dest_id = data.get('destination_facility') or data.get('targetFacilityId')
@@ -107,7 +115,26 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
             except Facility.DoesNotExist:
                 pass
 
-        return super().create(request, *args, **kwargs)
+        try:
+            src_fac = Facility.objects.get(id=src_id)
+            dest_fac = Facility.objects.get(id=dest_id)
+        except Facility.DoesNotExist:
+            return Response(
+                {"error": "FACILITY_NOT_FOUND", "message": "Source or destination facility not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        transfer = TransferRequest.objects.create(
+            source_facility=src_fac,
+            destination_facility=dest_fac,
+            blood_group=blood_group,
+            component_type=component_type,
+            requested_quantity=quantity,
+            status=TransferStatus.PENDING_APPROVAL,
+            priority=data.get('priority', 'URGENT'),
+            requested_by=self._get_actor(request),
+        )
+        return Response(TransferRequestSerializer(transfer).data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'])
     def approve(self, request, pk=None):
@@ -116,7 +143,7 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
 
         if role not in AUTHORIZED_APPROVE_ROLES:
             return Response(
-                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to approve transfer requests."},
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to approve transfer requests. Clinical approval requires an Authorized Approver."},
                 status=status.HTTP_403_FORBIDDEN
             )
 
@@ -154,8 +181,15 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
 
         if role not in AUTHORIZED_APPROVE_ROLES:
             return Response(
-                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to reject transfer requests."},
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to reject transfer requests. Clinical authorization required."},
                 status=status.HTTP_403_FORBIDDEN
+            )
+
+        reason = str(request.data.get('reason', '') or '').strip()
+        if not reason:
+            return Response(
+                {"error": "REJECTION_REASON_REQUIRED", "message": "A specific clinical or operational reason is required when rejecting a transfer request."},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         with transaction.atomic():
@@ -166,12 +200,12 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
 
             if transfer.status != TransferStatus.PENDING_APPROVAL:
                 return Response(
-                    {"error": "INVALID_STATE_TRANSITION", "message": f"Cannot reject transfer in state '{transfer.status}'."},
+                    {"error": "INVALID_STATE_TRANSITION", "message": f"Cannot reject transfer in state '{transfer.status}'. Must be 'PENDING_APPROVAL'."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
             transfer.status = TransferStatus.REJECTED
-            transfer.rejection_reason = request.data.get('reason', 'Rejected by authorized approver.')
+            transfer.rejection_reason = reason
             transfer.save()
 
             log_audit_event(
@@ -185,12 +219,12 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
 
         return Response(TransferRequestSerializer(transfer).data)
 
-    @action(detail=True, methods=['post'])
-    def dispatch(self, request, pk=None):
+    @action(detail=True, methods=['post'], url_path='dispatch', url_name='dispatch')
+    def dispatch_transfer(self, request, pk=None):
         role = self._get_user_role(request)
         if role not in AUTHORIZED_DISPATCH_ROLES:
             return Response(
-                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to dispatch transfers."},
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to dispatch transfers. Only Logistics Staff can initiate cold-chain transport."},
                 status=status.HTTP_403_FORBIDDEN
             )
 
@@ -252,7 +286,7 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
         role = self._get_user_role(request)
         if role not in AUTHORIZED_RECEIVE_ROLES:
             return Response(
-                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to receive transfers."},
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to receive transfers. Only Logistics Staff or Blood Bank Hub staff can verify transfer receipt."},
                 status=status.HTTP_403_FORBIDDEN
             )
 

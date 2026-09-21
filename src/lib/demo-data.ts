@@ -2,44 +2,280 @@ import type {
   Organization, InventorySummary, ForecastResult,
   DemandHistory, ShortageRisk, SafeShareSnapshot, BloodRequest,
   Transfer, TemperatureReading, Donor, DonationCampaign,
-  Notification, BloodGroup, ComponentType,
+  Notification, BloodGroup, ComponentType, SimulationScenario,
 } from '@/types';
 
+// ============================================================================
+// TIRUCHIRAPPALLI (TRICHY), TAMIL NADU — REGIONAL RESEARCH PROTOTYPE
+//
+// DATA GOVERNANCE STATEMENT:
+// ALL FACILITY NAMES, INVENTORIES, FORECASTS, DONORS, AND LOGISTICS DATA
+// PRESENTED IN THIS APPLICATION ARE SYNTHETIC DEMO DATASETS CREATED FOR
+// RESEARCH, LOGISTICAL BENCHMARKING, AND SYSTEM VALIDATION PURPOSES.
+// THEY DO NOT REPRESENT LIVE CLINICAL BLOOD INVENTORY OR ACTUAL HOSPITAL STATUS.
+// ============================================================================
+
+export const SYNTHETIC_DATA_NOTICE = "SYNTHETIC DEMO DATA — NOT LIVE BLOOD AVAILABILITY";
+
 export const DEMO_ORGANIZATIONS: Organization[] = [
-  { id: 'HOSP_A', name: 'Metro General Hospital', type: 'HOSPITAL', region: 'Central', city: 'Metropolis', latitude: 28.6139, longitude: 77.2090, populationServed: 850000, bedCapacity: 1200, icuBeds: 80, emergencyCapacity: 120, isActive: true, address: '12 Medical Enclave, Metropolis', phone: '+91 11 2345 6789', availableUnits: 238, hasDeficit: true },
-  { id: 'HOSP_B', name: 'City Care Hospital', type: 'HOSPITAL', region: 'North', city: 'Northville', latitude: 28.7041, longitude: 77.1025, populationServed: 550000, bedCapacity: 800, icuBeds: 50, emergencyCapacity: 80, isActive: true, address: '45 Health Avenue, Northville', phone: '+91 11 3456 7890', availableUnits: 195, hasDeficit: false },
-  { id: 'HOSP_C', name: 'Sunrise Medical Center', type: 'HOSPITAL', region: 'East', city: 'Eastport', latitude: 28.5355, longitude: 77.3910, populationServed: 420000, bedCapacity: 600, icuBeds: 35, emergencyCapacity: 60, isActive: true, address: '88 Sunrise Expressway, Eastport', phone: '+91 11 4567 8901', availableUnits: 180, hasDeficit: true },
-  { id: 'HOSP_D', name: 'Heritage Multispecialty Hospital', type: 'HOSPITAL', region: 'South', city: 'Southtown', latitude: 28.4595, longitude: 77.0266, populationServed: 380000, bedCapacity: 500, icuBeds: 30, emergencyCapacity: 50, isActive: true, address: '102 Heritage Ring Road, Southtown', phone: '+91 11 5678 9012', availableUnits: 165, hasDeficit: false },
-  { id: 'HOSP_E', name: 'Valley Children\'s Hospital', type: 'HOSPITAL', region: 'West', city: 'Westfield', latitude: 28.6304, longitude: 77.0819, populationServed: 290000, bedCapacity: 350, icuBeds: 25, emergencyCapacity: 40, isActive: true, address: '14 Pediatric Lane, Westfield', phone: '+91 11 6789 0123', availableUnits: 140, hasDeficit: true },
-  { id: 'BB_A', name: 'Regional Blood Center Alpha', type: 'BLOOD_BANK', region: 'Central', city: 'Metropolis', latitude: 28.6280, longitude: 77.2200, populationServed: 1500000, bedCapacity: 0, icuBeds: 0, emergencyCapacity: 0, isActive: true, address: '1 Central Donor Complex, Metropolis', phone: '+91 11 7890 1234', availableUnits: 450, storageCapacityUnits: 3000, hasDeficit: false },
-  { id: 'BB_B', name: 'Northern Blood Bank', type: 'BLOOD_BANK', region: 'North', city: 'Northville', latitude: 28.7200, longitude: 77.1100, populationServed: 900000, bedCapacity: 0, icuBeds: 0, emergencyCapacity: 0, isActive: true, address: '78 Northern Hub Road, Northville', phone: '+91 11 8901 2345', availableUnits: 360, storageCapacityUnits: 2500, hasDeficit: false },
-  { id: 'LOG_A', name: 'BloodRun Logistics', type: 'LOGISTICS', region: 'Central', city: 'Metropolis', latitude: 28.6100, longitude: 77.2300, populationServed: 0, bedCapacity: 0, icuBeds: 0, emergencyCapacity: 0, isActive: true, address: '3 Depot Gate, Metropolis', phone: '+91 11 9012 3456', availableUnits: 0, hasDeficit: false },
+  // 1. Core Tiruchirappalli City Nodes
+  {
+    id: 'SIM_HOSP_TRY_MAIN',
+    name: 'Tiruchirappalli Regional Trauma Center (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Tiruchirappalli City',
+    city: 'Tiruchirappalli',
+    latitude: 10.7925,
+    longitude: 78.6980,
+    populationServed: 1100000,
+    bedCapacity: 750,
+    icuBeds: 50,
+    emergencyCapacity: 90,
+    isActive: true,
+    address: 'Collector Office Road / Thillai Nagar, Tiruchirappalli, Tamil Nadu 620001',
+    phone: '+91 431 241 0001',
+    availableUnits: 185,
+    hasDeficit: false,
+  },
+  {
+    id: 'SIM_BB_TRY_CENTRAL',
+    name: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    type: 'BLOOD_BANK',
+    region: 'Tiruchirappalli City',
+    city: 'Tiruchirappalli',
+    latitude: 10.8010,
+    longitude: 78.6920,
+    populationServed: 1600000,
+    bedCapacity: 0,
+    icuBeds: 0,
+    emergencyCapacity: 0,
+    isActive: true,
+    address: 'Central District Health Complex, Cantonment, Tiruchirappalli, Tamil Nadu 620001',
+    phone: '+91 431 241 5500',
+    availableUnits: 490,
+    storageCapacityUnits: 2500,
+    hasDeficit: false,
+  },
+  {
+    id: 'SIM_LOG_TRY_FLEET',
+    name: 'Kaveri Cold-Chain Fleet Depot (Simulated)',
+    type: 'LOGISTICS',
+    region: 'Tiruchirappalli City',
+    city: 'Tiruchirappalli',
+    latitude: 10.7960,
+    longitude: 78.7050,
+    populationServed: 0,
+    bedCapacity: 0,
+    icuBeds: 0,
+    emergencyCapacity: 0,
+    isActive: true,
+    address: 'Highway Logistics Bypass, Palakkarai, Tiruchirappalli, Tamil Nadu 620008',
+    phone: '+91 431 246 8800',
+    availableUnits: 0,
+    hasDeficit: false,
+  },
+
+  // 2. Srirangam (North across Kaveri)
+  {
+    id: 'SIM_HOSP_SRIRANGAM',
+    name: 'Srirangam Sub-District Hospital (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Srirangam',
+    city: 'Srirangam',
+    latitude: 10.8650,
+    longitude: 78.6930,
+    populationServed: 280000,
+    bedCapacity: 250,
+    icuBeds: 15,
+    emergencyCapacity: 30,
+    isActive: true,
+    address: 'Gandhi Road, Srirangam, Tiruchirappalli, Tamil Nadu 620006',
+    phone: '+91 431 243 0012',
+    availableUnits: 72,
+    hasDeficit: false,
+  },
+
+  // 3. Thuvakudi (Eastern Industrial Corridor)
+  {
+    id: 'SIM_HOSP_THUVAKUDI',
+    name: 'Thuvakudi Industrial Corridor Health Center (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Thuvakudi',
+    city: 'Thuvakudi',
+    latitude: 10.7620,
+    longitude: 78.8120,
+    populationServed: 220000,
+    bedCapacity: 180,
+    icuBeds: 12,
+    emergencyCapacity: 25,
+    isActive: true,
+    address: 'NH 83 Thanjavur Highway, Thuvakudi, Tiruchirappalli, Tamil Nadu 620015',
+    phone: '+91 431 250 1100',
+    availableUnits: 58,
+    hasDeficit: false,
+  },
+
+  // 4. Manachanallur (North-West)
+  {
+    id: 'SIM_HOSP_MANACHANALLUR',
+    name: 'Manachanallur Community Health Center (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Manachanallur',
+    city: 'Manachanallur',
+    latitude: 10.9080,
+    longitude: 78.7020,
+    populationServed: 140000,
+    bedCapacity: 120,
+    icuBeds: 8,
+    emergencyCapacity: 20,
+    isActive: true,
+    address: 'Main Bazaar Road, Manachanallur, Tamil Nadu 621005',
+    phone: '+91 431 256 0033',
+    availableUnits: 36,
+    hasDeficit: false,
+  },
+
+  // 5. Lalgudi (North-East River Belt)
+  {
+    id: 'SIM_HOSP_LALGUDI',
+    name: 'Lalgudi Taluk Hospital (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Lalgudi',
+    city: 'Lalgudi',
+    latitude: 10.8700,
+    longitude: 78.8200,
+    populationServed: 190000,
+    bedCapacity: 140,
+    icuBeds: 8,
+    emergencyCapacity: 20,
+    isActive: true,
+    address: 'Kallakudi Road, Lalgudi, Tiruchirappalli District, Tamil Nadu 621601',
+    phone: '+91 431 254 1144',
+    availableUnits: 42,
+    hasDeficit: false,
+  },
+
+  // 6. Thuraiyur (North Outer Ring)
+  {
+    id: 'SIM_HOSP_THURAIYUR',
+    name: 'Thuraiyur Taluk Referral Hospital (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Thuraiyur',
+    city: 'Thuraiyur',
+    latitude: 11.1420,
+    longitude: 78.5980,
+    populationServed: 260000,
+    bedCapacity: 160,
+    icuBeds: 10,
+    emergencyCapacity: 25,
+    isActive: true,
+    address: 'Perambalur Main Road, Thuraiyur, Tamil Nadu 621010',
+    phone: '+91 4327 222 015',
+    availableUnits: 48,
+    hasDeficit: false,
+  },
+
+  // 7. Musiri (North-West Kaveri Bank)
+  {
+    id: 'SIM_HOSP_MUSIRI',
+    name: 'Musiri Riverbank Area Hospital (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Musiri',
+    city: 'Musiri',
+    latitude: 10.9430,
+    longitude: 78.4490,
+    populationServed: 210000,
+    bedCapacity: 150,
+    icuBeds: 10,
+    emergencyCapacity: 20,
+    isActive: true,
+    address: 'NH 81 Karur Highway, Musiri, Tiruchirappalli District, Tamil Nadu 621211',
+    phone: '+91 4326 260 022',
+    availableUnits: 45,
+    hasDeficit: false,
+  },
+
+  // 8. Manapparai (South-West Highway Corridor — Scenario Focus)
+  {
+    id: 'SIM_HOSP_MANAPPARAI',
+    name: 'Manapparai Highway Trauma Unit (Simulated)',
+    type: 'HOSPITAL',
+    region: 'Manapparai',
+    city: 'Manapparai',
+    latitude: 10.6100,
+    longitude: 78.4200,
+    populationServed: 310000,
+    bedCapacity: 200,
+    icuBeds: 16,
+    emergencyCapacity: 35,
+    isActive: true,
+    address: 'NH 83 Dindigul Highway Junction, Manapparai, Tamil Nadu 621306',
+    phone: '+91 4332 261 100',
+    availableUnits: 28,
+    hasDeficit: true, // Acute deficit due to highway emergency scenario
+  },
 ];
 
-const BLOOD_GROUPS: BloodGroup[] = ['A_POSITIVE','A_NEGATIVE','B_POSITIVE','B_NEGATIVE','AB_POSITIVE','AB_NEGATIVE','O_POSITIVE','O_NEGATIVE'];
-const COMPONENTS: ComponentType[] = ['RBC','PLASMA','PLATELETS','WHOLE_BLOOD'];
-const BG_FREQ: Record<BloodGroup, number> = { O_POSITIVE: 0.37, O_NEGATIVE: 0.07, A_POSITIVE: 0.28, A_NEGATIVE: 0.06, B_POSITIVE: 0.13, B_NEGATIVE: 0.03, AB_POSITIVE: 0.04, AB_NEGATIVE: 0.02 };
+export const BLOOD_GROUPS: BloodGroup[] = [
+  'A_POSITIVE', 'A_NEGATIVE',
+  'B_POSITIVE', 'B_NEGATIVE',
+  'AB_POSITIVE', 'AB_NEGATIVE',
+  'O_POSITIVE', 'O_NEGATIVE',
+];
+
+export const COMPONENTS: ComponentType[] = ['RBC', 'PLASMA', 'PLATELETS', 'WHOLE_BLOOD'];
+
+export const BG_FREQ: Record<BloodGroup, number> = {
+  O_POSITIVE: 0.38,
+  O_NEGATIVE: 0.05,
+  A_POSITIVE: 0.26,
+  A_NEGATIVE: 0.04,
+  B_POSITIVE: 0.20,
+  B_NEGATIVE: 0.03,
+  AB_POSITIVE: 0.03,
+  AB_NEGATIVE: 0.01,
+};
+
+// ---------------------------------------------------------------------------
+// Simulated Inventory Generation
+// ---------------------------------------------------------------------------
 
 function generateDemoInventory(): InventorySummary[] {
   const inventory: InventorySummary[] = [];
   const bloodOrgs = DEMO_ORGANIZATIONS.filter(o => o.type === 'HOSPITAL' || o.type === 'BLOOD_BANK');
-  const baseDemand: Record<string, number> = { HOSP_A: 32, HOSP_B: 22, HOSP_C: 18, HOSP_D: 15, HOSP_E: 12, BB_A: 45, BB_B: 30 };
-  const compFactor: Record<ComponentType, number> = { RBC: 1.0, PLASMA: 0.55, PLATELETS: 0.4, WHOLE_BLOOD: 0.25, CRYOPRECIPITATE: 0.15 };
+  const baseDemand: Record<string, number> = {
+    SIM_HOSP_TRY_MAIN: 28,
+    SIM_BB_TRY_CENTRAL: 42,
+    SIM_HOSP_SRIRANGAM: 10,
+    SIM_HOSP_THUVAKUDI: 8,
+    SIM_HOSP_MANACHANALLUR: 6,
+    SIM_HOSP_LALGUDI: 7,
+    SIM_HOSP_THURAIYUR: 7,
+    SIM_HOSP_MUSIRI: 7,
+    SIM_HOSP_MANAPPARAI: 9,
+  };
+  const compFactor: Record<ComponentType, number> = {
+    RBC: 1.0,
+    PLASMA: 0.55,
+    PLATELETS: 0.40,
+    WHOLE_BLOOD: 0.25,
+    CRYOPRECIPITATE: 0.15,
+  };
 
   for (const org of bloodOrgs) {
-    const base = baseDemand[org.id] || 15;
+    const base = baseDemand[org.id] || 10;
     for (const bg of BLOOD_GROUPS) {
       const bgF = BG_FREQ[bg];
       for (const comp of COMPONENTS) {
         const cF = compFactor[comp];
-        const baseInv = Math.round(base * bgF * cF * (3 + Math.random() * 3));
+        const baseInv = Math.round(base * bgF * cF * (3 + Math.random() * 2.5));
         const available = Math.max(0, baseInv);
         const reserved = Math.max(0, Math.round(available * (0.05 + Math.random() * 0.1)));
         const quarantined = Math.max(0, Math.round(available * Math.random() * 0.03));
-        const nearExpiry = Math.max(0, Math.round(available * (0.02 + Math.random() * 0.06)));
-        const incoming = Math.max(0, Math.round(base * bgF * cF * (0.3 + Math.random() * 0.4)));
+        const nearExpiry = Math.max(0, Math.round(available * (0.02 + Math.random() * 0.05)));
+        const incoming = Math.max(0, Math.round(base * bgF * cF * (0.3 + Math.random() * 0.3)));
         const expected_expiry = Math.max(0, Math.round(available * Math.random() * 0.03));
-        const safety = Math.max(1, Math.round(base * bgF * cF * 2));
+        const safety = Math.max(1, Math.round(base * bgF * cF * 2.2));
 
         inventory.push({
           organizationId: org.id,
@@ -57,13 +293,29 @@ function generateDemoInventory(): InventorySummary[] {
     }
   }
 
-  const hospAOpRbc = inventory.find(i => i.organizationId === 'HOSP_A' && i.bloodGroup === 'O_POSITIVE' && i.componentType === 'RBC');
-  if (hospAOpRbc) {
-    hospAOpRbc.availableUnits = 10;
-    hospAOpRbc.reservedUnits = 2;
-    hospAOpRbc.nearExpiryUnits = 1;
-    hospAOpRbc.expectedExpiryUnits = 1;
-    hospAOpRbc.safetyStockTarget = 3;
+  // Inject Core Emergency Scenario Invariant:
+  // Manapparai has acute O-Negative shortage
+  const manapparaiONegRbc = inventory.find(
+    i => i.organizationId === 'SIM_HOSP_MANAPPARAI' && i.bloodGroup === 'O_NEGATIVE' && i.componentType === 'RBC'
+  );
+  if (manapparaiONegRbc) {
+    manapparaiONegRbc.availableUnits = 1;
+    manapparaiONegRbc.reservedUnits = 1;
+    manapparaiONegRbc.nearExpiryUnits = 0;
+    manapparaiONegRbc.expectedExpiryUnits = 0;
+    manapparaiONegRbc.safetyStockTarget = 6;
+  }
+
+  // Central Blood Bank has surplus safe-to-share O-Negative
+  const centralHubONegRbc = inventory.find(
+    i => i.organizationId === 'SIM_BB_TRY_CENTRAL' && i.bloodGroup === 'O_NEGATIVE' && i.componentType === 'RBC'
+  );
+  if (centralHubONegRbc) {
+    centralHubONegRbc.availableUnits = 22;
+    centralHubONegRbc.reservedUnits = 4;
+    centralHubONegRbc.nearExpiryUnits = 1;
+    centralHubONegRbc.expectedExpiryUnits = 0;
+    centralHubONegRbc.safetyStockTarget = 10;
   }
 
   return inventory;
@@ -72,88 +324,118 @@ function generateDemoInventory(): InventorySummary[] {
 export const DEMO_INVENTORY = generateDemoInventory();
 
 export const DEMO_SUMMARY = {
-  totalUsableInventory: 1728,
-  totalReservedUnits: 149,
-  totalNearExpiryUnits: 74,
-  criticalShortageCount: 1,
+  totalUsableInventory: 965,
+  totalReservedUnits: 84,
+  totalNearExpiryUnits: 38,
+  criticalShortageCount: 1, // Manapparai O-
   activeTransferCount: 1,
 };
 
+// 14-day demand trend for Tiruchirappalli Regional Network
 export const DEMO_DEMAND_TREND = [
-  { date: '23 Aug', actual: 135, forecast: 130 },
-  { date: '24 Aug', actual: 148, forecast: 145 },
-  { date: '25 Aug', actual: 172, forecast: 168 },
-  { date: '26 Aug', actual: 156, forecast: 160 },
-  { date: '27 Aug', actual: 165, forecast: 158 },
-  { date: '28 Aug', actual: 162, forecast: 164 },
-  { date: '29 Aug', actual: 125, forecast: 118 },
-  { date: '30 Aug', actual: 138, forecast: 132 },
-  { date: '31 Aug', actual: 170, forecast: 162 },
-  { date: '01 Sept', actual: 168, forecast: 160 },
-  { date: '02 Sept', actual: 164, forecast: 158 },
-  { date: '03 Sept', actual: 175, forecast: 165 },
-  { date: '04 Sept', actual: 150, forecast: 155 },
-  { date: '05 Sept', actual: 165, forecast: 158 },
+  { date: '08 Sept', actual: 98, forecast: 95 },
+  { date: '09 Sept', actual: 104, forecast: 102 },
+  { date: '10 Sept', actual: 112, forecast: 110 },
+  { date: '11 Sept', actual: 108, forecast: 106 },
+  { date: '12 Sept', actual: 115, forecast: 112 },
+  { date: '13 Sept', actual: 92, forecast: 90 },
+  { date: '14 Sept', actual: 88, forecast: 85 },
+  { date: '15 Sept', actual: 102, forecast: 98 },
+  { date: '16 Sept', actual: 118, forecast: 114 },
+  { date: '17 Sept', actual: 122, forecast: 120 },
+  { date: '18 Sept', actual: 110, forecast: 108 },
+  { date: '19 Sept', actual: 125, forecast: 118 },
+  { date: '20 Sept', actual: 114, forecast: 112 },
+  { date: '21 Sept', actual: 120, forecast: 116 },
 ];
 
 export const DEMO_BLOOD_GROUP_DISTRIBUTION = [
-  { name: 'O+', value: 640 },
-  { name: 'A+', value: 480 },
-  { name: 'B+', value: 230 },
-  { name: 'AB+', value: 70 },
-  { name: 'O-', value: 120 },
-  { name: 'A-', value: 100 },
-  { name: 'B-', value: 50 },
-  { name: 'AB-', value: 38 },
+  { name: 'O+', value: 366 },
+  { name: 'A+', value: 251 },
+  { name: 'B+', value: 193 },
+  { name: 'O-', value: 48 },
+  { name: 'A-', value: 39 },
+  { name: 'AB+', value: 29 },
+  { name: 'B-', value: 29 },
+  { name: 'AB-', value: 10 },
 ];
 
-export function generateDemoForecasts(orgId?: string): ForecastResult[] {
+// ---------------------------------------------------------------------------
+// Simulated Forecast Generator (P10, P50, P90 Quantiles)
+// ---------------------------------------------------------------------------
+
+export function generateDemoForecasts(
+  orgId?: string,
+  bloodGroup?: string,
+  componentType?: string
+): ForecastResult[] {
+  const targetOrgs = orgId
+    ? [orgId]
+    : DEMO_ORGANIZATIONS.filter(o => o.type === 'HOSPITAL' || o.type === 'BLOOD_BANK').map(o => o.id);
+
+  const targetBloodGroups = bloodGroup ? [bloodGroup as BloodGroup] : BLOOD_GROUPS;
+  const targetComponents = componentType ? [componentType as ComponentType] : COMPONENTS;
+
   const forecasts: ForecastResult[] = [];
-  const orgs = orgId ? DEMO_ORGANIZATIONS.filter(o => o.id === orgId) : DEMO_ORGANIZATIONS.filter(o => o.type !== 'LOGISTICS' && o.type !== 'REGIONAL_ADMIN');
-  const baseDemand: Record<string, number> = { HOSP_A: 32, HOSP_B: 22, HOSP_C: 18, HOSP_D: 15, HOSP_E: 12, BB_A: 45, BB_B: 30 };
-  const compFactor: Record<string, number> = { RBC: 1.0, PLASMA: 0.55, PLATELETS: 0.4, WHOLE_BLOOD: 0.25 };
+  const baseDemand: Record<string, number> = {
+    SIM_HOSP_TRY_MAIN: 28,
+    SIM_BB_TRY_CENTRAL: 42,
+    SIM_HOSP_SRIRANGAM: 10,
+    SIM_HOSP_THUVAKUDI: 8,
+    SIM_HOSP_MANACHANALLUR: 6,
+    SIM_HOSP_LALGUDI: 7,
+    SIM_HOSP_THURAIYUR: 7,
+    SIM_HOSP_MUSIRI: 7,
+    SIM_HOSP_MANAPPARAI: 9,
+    HOSP_A: 28,
+    BB_A: 42,
+  };
+  const compFactors: Record<string, number> = { RBC: 1.0, PLASMA: 0.55, PLATELETS: 0.4, WHOLE_BLOOD: 0.25, CRYOPRECIPITATE: 0.15 };
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const today = new Date();
 
-  for (const org of orgs) {
-    const base = baseDemand[org.id] || 15;
-    for (const bg of BLOOD_GROUPS) {
-      const bgF = BG_FREQ[bg];
-      for (const comp of COMPONENTS) {
-        const cF = compFactor[comp] || 0.25;
-        const p50 = Math.max(0, Math.round((base * bgF * cF) * (0.9 + Math.random() * 0.2) * 10) / 10);
-        const spread = p50 * (0.2 + Math.random() * 0.1);
-        const p10 = Math.max(0, Math.round((p50 - spread) * 10) / 10);
-        const p90 = Math.round((p50 + spread) * 10) / 10;
+  for (const oId of targetOrgs) {
+    for (const bg of targetBloodGroups) {
+      for (const comp of targetComponents) {
+        const base = (baseDemand[oId] || 8) * (BG_FREQ[bg] || 0.1) * (compFactors[comp] || 0.3);
 
-        forecasts.push({
-          organizationId: org.id,
-          bloodGroup: bg,
-          componentType: comp,
-          forecastDate: tomorrow.toISOString().split('T')[0],
-          predictedUnits: p50,
-          lowerBound: p10,
-          upperBound: p90,
-          p10,
-          p50,
-          p90,
-          confidenceInterval: 0.80,
-          modelName: 'XGBoost Global v1',
-          modelVersion: 'v1.0.0',
-        });
+        for (let i = 1; i <= 7; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() + i);
+          const dateStr = d.toISOString().split('T')[0];
+          const dow = d.getDay();
+          const seasonalFactor = (dow === 0 || dow === 6) ? 0.85 : 1.05;
+          let p50 = Math.max(1, Math.round(base * seasonalFactor * 10) / 10);
+          let p10 = Math.max(0.5, Math.round(p50 * 0.75 * 10) / 10);
+          let p90 = Math.round(p50 * 1.35 * 10) / 10;
+
+          // Inject Scenario Specifics for Manapparai O-Negative:
+          if (oId === 'SIM_HOSP_MANAPPARAI' && bg === 'O_NEGATIVE' && comp === 'RBC' && i === 1) {
+            p50 = 8.0;
+            p10 = 6.0;
+            p90 = 11.0;
+          }
+
+          forecasts.push({
+            date: dateStr,
+            forecastDate: dateStr,
+            organizationId: oId,
+            bloodGroup: bg,
+            componentType: comp,
+            predictedUnits: p50,
+            p10,
+            p50,
+            p90,
+            lowerBound: p10,
+            upperBound: p90,
+            confidenceInterval: 0.80,
+            confidenceScore: 0.88,
+            modelName: 'XGBoost Time-Series (Trichy Tuned)',
+            modelVersion: 'v2.1-trichy',
+          });
+        }
       }
     }
-  }
-
-  const hospAFc = forecasts.find(f => f.organizationId === 'HOSP_A' && f.bloodGroup === 'O_POSITIVE' && f.componentType === 'RBC');
-  if (hospAFc) {
-    hospAFc.predictedUnits = 25.0;
-    hospAFc.p50 = 25.0;
-    hospAFc.p10 = 19.0;
-    hospAFc.p90 = 32.0;
-    hospAFc.lowerBound = 19.0;
-    hospAFc.upperBound = 32.0;
   }
 
   return forecasts;
@@ -161,16 +443,26 @@ export function generateDemoForecasts(orgId?: string): ForecastResult[] {
 
 export function generateDemoHistory(orgId: string, bloodGroup: string, componentType: string): DemandHistory[] {
   const history: DemandHistory[] = [];
-  const baseDemand: Record<string, number> = { HOSP_A: 32, HOSP_B: 22, HOSP_C: 18, HOSP_D: 15, HOSP_E: 12, BB_A: 45, BB_B: 30 };
-  const compFactors: Record<string, number> = { RBC: 1, PLASMA: 0.55, PLATELETS: 0.4, WHOLE_BLOOD: 0.25, CRYOPRECIPITATE: 0.15 };
-  const base = (baseDemand[orgId] || 15) * (BG_FREQ[bloodGroup as BloodGroup] || 0.1) * (compFactors[componentType] || 0.25);
+  const baseDemand: Record<string, number> = {
+    SIM_HOSP_TRY_MAIN: 28,
+    SIM_BB_TRY_CENTRAL: 42,
+    SIM_HOSP_SRIRANGAM: 10,
+    SIM_HOSP_THUVAKUDI: 8,
+    SIM_HOSP_MANACHANALLUR: 6,
+    SIM_HOSP_LALGUDI: 7,
+    SIM_HOSP_THURAIYUR: 7,
+    SIM_HOSP_MUSIRI: 7,
+    SIM_HOSP_MANAPPARAI: 9,
+  };
+  const compFactors: Record<string, number> = { RBC: 1.0, PLASMA: 0.55, PLATELETS: 0.4, WHOLE_BLOOD: 0.25 };
+  const base = (baseDemand[orgId] || 8) * (BG_FREQ[bloodGroup as BloodGroup] || 0.1) * (compFactors[componentType] || 0.3);
 
   const today = new Date();
   for (let i = 14; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
     const dow = date.getDay();
-    const weekendFactor = (dow === 0 || dow === 6) ? 0.8 : 1.05;
+    const weekendFactor = (dow === 0 || dow === 6) ? 0.85 : 1.05;
     const units = Math.max(0, Math.round(base * weekendFactor * (0.8 + Math.random() * 0.4)));
 
     history.push({
@@ -186,216 +478,532 @@ export function generateDemoHistory(orgId: string, bloodGroup: string, component
   return history;
 }
 
+// ---------------------------------------------------------------------------
+// Shortage Risks (Tiruchirappalli Localized)
+// ---------------------------------------------------------------------------
+
 export function generateDemoShortages(): ShortageRisk[] {
   return [
     {
-      id: 'SHORT_01',
-      organizationId: 'HOSP_A',
-      organizationName: 'Metro General Hospital',
-      bloodGroup: 'O_POSITIVE',
+      id: 'SHORT_TRY_01',
+      organizationId: 'SIM_HOSP_MANAPPARAI',
+      organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+      bloodGroup: 'O_NEGATIVE',
       componentType: 'RBC',
-      projectedAvailable: 7,
-      requiredInventory: 27.2,
-      projectedDeficit: 20.2,
+      projectedAvailable: 0,
+      requiredInventory: 8.0,
+      projectedDeficit: 8.0,
       severity: 'CRITICAL',
-      coverageRatio: 0.257,
-      explanation: 'Projected deficit of 20 units. Coverage ratio: 25.7%.',
+      coverageRatio: 0.0,
+      explanation: 'Critical O-Negative deficit at Manapparai following NH 83 highway collision casualties. Usable stock: 0. 24h P50 demand: 8 units.',
     },
     {
-      id: 'SHORT_02',
-      organizationId: 'HOSP_A',
-      organizationName: 'Metro General Hospital',
+      id: 'SHORT_TRY_02',
+      organizationId: 'SIM_HOSP_TRY_MAIN',
+      organizationName: 'Tiruchirappalli Regional Trauma Center (Simulated)',
       bloodGroup: 'A_POSITIVE',
       componentType: 'PLATELETS',
       projectedAvailable: 4,
-      requiredInventory: 8,
-      projectedDeficit: 4,
+      requiredInventory: 8.0,
+      projectedDeficit: 4.0,
       severity: 'HIGH',
       coverageRatio: 0.5,
-      explanation: 'Projected available: 4 units. Required: 8. Coverage ratio: 50.0%.',
+      explanation: 'Platelet stock below safety buffer due to scheduled cardiac surgeries.',
     },
     {
-      id: 'SHORT_03',
-      organizationId: 'HOSP_C',
-      organizationName: 'Sunrise Medical Center',
+      id: 'SHORT_TRY_03',
+      organizationId: 'SIM_HOSP_THURAIYUR',
+      organizationName: 'Thuraiyur Taluk Referral Hospital (Simulated)',
       bloodGroup: 'B_NEGATIVE',
       componentType: 'RBC',
-      projectedAvailable: 3,
-      requiredInventory: 5,
-      projectedDeficit: 2,
-      severity: 'WARNING',
-      coverageRatio: 0.6,
-      explanation: 'Low inventory of B− RBC. Coverage ratio: 60%.',
-    },
-    {
-      id: 'SHORT_04',
-      organizationId: 'HOSP_E',
-      organizationName: 'Valley Children\'s Hospital',
-      bloodGroup: 'O_NEGATIVE',
-      componentType: 'RBC',
       projectedAvailable: 2,
-      requiredInventory: 4,
-      projectedDeficit: 2,
+      requiredInventory: 4.0,
+      projectedDeficit: 2.0,
       severity: 'WARNING',
       coverageRatio: 0.5,
-      explanation: 'Universal donor O− running low. Coverage ratio: 50%.',
+      explanation: 'B-Negative RBC stock approaching minimum buffer in northern ring.',
     },
   ];
 }
 
 export const DEMO_SHORTAGES = generateDemoShortages();
 
+// ---------------------------------------------------------------------------
+// Safe-to-Share Pool (Tiruchirappalli Regional Facilities)
+// ---------------------------------------------------------------------------
+
 export const DEMO_SAFE_SHARE: SafeShareSnapshot[] = [
-  { organizationId: 'BB_A', bloodGroup: 'O_POSITIVE', componentType: 'RBC', usableInventory: 145, predictedLocalDemand: 35, safetyReserve: 30, reservedUnits: 10, safeShareUnits: 70 },
-  { organizationId: 'BB_A', bloodGroup: 'A_POSITIVE', componentType: 'RBC', usableInventory: 110, predictedLocalDemand: 28, safetyReserve: 20, reservedUnits: 8, safeShareUnits: 54 },
-  { organizationId: 'BB_B', bloodGroup: 'O_POSITIVE', componentType: 'RBC', usableInventory: 98, predictedLocalDemand: 25, safetyReserve: 20, reservedUnits: 5, safeShareUnits: 48 },
-  { organizationId: 'BB_B', bloodGroup: 'B_POSITIVE', componentType: 'RBC', usableInventory: 65, predictedLocalDemand: 15, safetyReserve: 12, reservedUnits: 3, safeShareUnits: 35 },
+  {
+    organizationId: 'SIM_BB_TRY_CENTRAL',
+    bloodGroup: 'O_NEGATIVE',
+    componentType: 'RBC',
+    usableInventory: 18,
+    predictedLocalDemand: 6,
+    safetyReserve: 4,
+    reservedUnits: 4,
+    safeShareUnits: 8, // Available surplus above P90 protection
+  },
+  {
+    organizationId: 'SIM_BB_TRY_CENTRAL',
+    bloodGroup: 'O_POSITIVE',
+    componentType: 'RBC',
+    usableInventory: 140,
+    predictedLocalDemand: 35,
+    safetyReserve: 30,
+    reservedUnits: 15,
+    safeShareUnits: 60,
+  },
+  {
+    organizationId: 'SIM_HOSP_TRY_MAIN',
+    bloodGroup: 'O_POSITIVE',
+    componentType: 'RBC',
+    usableInventory: 65,
+    predictedLocalDemand: 22,
+    safetyReserve: 25,
+    reservedUnits: 8,
+    safeShareUnits: 10,
+  },
+  {
+    organizationId: 'SIM_HOSP_SRIRANGAM',
+    bloodGroup: 'O_NEGATIVE',
+    componentType: 'RBC',
+    usableInventory: 3,
+    predictedLocalDemand: 2,
+    safetyReserve: 2,
+    reservedUnits: 1,
+    safeShareUnits: 0, // Protected: cannot share
+  },
+  {
+    organizationId: 'SIM_HOSP_THUVAKUDI',
+    bloodGroup: 'O_NEGATIVE',
+    componentType: 'RBC',
+    usableInventory: 4,
+    predictedLocalDemand: 1,
+    safetyReserve: 2,
+    reservedUnits: 1,
+    safeShareUnits: 1,
+  },
 ];
 
+// ---------------------------------------------------------------------------
+// Core Demonstration Scenario Allocation (Manapparai Emergency)
+// ---------------------------------------------------------------------------
+
 export const DEMO_ALLOCATION = {
-  requestId: 'REQ_DEMO_001',
+  requestId: 'REQ_TRY_MANAPPARAI_001',
   status: 'OPTIMAL',
-  totalAllocated: 14,
-  totalNeeded: 14,
+  totalAllocated: 6,
+  totalNeeded: 6,
   unfulfilled: 0,
   allocations: [
-    { sourceId: 'BB_B', sourceName: 'Northern Blood Bank', unitsAllocated: 6, rank: 1, distanceKm: 12.3, etaMinutes: 18, sourceRisk: 'LOW', safeShareRemaining: 42, explanation: 'Northern Blood Bank: 6 units allocated' },
-    { sourceId: 'HOSP_C', sourceName: 'Sunrise Medical Center', unitsAllocated: 5, rank: 2, distanceKm: 18.7, etaMinutes: 24, sourceRisk: 'LOW', safeShareRemaining: 15, explanation: 'Sunrise Medical Center: 5 units allocated' },
-    { sourceId: 'HOSP_D', sourceName: 'Heritage Multispecialty Hospital', unitsAllocated: 3, rank: 3, distanceKm: 24.1, etaMinutes: 31, sourceRisk: 'MEDIUM', safeShareRemaining: 8, explanation: 'Heritage Multispecialty Hospital: 3 units allocated' },
+    {
+      sourceId: 'SIM_BB_TRY_CENTRAL',
+      sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+      unitsAllocated: 6,
+      rank: 1,
+      distanceKm: 40.2,
+      etaMinutes: 48,
+      sourceRisk: 'LOW',
+      safeShareRemaining: 2,
+      explanation: 'Optimal multi-criteria match: Tiruchirappalli Central Hub has 8 units safe-to-share O-Negative. Direct highway route via NH 83 ensures 48 min transit time, well within the 120-minute cold-chain limit.',
+    },
   ],
-  solverRuntimeMs: 12.4,
-  objectiveValue: 847.2,
-  explanation: 'Allocated 14/14 units from 3 source locations optimal in 12.4ms.',
+  solverRuntimeMs: 9.8,
+  objectiveValue: 412.5,
+  explanation: 'Linear optimization satisfied 100% of Manapparai emergency demand (6 units O- RBC) from Central Hub without inducing secondary stockouts.',
 };
 
 export const DEMO_TRANSFERS: Transfer[] = [
-  { id: 'TR-101', requestId: 'REQ_DEMO_001', sourceOrganizationId: 'BB_B', sourceOrganizationName: 'Northern Blood Bank', sourceName: 'Northern Blood Bank', destinationOrganizationId: 'HOSP_A', destinationOrganizationName: 'Metro General Hospital', destinationName: 'Metro General Hospital', status: 'IN_TRANSIT', priority: 'EMERGENCY', pickupTime: '14:25', dispatchTime: '14:35', expectedArrival: '15:05', routeDistanceKm: 12.3, routeDurationMinutes: 18, unitCount: 6, units: 6, etaMinutes: 18, courierName: 'Rapid Express Medical', bloodGroups: ['O+'] },
-  { id: 'TR-102', requestId: 'REQ_DEMO_001', sourceOrganizationId: 'HOSP_C', sourceOrganizationName: 'Sunrise Medical Center', sourceName: 'Sunrise Medical Center', destinationOrganizationId: 'HOSP_A', destinationOrganizationName: 'Metro General Hospital', destinationName: 'Metro General Hospital', status: 'PREPARING', priority: 'EMERGENCY', pickupTime: '', dispatchTime: '', expectedArrival: '15:25', routeDistanceKm: 18.7, routeDurationMinutes: 24, unitCount: 5, units: 5, etaMinutes: 24, courierName: 'MedDispatch Logistics', bloodGroups: ['O+'] },
-  { id: 'TR-103', requestId: 'REQ_00042', sourceOrganizationId: 'BB_A', sourceOrganizationName: 'Regional Blood Center Alpha', sourceName: 'Regional Blood Center Alpha', destinationOrganizationId: 'HOSP_B', destinationOrganizationName: 'City Care Hospital', destinationName: 'City Care Hospital', status: 'DELIVERED', priority: 'ROUTINE', pickupTime: '11:00', dispatchTime: '11:15', expectedArrival: '11:30', actualArrival: '11:28', routeDistanceKm: 8.4, routeDurationMinutes: 15, unitCount: 10, units: 10, etaMinutes: 0, courierName: 'Direct Health Cargo', bloodGroups: ['A+', 'O+'] },
+  {
+    id: 'TR-TRY-8821',
+    requestId: 'REQ_TRY_MANAPPARAI_001',
+    sourceOrganizationId: 'SIM_BB_TRY_CENTRAL',
+    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    destinationOrganizationId: 'SIM_HOSP_MANAPPARAI',
+    destinationOrganizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    destinationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    status: 'IN_TRANSIT',
+    priority: 'EMERGENCY',
+    pickupTime: '14:20',
+    dispatchTime: '14:30',
+    expectedArrival: '15:18',
+    routeDistanceKm: 40.2,
+    routeDurationMinutes: 48,
+    unitCount: 6,
+    units: 6,
+    etaMinutes: 28,
+    courierName: 'Kaveri Cold-Chain Express (Vehicle TN-45-BC-109)',
+    bloodGroups: ['O-'],
+  },
+  {
+    id: 'TR-TRY-8820',
+    requestId: 'REQ_TRY_SRIRANGAM_004',
+    sourceOrganizationId: 'SIM_BB_TRY_CENTRAL',
+    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    destinationOrganizationId: 'SIM_HOSP_SRIRANGAM',
+    destinationOrganizationName: 'Srirangam Sub-District Hospital (Simulated)',
+    destinationName: 'Srirangam Sub-District Hospital (Simulated)',
+    status: 'DELIVERED',
+    priority: 'ROUTINE',
+    pickupTime: '10:00',
+    dispatchTime: '10:15',
+    expectedArrival: '10:35',
+    actualArrival: '10:32',
+    routeDistanceKm: 9.2,
+    routeDurationMinutes: 20,
+    unitCount: 4,
+    units: 4,
+    etaMinutes: 0,
+    courierName: 'Kaveri Local Courier #2',
+    bloodGroups: ['A+'],
+  },
 ];
 
 export const DEMO_REQUESTS: BloodRequest[] = [
-  { id: 'REQ_DEMO_001', organizationId: 'HOSP_A', organizationName: 'Metro General Hospital', bloodGroup: 'O_POSITIVE', componentType: 'RBC', unitsNeeded: 14, unitsFulfilled: 6, priority: 'EMERGENCY', status: 'IN_TRANSIT', createdAt: '14:10', notes: 'Critical O+ RBC shortage' },
-  { id: 'REQ_00042', organizationId: 'HOSP_B', organizationName: 'City Care Hospital', bloodGroup: 'A_POSITIVE', componentType: 'PLASMA', unitsNeeded: 10, unitsFulfilled: 10, priority: 'ROUTINE', status: 'COMPLETED', createdAt: '11:00' },
-  { id: 'REQ_00043', organizationId: 'HOSP_E', organizationName: 'Valley Children\'s Hospital', bloodGroup: 'B_POSITIVE', componentType: 'PLATELETS', unitsNeeded: 8, unitsFulfilled: 8, priority: 'URGENT', status: 'COMPLETED', createdAt: '09:30' },
+  {
+    id: 'REQ_TRY_MANAPPARAI_001',
+    organizationId: 'SIM_HOSP_MANAPPARAI',
+    organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    bloodGroup: 'O_NEGATIVE',
+    componentType: 'RBC',
+    unitsNeeded: 6,
+    unitsFulfilled: 6,
+    priority: 'EMERGENCY',
+    status: 'IN_TRANSIT',
+    createdAt: '14:15',
+    notes: 'NH 83 Multi-vehicle collision emergency trauma surgery intake.',
+  },
+  {
+    id: 'REQ_TRY_SRIRANGAM_004',
+    organizationId: 'SIM_HOSP_SRIRANGAM',
+    organizationName: 'Srirangam Sub-District Hospital (Simulated)',
+    bloodGroup: 'A_POSITIVE',
+    componentType: 'RBC',
+    unitsNeeded: 4,
+    unitsFulfilled: 4,
+    priority: 'ROUTINE',
+    status: 'COMPLETED',
+    createdAt: '09:45',
+    notes: 'Elective orthopedic surgery preparation.',
+  },
 ];
 
 export const DEMO_TEMPERATURE_LOGS: TemperatureReading[] = [
-  { transferId: 'TR-101', deviceId: 'SENSOR_01', recordedAt: '14:35', timestamp: '14:35', temperatureC: 4.1, temperature: 4.1, latitude: 28.72, longitude: 77.11, excursionFlag: false },
-  { transferId: 'TR-101', deviceId: 'SENSOR_01', recordedAt: '14:40', timestamp: '14:40', temperatureC: 4.3, temperature: 4.3, latitude: 28.69, longitude: 77.14, excursionFlag: false },
-  { transferId: 'TR-101', deviceId: 'SENSOR_01', recordedAt: '14:45', timestamp: '14:45', temperatureC: 4.2, temperature: 4.2, latitude: 28.66, longitude: 77.17, excursionFlag: false },
-  { transferId: 'TR-101', deviceId: 'SENSOR_01', recordedAt: '14:50', timestamp: '14:50', temperatureC: 4.5, temperature: 4.5, latitude: 28.64, longitude: 77.19, excursionFlag: false },
-  { transferId: 'TR-101', deviceId: 'SENSOR_01', recordedAt: '14:55', timestamp: '14:55', temperatureC: 4.4, temperature: 4.4, latitude: 28.62, longitude: 77.21, excursionFlag: false },
+  { transferId: 'TR-TRY-8821', deviceId: 'SENSOR_TRY_01', recordedAt: '14:30', timestamp: '14:30', temperatureC: 3.6, temperature: 3.6, latitude: 10.8010, longitude: 78.6920, excursionFlag: false },
+  { transferId: 'TR-TRY-8821', deviceId: 'SENSOR_TRY_01', recordedAt: '14:35', timestamp: '14:35', temperatureC: 3.7, temperature: 3.7, latitude: 10.7600, longitude: 78.6300, excursionFlag: false },
+  { transferId: 'TR-TRY-8821', deviceId: 'SENSOR_TRY_01', recordedAt: '14:40', timestamp: '14:40', temperatureC: 3.8, temperature: 3.8, latitude: 10.7200, longitude: 78.5800, excursionFlag: false },
+  { transferId: 'TR-TRY-8821', deviceId: 'SENSOR_TRY_01', recordedAt: '14:45', timestamp: '14:45', temperatureC: 3.9, temperature: 3.9, latitude: 10.6700, longitude: 78.5200, excursionFlag: false },
+  { transferId: 'TR-TRY-8821', deviceId: 'SENSOR_TRY_01', recordedAt: '14:50', timestamp: '14:50', temperatureC: 3.8, temperature: 3.8, latitude: 10.6300, longitude: 78.4600, excursionFlag: false },
 ];
 
 export const DEMO_DONORS: Donor[] = [
-  { id: 'DONOR_0001', name: 'Aarav Sharma', fullName: 'Aarav Sharma', bloodGroup: 'O_POSITIVE', city: 'Metropolis', phone: '+91 98765 43210', lastDonationDate: '15 Nov 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 12 },
-  { id: 'DONOR_0002', name: 'Diya Patel', fullName: 'Diya Patel', bloodGroup: 'A_POSITIVE', city: 'Northville', phone: '+91 98765 43211', lastDonationDate: '28 Oct 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 8 },
-  { id: 'DONOR_0003', name: 'Vivaan Kumar', fullName: 'Vivaan Kumar', bloodGroup: 'B_POSITIVE', city: 'Eastport', phone: '+91 98765 43212', lastDonationDate: '01 Dec 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 5 },
-  { id: 'DONOR_0004', name: 'Ananya Singh', fullName: 'Ananya Singh', bloodGroup: 'AB_POSITIVE', city: 'Southtown', phone: '+91 98765 43213', lastDonationDate: '20 Sep 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 15 },
-  { id: 'DONOR_0005', name: 'Arjun Gupta', fullName: 'Arjun Gupta', bloodGroup: 'O_NEGATIVE', city: 'Westfield', phone: '+91 98765 43214', lastDonationDate: '30 Nov 2024', eligibilityStatus: 'DEFERRED', consentGiven: true, totalDonations: 3 },
+  { id: 'DONOR_TRY_001', name: 'Karthik Subramanian', fullName: 'Karthik Subramanian', bloodGroup: 'O_NEGATIVE', city: 'Tiruchirappalli', phone: '+91 98424 12345', lastDonationDate: '15 Aug 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 8 },
+  { id: 'DONOR_TRY_002', name: 'Priya Sundaram', fullName: 'Priya Sundaram', bloodGroup: 'O_POSITIVE', city: 'Srirangam', phone: '+91 98424 23456', lastDonationDate: '10 Jul 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 6 },
+  { id: 'DONOR_TRY_003', name: 'Murugan Thangavel', fullName: 'Murugan Thangavel', bloodGroup: 'A_POSITIVE', city: 'Thuvakudi', phone: '+91 98424 34567', lastDonationDate: '01 Jun 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 12 },
+  { id: 'DONOR_TRY_004', name: 'Meenakshi Raman', fullName: 'Meenakshi Raman', bloodGroup: 'B_POSITIVE', city: 'Manapparai', phone: '+91 98424 45678', lastDonationDate: '20 Sep 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 4 },
+  { id: 'DONOR_TRY_005', name: 'Saravanan Balaji', fullName: 'Saravanan Balaji', bloodGroup: 'AB_POSITIVE', city: 'Lalgudi', phone: '+91 98424 56789', lastDonationDate: '12 Sep 2024', eligibilityStatus: 'ELIGIBLE', consentGiven: true, totalDonations: 5 },
 ];
 
 export const DEMO_CAMPAIGNS: DonationCampaign[] = [
-  { id: 'CAMP_001', title: 'O-Negative Emergency Drive', name: 'O-Negative Emergency Drive', location: 'Metro General Hospital', targetOrganizationName: 'Metro General Hospital', targetBloodGroup: 'O_NEGATIVE', targetBloodGroups: ['O_NEGATIVE'], unitsPledged: 28, unitsNeeded: 40, startDate: '2026-09-01', endDate: '2026-09-10', status: 'ACTIVE', urgencyLevel: 'EMERGENCY', registeredDonors: 45, completedDonations: 12 },
-  { id: 'CAMP_002', title: 'Monthly Regional Blood Drive', name: 'Monthly Regional Blood Drive', location: 'Regional Blood Center Alpha', targetOrganizationName: 'Regional Blood Center Alpha', targetBloodGroup: 'O_POSITIVE', targetBloodGroups: ['O_POSITIVE', 'A_POSITIVE'], unitsPledged: 85, unitsNeeded: 150, startDate: '2026-09-05', endDate: '2026-09-15', status: 'ACTIVE', urgencyLevel: 'ROUTINE', registeredDonors: 120, completedDonations: 35 },
+  { id: 'CAMP_TRY_001', title: 'Tiruchirappalli Central O- Emergency Drive', name: 'Tiruchirappalli Central O- Emergency Drive', location: 'Central Blood Bank Hub', targetOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)', targetBloodGroup: 'O_NEGATIVE', targetBloodGroups: ['O_NEGATIVE'], unitsPledged: 18, unitsNeeded: 30, startDate: '2026-09-15', endDate: '2026-09-25', status: 'ACTIVE', urgencyLevel: 'EMERGENCY', registeredDonors: 28, completedDonations: 8 },
+  { id: 'CAMP_TRY_002', title: 'Thuvakudi Industrial Corridor Campus Drive', name: 'Thuvakudi Industrial Corridor Campus Drive', location: 'Thuvakudi Health Center', targetOrganizationName: 'Thuvakudi Industrial Corridor Health Center (Simulated)', targetBloodGroup: 'O_POSITIVE', targetBloodGroups: ['O_POSITIVE', 'A_POSITIVE'], unitsPledged: 65, unitsNeeded: 100, startDate: '2026-09-20', endDate: '2026-09-30', status: 'ACTIVE', urgencyLevel: 'ROUTINE', registeredDonors: 92, completedDonations: 24 },
 ];
 
 export const DEMO_NOTIFICATIONS: Notification[] = [
-  { id: 'N_001', type: 'CRITICAL_SHORTAGE', title: 'Critical Shortage Alert', message: 'O+ RBC at Metro General Hospital critically low (10 units). Immediate action required.', severity: 'CRITICAL', isRead: false, createdAt: new Date(Date.now() - 30 * 60000).toISOString(), organizationId: 'HOSP_A', referenceId: 'REQ_DEMO_001' },
-  { id: 'N_002', type: 'ALLOCATION_RECOMMENDED', title: 'Allocation Recommendation', message: 'OR-Tools optimizer recommends 14-unit multi-source allocation for REQ_DEMO_001.', severity: 'HIGH', isRead: false, createdAt: new Date(Date.now() - 25 * 60000).toISOString(), organizationId: 'HOSP_A', referenceId: 'REQ_DEMO_001' },
-  { id: 'N_003', type: 'DISPATCH', title: 'Transfer Dispatched', message: '6 units O+ RBC dispatched from Northern Blood Bank. ETA: 18 minutes.', severity: 'INFO', isRead: false, createdAt: new Date(Date.now() - 20 * 60000).toISOString(), organizationId: 'BB_B', referenceId: 'TRF_00001' },
+  {
+    id: 'N_TRY_001',
+    type: 'CRITICAL_SHORTAGE',
+    title: 'Manapparai Highway Emergency (O- Deficit)',
+    message: 'NH 83 collision victims admitted to Manapparai Highway Trauma Unit. 0 usable O- PRBC units remaining. Action required.',
+    severity: 'CRITICAL',
+    isRead: false,
+    createdAt: new Date(Date.now() - 25 * 60000).toISOString(),
+    organizationId: 'SIM_HOSP_MANAPPARAI',
+    referenceId: 'REQ_TRY_MANAPPARAI_001',
+  },
+  {
+    id: 'N_TRY_002',
+    type: 'ALLOCATION_RECOMMENDED',
+    title: 'Allocation Ready for Approval',
+    message: 'Optimization recommends 6 units O- RBC from Tiruchirappalli Central Hub to Manapparai (ETA 48 mins). Requires authorized human approval.',
+    severity: 'HIGH',
+    isRead: false,
+    createdAt: new Date(Date.now() - 20 * 60000).toISOString(),
+    organizationId: 'SIM_HOSP_MANAPPARAI',
+    referenceId: 'REQ_TRY_MANAPPARAI_001',
+  },
+  {
+    id: 'N_TRY_003',
+    type: 'DISPATCH',
+    title: 'Courier Dispatched via NH 83',
+    message: 'Transfer TR-TRY-8821 dispatched from Central Hub to Manapparai. IoT sensor active at 3.6°C.',
+    severity: 'INFO',
+    isRead: false,
+    createdAt: new Date(Date.now() - 15 * 60000).toISOString(),
+    organizationId: 'SIM_BB_TRY_CENTRAL',
+    referenceId: 'TR-TRY-8821',
+  },
 ];
+
+// ---------------------------------------------------------------------------
+// Research-Grade Evaluation & Baseline Benchmarks
+// ---------------------------------------------------------------------------
 
 export const DEMO_MODEL_STATUS = {
-  modelName: 'XGBoost v1',
-  modelVersion: 'v1',
-  datasetRows: 245504,
-  dateRange: '2022-01-01 → 2024-12-31',
+  modelName: 'XGBoost Time-Series (Trichy Tuned)',
+  modelVersion: 'v2.1-trichy',
+  datasetRows: 184320,
+  dateRange: '2022-01-01 → 2024-12-31 (Synthetic Trichy Series)',
+  validationStrategy: 'Walk-Forward Temporal (No Random Shuffling)',
   globalWinner: 'xgboost',
-  trainingDate: new Date().toISOString(),
-  metrics: {
-    seasonal_naive: { val: { mae: 1.89, rmse: 3.21, wape: 0.312, bias: 0.05 }, test: { mae: 1.95, rmse: 3.34, wape: 0.321, bias: 0.08 } },
-    holt_winters: { val: { mae: 1.62, rmse: 2.87, wape: 0.271, bias: -0.12 }, test: { mae: 1.71, rmse: 2.98, wape: 0.282, bias: -0.09 } },
-    xgboost: { val: { mae: 1.12, rmse: 2.15, wape: 0.185, bias: 0.02 }, test: { mae: 1.18, rmse: 2.24, wape: 0.192, bias: 0.03 } },
+  trainingDate: '2026-09-21T12:00:00Z',
+
+  // Benchmarks against standard statistical baselines:
+  benchmarks: [
+    {
+      model: 'XGBoost (Trichy Tuned)',
+      type: 'Gradient Boosted Trees (Lags 1-14 + Seasonality)',
+      mae: 1.82,
+      rmse: 2.41,
+      wape: 0.114,
+      mase: 0.78,
+      bias: 0.02,
+      inferenceTimeMs: 1.4,
+    },
+    {
+      model: 'Holt-Winters Exponential Smoothing',
+      type: 'Additive Trend + 7-Day Multiplicative Seasonality',
+      mae: 2.15,
+      rmse: 2.89,
+      wape: 0.135,
+      mase: 0.86,
+      bias: -0.06,
+      inferenceTimeMs: 4.8,
+    },
+    {
+      model: 'Seasonal Naive (Lag 7)',
+      type: 'Prior Week Observed Value Baseline',
+      mae: 2.74,
+      rmse: 3.65,
+      wape: 0.172,
+      mase: 1.00,
+      bias: 0.08,
+      inferenceTimeMs: 0.1,
+    },
+    {
+      model: 'Moving Average (14-Day)',
+      type: 'Rolling Mean Window Baseline',
+      mae: 3.10,
+      rmse: 4.02,
+      wape: 0.195,
+      mase: 1.13,
+      bias: -0.14,
+      inferenceTimeMs: 0.1,
+    },
+  ],
+
+  // Prediction Interval Calibration (P10 / P50 / P90):
+  predictionIntervals: {
+    method: 'Conformal Empirical Residuals on Walk-Forward Splits',
+    targetCoverage90: 0.90,
+    empiricalCoverage90: 0.892,
+    targetCoverage80: 0.80,
+    empiricalCoverage80: 0.814,
+    meanIntervalWidthUnits: 5.2,
+    calibrationStatus: 'WELL_CALIBRATED',
+    reliabilityNote: 'Empirical coverage aligns within ±1.5% of theoretical intervals on out-of-time test set.',
   },
-  predictionIntervals: { method: 'empirical_residuals', residual_q05: -3.21, residual_q95: 3.45, note: 'Empirical prediction intervals' },
+
+  // Shortage Risk Recall & Safety Analysis:
+  shortageRiskEvaluation: {
+    evaluationHorizon: '3-Day Ahead Lookahead',
+    totalEvaluationEvents: 142,
+    truePositives: 42,
+    falseNegatives: 2, // Only 2 missed critical shortages in 12-month synthetic test
+    falsePositives: 6,
+    trueNegatives: 92,
+    recall: 0.955, // 95.5% Recall (Prioritizes zero patient harm)
+    precision: 0.875,
+    f2Score: 0.937,
+    safetyNote: 'Optimized for high recall to prevent catastrophic unexpected hospital stockouts.',
+  },
+
+  // Expiry & Wastage Reduction (FEFO vs FIFO):
+  wastageEvaluation: {
+    standardFifoDiscardRate: 0.128, // 12.8% discard rate under siloed FIFO
+    fefoRescueDiscardRate: 0.041, // 4.1% discard rate under cross-facility FEFO rescue
+    relativeDiscardReduction: 0.68, // -68% wastage reduction
+    plateletLifespanDays: 5,
+    rbcLifespanDays: 42,
+  },
+
+  // Multi-Hospital Optimization Benchmark:
+  optimizationComparison: [
+    {
+      algorithm: 'Linear Program (OR-Tools Multi-Criteria)',
+      demandSatisfactionPct: 100.0,
+      secondaryShortagesCreated: 0,
+      meanTravelTimeMinutes: 38.4,
+      solverRuntimeMs: 14.2,
+      explanation: 'Optimizes distance, inventory balance, and preserves source P90 safety buffers.',
+    },
+    {
+      algorithm: 'Greedy Nearest-Neighbor',
+      demandSatisfactionPct: 100.0,
+      secondaryShortagesCreated: 1, // Drained donor hospital below its own safe threshold
+      meanTravelTimeMinutes: 31.2,
+      solverRuntimeMs: 1.1,
+      explanation: 'Selects closest facility blindly, creating a secondary deficit at Srirangam.',
+    },
+    {
+      algorithm: 'Uncoordinated / Local Only',
+      demandSatisfactionPct: 42.0,
+      secondaryShortagesCreated: 0,
+      meanTravelTimeMinutes: 0.0,
+      solverRuntimeMs: 0.0,
+      explanation: 'Hospital relies solely on local stocks, leading to emergency surgery deferral.',
+    },
+  ],
 };
 
+// ---------------------------------------------------------------------------
+// Physical Batch Inventory (ISBT-128 Mock Standard)
+// ---------------------------------------------------------------------------
+
 export const DEMO_INVENTORY_BATCHES = [
-  { id: 'BATCH_001', batchNumber: 'B-2026-O+RBC-01', organizationId: 'HOSP_A', organizationName: 'Metro General Hospital', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-08-25', expiryDate: '2026-09-24', daysToExpiry: 4, quantity: 10, reservedQuantity: 2, status: 'NEAR_EXPIRY' as const, storageLocation: 'Cold Storage Room 2B - Bay 4' },
-  { id: 'BATCH_002', batchNumber: 'B-2026-O+RBC-02', organizationId: 'BB_B', organizationName: 'Northern Blood Bank', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-09-10', expiryDate: '2026-10-15', daysToExpiry: 25, quantity: 50, reservedQuantity: 5, status: 'USABLE' as const, storageLocation: 'Hub Freezer Alpha-1' },
-  { id: 'BATCH_003', batchNumber: 'B-2026-O+RBC-03', organizationId: 'BB_A', organizationName: 'Regional Blood Center Alpha', bloodGroup: 'O_POSITIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-09-12', expiryDate: '2026-10-18', daysToExpiry: 28, quantity: 70, reservedQuantity: 10, status: 'USABLE' as const, storageLocation: 'Vault 1' },
-  { id: 'BATCH_004', batchNumber: 'B-2026-A+PLT-01', organizationId: 'HOSP_A', organizationName: 'Metro General Hospital', bloodGroup: 'A_POSITIVE' as const, componentType: 'PLATELETS' as const, collectionDate: '2026-09-18', expiryDate: '2026-09-23', daysToExpiry: 3, quantity: 4, reservedQuantity: 1, status: 'NEAR_EXPIRY' as const, storageLocation: 'Agitator #3' },
-  { id: 'BATCH_005', batchNumber: 'B-2026-O-RBC-01', organizationId: 'HOSP_E', organizationName: 'Valley Children\'s Hospital', bloodGroup: 'O_NEGATIVE' as const, componentType: 'RBC' as const, collectionDate: '2026-08-30', expiryDate: '2026-09-22', daysToExpiry: 2, quantity: 3, reservedQuantity: 1, status: 'NEAR_EXPIRY' as const, storageLocation: 'Pediatric Bay C' },
+  {
+    id: 'BATCH_TRY_001',
+    batchNumber: 'W1234-26-00984-O-',
+    organizationId: 'SIM_BB_TRY_CENTRAL',
+    organizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    bloodGroup: 'O_NEGATIVE' as const,
+    componentType: 'RBC' as const,
+    collectionDate: '2026-09-02',
+    expiryDate: '2026-10-14',
+    daysToExpiry: 23,
+    quantity: 12,
+    reservedQuantity: 2,
+    status: 'USABLE' as const,
+    storageLocation: 'Cold Chamber Alpha (Shelf 3)',
+  },
+  {
+    id: 'BATCH_TRY_002',
+    batchNumber: 'W1234-26-00985-O-',
+    organizationId: 'SIM_BB_TRY_CENTRAL',
+    organizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    bloodGroup: 'O_NEGATIVE' as const,
+    componentType: 'RBC' as const,
+    collectionDate: '2026-08-28',
+    expiryDate: '2026-10-09',
+    daysToExpiry: 18,
+    quantity: 10,
+    reservedQuantity: 2,
+    status: 'USABLE' as const,
+    storageLocation: 'Cold Chamber Alpha (Shelf 2)',
+  },
+  {
+    id: 'BATCH_TRY_003',
+    batchNumber: 'W1234-26-01102-O+',
+    organizationId: 'SIM_HOSP_TRY_MAIN',
+    organizationName: 'Tiruchirappalli Regional Trauma Center (Simulated)',
+    bloodGroup: 'O_POSITIVE' as const,
+    componentType: 'RBC' as const,
+    collectionDate: '2026-09-10',
+    expiryDate: '2026-10-22',
+    daysToExpiry: 31,
+    quantity: 35,
+    reservedQuantity: 5,
+    status: 'USABLE' as const,
+    storageLocation: 'Trauma Blood Bank Vault 1',
+  },
+  {
+    id: 'BATCH_TRY_004',
+    batchNumber: 'W1234-26-00441-A+PLT',
+    organizationId: 'SIM_HOSP_TRY_MAIN',
+    organizationName: 'Tiruchirappalli Regional Trauma Center (Simulated)',
+    bloodGroup: 'A_POSITIVE' as const,
+    componentType: 'PLATELETS' as const,
+    collectionDate: '2026-09-18',
+    expiryDate: '2026-09-23',
+    daysToExpiry: 2,
+    quantity: 4,
+    reservedQuantity: 1,
+    status: 'NEAR_EXPIRY' as const,
+    storageLocation: 'Agitator Unit 2',
+  },
+  {
+    id: 'BATCH_TRY_005',
+    batchNumber: 'W1234-26-00301-O-',
+    organizationId: 'SIM_HOSP_MANAPPARAI',
+    organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    bloodGroup: 'O_NEGATIVE' as const,
+    componentType: 'RBC' as const,
+    collectionDate: '2026-08-20',
+    expiryDate: '2026-10-01',
+    daysToExpiry: 10,
+    quantity: 1,
+    reservedQuantity: 1,
+    status: 'NEAR_EXPIRY' as const,
+    storageLocation: 'Emergency OT Refrigerator',
+  },
 ];
+
+// ---------------------------------------------------------------------------
+// Transfer Recommendations (Tiruchirappalli Region)
+// ---------------------------------------------------------------------------
 
 export const DEMO_RECOMMENDATIONS = [
   {
-    id: 'REC_TRF_101',
-    requestId: 'REQ_DEMO_001',
-    sourceOrganizationId: 'BB_B',
-    sourceOrganizationName: 'Northern Blood Bank',
-    destinationOrganizationId: 'HOSP_A',
-    destinationOrganizationName: 'Metro General Hospital',
-    bloodGroup: 'O_POSITIVE' as const,
+    id: 'REC_TRY_101',
+    requestId: 'REQ_TRY_MANAPPARAI_001',
+    sourceOrganizationId: 'SIM_BB_TRY_CENTRAL',
+    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    destinationOrganizationId: 'SIM_HOSP_MANAPPARAI',
+    destinationOrganizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    bloodGroup: 'O_NEGATIVE' as const,
     componentType: 'RBC' as const,
-    quantityNeeded: 14,
+    quantityNeeded: 6,
     quantityRecommended: 6,
-    reason: 'Metro General O+ RBC projected deficit of 20 units. Northern Blood Bank has 48 safe-to-share units above local P90 protection level (37 units). ETA 18 mins.',
-    sourceSafeToShare: 48,
+    reason: 'Manapparai O- RBC deficit of 8 units following NH 83 highway collision. Central Blood Bank Hub has 8 safe-to-share units above local P90 protection level (10 units). Direct highway transit time: 48 mins.',
+    sourceSafeToShare: 8,
     destinationShortageSeverity: 'CRITICAL' as const,
     expiryUrgency: 'NONE' as const,
-    estimatedTravelMinutes: 18,
+    estimatedTravelMinutes: 48,
     priority: 'EMERGENCY' as const,
-    status: 'PENDING_APPROVAL' as const,
-  },
-  {
-    id: 'REC_TRF_102',
-    requestId: 'REQ_DEMO_001',
-    sourceOrganizationId: 'HOSP_C',
-    sourceOrganizationName: 'Sunrise Medical Center',
-    destinationOrganizationId: 'HOSP_A',
-    destinationOrganizationName: 'Metro General Hospital',
-    bloodGroup: 'O_POSITIVE' as const,
-    componentType: 'RBC' as const,
-    quantityNeeded: 14,
-    quantityRecommended: 5,
-    reason: 'Sunrise Medical Center has 15 safe-to-share units remaining after reserving 5 units for local P90 demand protection. ETA 24 mins.',
-    sourceSafeToShare: 15,
-    destinationShortageSeverity: 'CRITICAL' as const,
-    expiryUrgency: 'LOW' as const,
-    estimatedTravelMinutes: 24,
-    priority: 'EMERGENCY' as const,
-    status: 'PENDING_APPROVAL' as const,
   },
 ];
 
-export const DEMO_SCENARIOS = [
+// ---------------------------------------------------------------------------
+// Simulation Scenarios (Tiruchirappalli Regional Context)
+// ---------------------------------------------------------------------------
+
+export const DEMO_SCENARIOS: SimulationScenario[] = [
   {
-    id: 'SCEN_NORMAL',
-    name: 'Normal Operations (Baseline)',
-    description: 'Standard baseline regional demand and normal donation collection rates.',
-    demandMultiplier: 1.0,
+    id: 'SCEN_TRICHY_HIGHWAY_EMERGENCY',
+    name: 'NH 83 Highway Collision Emergency (Manapparai O- Surge)',
+    description: 'Multi-vehicle collision on NH 83 (Dindigul-Trichy corridor) creates an immediate surge in O-Negative and O-Positive blood demand at Manapparai Highway Trauma Unit.',
+    demandMultiplier: 2.2,
     donationChangePercent: 0,
-    outageFacilityIds: [],
-    massCasualtyEvent: false,
-    durationDays: 7,
-  },
-  {
-    id: 'SCEN_MASS_CASUALTY',
-    name: 'Mass-Casualty Emergency Event (+100% Emergency Demand)',
-    description: 'Highway pileup / major industrial incident causes sudden emergency surge in O-Negative and O-Positive Red Blood Cell demand across central trauma hospitals.',
-    demandMultiplier: 2.0,
-    donationChangePercent: -10,
     outageFacilityIds: [],
     massCasualtyEvent: true,
     durationDays: 3,
   },
   {
-    id: 'SCEN_DONATION_DROP',
-    name: 'Monsoon Flooding Drive Disruption (-40% Donations)',
-    description: 'Severe regional flooding forces cancellation of outdoor donation drives, reducing regional incoming blood supply by 40%.',
+    id: 'SCEN_TRICHY_FESTIVAL_SURGE',
+    name: 'Srirangam Festival Regional Surge (+50% Regional Demand)',
+    description: 'Large pilgrimage gathering in Srirangam increases regional footfall and elective surgical reserve requirements across the Kaveri river cluster.',
+    demandMultiplier: 1.5,
+    donationChangePercent: 15,
+    outageFacilityIds: [],
+    massCasualtyEvent: false,
+    durationDays: 7,
+  },
+  {
+    id: 'SCEN_KAVERI_MONSOON_FLOOD',
+    name: 'Kaveri River Monsoon Inundation (-40% Mobile Collections)',
+    description: 'Severe seasonal flooding along Musiri and Lalgudi riverbanks disrupts mobile blood donation camps and delays transit along rural roads.',
     demandMultiplier: 1.1,
     donationChangePercent: -40,
     outageFacilityIds: [],
@@ -403,14 +1011,13 @@ export const DEMO_SCENARIOS = [
     durationDays: 14,
   },
   {
-    id: 'SCEN_OUTAGE',
-    name: 'Blood Bank Alpha Power Outage / Quarantine',
-    description: 'Refrigeration equipment failure at Regional Blood Center Alpha forces emergency redistribution of all stored units to avoid spoilage.',
+    id: 'SCEN_HUB_POWER_FAIL',
+    name: 'Central Blood Bank Hub Chiller Outage (Quarantine Risk)',
+    description: 'Cold-chain refrigeration failure at Tiruchirappalli Central Blood Bank Hub forces immediate emergency transfer of stored units to Srirangam and Thuvakudi.',
     demandMultiplier: 1.0,
     donationChangePercent: 0,
-    outageFacilityIds: ['BB_A'],
+    outageFacilityIds: ['SIM_BB_TRY_CENTRAL'],
     massCasualtyEvent: false,
     durationDays: 2,
   },
 ];
-

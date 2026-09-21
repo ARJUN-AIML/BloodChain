@@ -114,6 +114,7 @@ export interface ForecastResult {
   bloodGroup: string;
   componentType: string;
   forecastDate: string;
+  date?: string;
   predictedUnits: number; // P50
   lowerBound: number;    // P10
   upperBound: number;    // P90
@@ -121,6 +122,7 @@ export interface ForecastResult {
   p50: number;
   p90: number;
   confidenceInterval: number; // e.g. 0.80
+  confidenceScore?: number;
   modelName: string;
   modelVersion: string;
 }
@@ -338,6 +340,12 @@ export interface AuditLogEntry {
   newValue?: string;
   reason?: string;
   recommendationId?: string;
+  displayTitle?: string;
+  displayCategory?: string;
+  displayPerformer?: string;
+  displayExplanation?: string;
+  displayNote?: string;
+  isDemonstration?: boolean;
 }
 
 export interface SimulationScenario {

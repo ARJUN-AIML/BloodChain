@@ -67,7 +67,7 @@ def run_integration_tests():
         'units_used': 5,
         'usage_date': '2026-09-20',
         'recorded_by': 'Dr. Jenkins'
-    }, format='json')
+    }, format='json', HTTP_X_USER_ROLE='HOSPITAL_STAFF')
     view4 = UsageRecordViewSet.as_view({'post': 'create'})
     res4 = view4(req4)
     inv_src.refresh_from_db()
@@ -81,7 +81,7 @@ def run_integration_tests():
         'target_blood_groups': 'O+, A+',
         'target_units': 100,
         'campaign_date': '2026-10-01'
-    }, format='json')
+    }, format='json', HTTP_X_USER_ROLE='BLOOD_BANK_STAFF')
     view5 = CollectionCampaignViewSet.as_view({'post': 'create'})
     res5 = view5(req5)
     print(f"5. Collection Campaign API: Status {res5.status_code}, Campaign: {res5.data.get('campaign_name')}")
@@ -130,7 +130,7 @@ def run_integration_tests():
 
     # 12. Transfer Dispatch (POST /api/transfers/{id}/dispatch/)
     req12 = factory.post(f'/api/transfers/{transfer_id}/dispatch/', {}, format='json', HTTP_X_USER_ROLE='LOGISTICS_STAFF')
-    view12 = TransferRequestViewSet.as_view({'post': 'dispatch'})
+    view12 = TransferRequestViewSet.as_view({'post': 'dispatch_transfer'})
     res12 = view12(req12, pk=transfer_id)
     inv_src.refresh_from_db()
     print(f"12. Transfer Dispatch: Status {res12.status_code}, Status: {res12.data.get('status')}, Source Units Remaining: {inv_src.available_units}")

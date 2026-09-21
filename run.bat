@@ -6,6 +6,28 @@ echo ====================================================================
 echo                   BLOODCHAIN AI PLATFORM LAUNCHER
 echo ====================================================================
 echo.
+
+:: Set UTF-8 encoding for Python to prevent charmap codec errors on Windows
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
+
+:: Clean up any existing processes on required ports to prevent "Address already in use" errors
+echo Checking and clearing active ports 8000, 8001, and 5173
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8000 " ^| findstr "LISTENING"') do (
+    echo Releasing port 8000 with PID %%a
+    taskkill /f /t /pid %%a >nul 2>&1
+)
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8001 " ^| findstr "LISTENING"') do (
+    echo Releasing port 8001 with PID %%a
+    taskkill /f /t /pid %%a >nul 2>&1
+)
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":5173 " ^| findstr "LISTENING"') do (
+    echo Releasing port 5173 with PID %%a
+    taskkill /f /t /pid %%a >nul 2>&1
+)
+
+echo Ports are clean and ready.
+echo.
 echo Initializing services...
 echo.
 

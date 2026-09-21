@@ -134,16 +134,21 @@ export function LogisticsDashboard() {
           </div>
 
           {/* Cold Chain IoT Temperature Chart */}
-          <div className="bg-[#FFFFFF] border border-[#E2E2DC] rounded-xl p-5 shadow-flat">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E2E2DC] mb-2">
+          <div className="bg-[#FFFFFF] border border-[#E2E2DC] rounded-xl p-5 shadow-flat space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E2DC]">
               <div>
-                <h3 className="text-sm font-bold text-[#1A1F26]">IoT Cold-Chain Telemetry (Safe: 2°C – 8°C)</h3>
-                <p className="text-[11px] text-[#64748B]">Continuous temperature sensor logs inside insulated transit container</p>
+                <h3 className="text-sm font-bold text-[#1A1F26]">Cold-Chain Temperature Telemetry (Safe Range: 2°C – 8°C)</h3>
+                <p className="text-[11px] text-[#64748B]">Continuous temperature logs for simulated transit container</p>
               </div>
               <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E3EFEA] text-[#5B8C7A] text-[10px] font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#5B8C7A]" />
                 Optimal Temp Range
               </span>
+            </div>
+
+            <div className="bg-amber-50/70 border border-amber-200/80 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-center gap-2">
+              <span className="font-semibold text-amber-950">Demonstration Temperature Information:</span>
+              <span className="text-amber-800">Temperature information shown here is simulated and does not come from a real sensor.</span>
             </div>
 
             <div className="h-56 w-full pt-2">

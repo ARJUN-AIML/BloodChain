@@ -185,7 +185,7 @@ class HoltWintersModel(ForecastModel):
 
     def fit(self, train_df: pd.DataFrame, val_df=None, **kwargs):
         if not HAS_STATSMODELS:
-            print("  ⚠ statsmodels not available, Holt-Winters will use fallback")
+            print("  [WARNING] statsmodels not available, Holt-Winters will use fallback")
             return
 
         segments = train_df.groupby(["organization_id", "blood_group", "component_type"])

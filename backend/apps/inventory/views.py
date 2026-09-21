@@ -14,15 +14,59 @@ from apps.facilities.models import Facility
 from apps.audit.services import log_audit_event, create_alert
 from apps.audit.models import AlertType, AlertSeverity
 
+def _get_user_role(request):
+    meta = getattr(request, 'META', {})
+    headers = getattr(request, 'headers', {})
+    role_header = meta.get('HTTP_X_USER_ROLE') or headers.get('x-user-role') or headers.get('X-User-Role')
+    role_data = None
+    if hasattr(request, 'data') and isinstance(request.data, dict):
+        role_data = request.data.get('user_role') or request.data.get('role')
+    user = getattr(request, 'user', None)
+    role_user = getattr(user, 'role', None) if user else None
+    return role_user or role_header or role_data or 'HOSPITAL_STAFF'
+
 class BloodInventoryViewSet(viewsets.ModelViewSet):
     queryset = BloodInventory.objects.all()
     serializer_class = BloodInventorySerializer
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        return Response(
+            {"error": "DIRECT_INVENTORY_OVERWRITE_FORBIDDEN", "message": "Direct creation of inventory summary records is forbidden. Totals are derived from validated batch intake and usage."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    def update(self, request, *args, **kwargs):
+        return Response(
+            {"error": "DIRECT_INVENTORY_OVERWRITE_FORBIDDEN", "message": "Direct editing of inventory totals is forbidden. Totals change via validated usage records and transfer lifecycle."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {"error": "DIRECT_INVENTORY_OVERWRITE_FORBIDDEN", "message": "Direct editing of inventory totals is forbidden. Totals change via validated usage records and transfer lifecycle."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(
+            {"error": "DIRECT_INVENTORY_OVERWRITE_FORBIDDEN", "message": "Direct deletion of inventory records is forbidden."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
 class InventoryBatchViewSet(viewsets.ModelViewSet):
     queryset = InventoryBatch.objects.all().order_by('expiry_date')
     serializer_class = InventoryBatchSerializer
     permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        role = _get_user_role(request)
+        if role != 'BLOOD_BANK_STAFF':
+            return Response(
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to register inventory batches. Only Blood Bank Staff can manage batch intake."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().create(request, *args, **kwargs)
 
 class UsageRecordViewSet(viewsets.ModelViewSet):
     queryset = UsageRecord.objects.all().order_by('-usage_date')
@@ -30,6 +74,13 @@ class UsageRecordViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
+        role = _get_user_role(request)
+        if role != 'HOSPITAL_STAFF':
+            return Response(
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to record hospital blood usage. Only Hospital Staff can log clinical usage."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
@@ -78,6 +129,15 @@ class CollectionCampaignViewSet(viewsets.ModelViewSet):
     queryset = CollectionCampaign.objects.all().order_by('-campaign_date')
     serializer_class = CollectionCampaignSerializer
     permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        role = _get_user_role(request)
+        if role != 'BLOOD_BANK_STAFF':
+            return Response(
+                {"error": "UNAUTHORIZED_ROLE", "message": f"Role '{role}' is not authorized to create collection campaigns. Only Blood Bank Staff can schedule donation drives."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         campaign = serializer.save()

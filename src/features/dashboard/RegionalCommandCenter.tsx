@@ -55,17 +55,29 @@ export function RegionalCommandCenter() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Synthetic Data Governance Header Notice */}
+      <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          <span className="font-bold font-mono tracking-wide">SYNTHETIC DEMO DATA — NOT LIVE BLOOD AVAILABILITY</span>
+          <span className="text-amber-700 hidden md:inline">• Tiruchirappalli Regional Research Cluster</span>
+        </div>
+        <span className="text-[10px] font-mono text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded">
+          Core Nodes: Trichy, Srirangam, Thuvakudi, Manapparai
+        </span>
+      </div>
+
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[#E2E2DC]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h2 className="text-xl font-bold text-[#1A1F26] tracking-tight">Regional Command Center</h2>
-          <p className="text-xs text-[#64748B] mt-0.5">
-            Network-wide inventory monitoring, forecast trends, and emergency dispatch tracking
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Regional Command Center</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Network-wide inventory monitoring, forecast trends, and emergency dispatch tracking across Tiruchirappalli
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
-          <span className="px-2.5 py-1 rounded-md bg-[#FFFFFF] border border-[#E2E2DC] shadow-flat">
-            Region: <span className="font-bold text-[#1A1F26]">Metropolis North & Central</span>
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+          <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-xs">
+            Region: <span className="font-bold text-slate-900">Tiruchirappalli (Trichy) Regional Cluster</span>
           </span>
         </div>
       </div>
@@ -124,7 +136,7 @@ export function RegionalCommandCenter() {
           <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#E2E2DC]">
             <div>
               <h3 className="text-sm font-bold text-[#1A1F26]">14-Day Demand vs. AI Forecast</h3>
-              <p className="text-[11px] text-[#64748B]">Comparing actual aggregate daily demand against XGBoost prediction</p>
+              <p className="text-[11px] text-[#64748B]">Comparing actual aggregate daily demand against automated demand estimate</p>
             </div>
             <div className="flex items-center gap-4 text-xs font-medium">
               <div className="flex items-center gap-1.5">

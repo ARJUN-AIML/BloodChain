@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { LandingPage } from '@/features/landing/LandingPage';
 import { RegionalCommandCenter } from '@/features/dashboard/RegionalCommandCenter';
+import { RoleDashboardRouter } from '@/features/dashboard/RoleDashboardRouter';
 import { FacilitiesPage } from '@/features/facilities/FacilitiesPage';
 import { HospitalDashboard } from '@/features/dashboard/HospitalDashboard';
 import { BloodBankDashboard } from '@/features/dashboard/BloodBankDashboard';
@@ -21,7 +22,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route element={<AppLayout />}>
-        <Route path="/command-center" element={<RegionalCommandCenter />} />
+        <Route path="/command-center" element={<RoleDashboardRouter />} />
         <Route path="/facilities" element={<FacilitiesPage />} />
         <Route path="/hospital" element={<HospitalDashboard />} />
         <Route path="/blood-bank" element={<BloodBankDashboard />} />

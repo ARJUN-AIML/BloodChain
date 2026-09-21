@@ -90,7 +90,7 @@ function runSystemHardeningAudit() {
   const bloodBankStaff: User = { id: 'U4', name: 'BB Staff', email: 'bb@a.com', role: 'BLOOD_BANK_STAFF', organizationName: 'BB' };
   const logisticsStaff: User = { id: 'U5', name: 'Logistics', email: 'l@a.com', role: 'LOGISTICS_STAFF', organizationName: 'Log' };
 
-  assert(isAuthorizedApproverRole(adminUser.role) === true, 'ADMIN role is authorized to approve transfers');
+  assert(isAuthorizedApproverRole(adminUser.role) === false, 'ADMIN role is NOT authorized to approve transfers (clinical controls preserved)');
   assert(isAuthorizedApproverRole(approverUser.role) === true, 'AUTHORIZED_APPROVER role is authorized to approve transfers');
   assert(isAuthorizedApproverRole(hospitalStaff.role) === false, 'HOSPITAL_STAFF role is NOT authorized to approve transfers');
   assert(isAuthorizedApproverRole(bloodBankStaff.role) === false, 'BLOOD_BANK_STAFF role is NOT authorized to approve transfers');
@@ -127,22 +127,22 @@ function runSystemHardeningAudit() {
 
   // Valid transition to IN_TRANSIT (Source inventory deduction)
   const approvedRecord = authorizedAttempt.record!;
-  const inTransitRes = transitionTransferState(approvedRecord, 'IN_TRANSIT', approverUser, mockInventory);
+  const inTransitRes = transitionTransferState(approvedRecord, 'IN_TRANSIT', logisticsStaff, mockInventory);
   assert(inTransitRes.success === true && inTransitRes.record?.status === 'IN_TRANSIT', 'State Machine transitions APPROVED -> IN_TRANSIT');
   assert(mockInventory[0].availableUnits === 47, `Source inventory deducted by 3: Expected 47, got ${mockInventory[0].availableUnits}`);
 
   // Idempotence test: Repeated call to IN_TRANSIT should NOT deduct again
-  const repeatInTransitRes = transitionTransferState(inTransitRes.record!, 'IN_TRANSIT', approverUser, mockInventory);
+  const repeatInTransitRes = transitionTransferState(inTransitRes.record!, 'IN_TRANSIT', logisticsStaff, mockInventory);
   assert(mockInventory[0].availableUnits === 47, `Idempotence verified: Repeated IN_TRANSIT transition kept inventory at 47 (no double-deduction)`);
 
   // Valid transition to RECEIVED (Destination inventory addition)
   const inTransitRecord = inTransitRes.record!;
-  const receivedRes = transitionTransferState(inTransitRecord, 'RECEIVED', approverUser, mockInventory);
+  const receivedRes = transitionTransferState(inTransitRecord, 'RECEIVED', logisticsStaff, mockInventory);
   assert(receivedRes.success === true && receivedRes.record?.status === 'RECEIVED', 'State Machine transitions IN_TRANSIT -> RECEIVED');
   assert(mockInventory[1].availableUnits === 13, `Destination inventory increased by 3: Expected 13, got ${mockInventory[1].availableUnits}`);
 
   // Idempotence test: Repeated call to RECEIVED should NOT add again
-  const repeatReceivedRes = transitionTransferState(receivedRes.record!, 'RECEIVED', approverUser, mockInventory);
+  const repeatReceivedRes = transitionTransferState(receivedRes.record!, 'RECEIVED', logisticsStaff, mockInventory);
   assert(mockInventory[1].availableUnits === 13, `Idempotence verified: Repeated RECEIVED transition kept inventory at 13 (no double-addition)`);
 
   // ========================================================================
