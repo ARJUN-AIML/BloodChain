@@ -9,6 +9,9 @@ from apps.facilities.models import Facility
 from apps.inventory.models import BloodInventory, InventoryBatch, BatchStatus
 from apps.inventory.services import calculate_safe_to_share, allocate_fefo
 from apps.audit.services import log_audit_event
+from apps.notifications.integration_service import NotificationService
+from apps.notifications.models import NotificationEventType, NotificationStatus
+
 
 AUTHORIZED_CREATE_ROLES = {'HOSPITAL_STAFF', 'BLOOD_BANK_STAFF'}
 AUTHORIZED_APPROVE_ROLES = {'AUTHORIZED_APPROVER'}
@@ -124,16 +127,32 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        transfer = TransferRequest.objects.create(
-            source_facility=src_fac,
-            destination_facility=dest_fac,
-            blood_group=blood_group,
-            component_type=component_type,
-            requested_quantity=quantity,
-            status=TransferStatus.PENDING_APPROVAL,
-            priority=data.get('priority', 'URGENT'),
-            requested_by=self._get_actor(request),
-        )
+        with transaction.atomic():
+            transfer = TransferRequest.objects.create(
+                source_facility=src_fac,
+                destination_facility=dest_fac,
+                blood_group=blood_group,
+                component_type=component_type,
+                requested_quantity=quantity,
+                status=TransferStatus.PENDING_APPROVAL,
+                priority=data.get('priority', 'URGENT'),
+                requested_by=self._get_actor(request),
+            )
+
+            delivery, created = NotificationService.stage_notification(
+                event_type=NotificationEventType.TRANSFER_PENDING_APPROVAL,
+                recipient_role='authorized_approver',
+                recipient_reference=transfer.source_facility.name,
+                title='Transfer pending approval',
+                message=f'Blood transfer request for {transfer.requested_quantity} units {transfer.blood_group} awaits clinical review.',
+                reference_details={'transfer_reference': str(transfer.id)},
+                priority=transfer.priority.lower(),
+                notification_id=f'bc-notif-transfer_pending-{transfer.id}'
+            )
+            if created and delivery.status == NotificationStatus.PENDING:
+                delivery_id = delivery.id
+                transaction.on_commit(lambda: NotificationService.execute_dispatch(delivery_id))
+
         return Response(TransferRequestSerializer(transfer).data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'])
@@ -171,6 +190,20 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
                 entity_id=transfer.id,
                 details={'status': transfer.status, 'quantity': transfer.requested_quantity}
             )
+
+            delivery, created = NotificationService.stage_notification(
+                event_type=NotificationEventType.TRANSFER_APPROVED,
+                recipient_role='hospital_staff',
+                recipient_reference=transfer.destination_facility.name,
+                title='Transfer approved',
+                message=f'Blood transfer of {transfer.requested_quantity} units {transfer.blood_group} has been approved.',
+                reference_details={'transfer_reference': str(transfer.id)},
+                priority=transfer.priority.lower(),
+                notification_id=f'bc-notif-transfer_approved-{transfer.id}'
+            )
+            if created and delivery.status == NotificationStatus.PENDING:
+                delivery_id = delivery.id
+                transaction.on_commit(lambda: NotificationService.execute_dispatch(delivery_id))
 
         return Response(TransferRequestSerializer(transfer).data)
 
@@ -279,6 +312,20 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
                 details={'status': transfer.status, 'source_deducted': transfer.source_deducted}
             )
 
+            delivery, created = NotificationService.stage_notification(
+                event_type=NotificationEventType.TRANSFER_IN_TRANSIT,
+                recipient_role='hospital_staff',
+                recipient_reference=transfer.destination_facility.name,
+                title='Transfer in transit',
+                message=f'Cold-chain transport dispatched for {transfer.requested_quantity} units {transfer.blood_group}.',
+                reference_details={'transfer_reference': str(transfer.id)},
+                priority=transfer.priority.lower(),
+                notification_id=f'bc-notif-transfer_dispatch-{transfer.id}'
+            )
+            if created and delivery.status == NotificationStatus.PENDING:
+                delivery_id = delivery.id
+                transaction.on_commit(lambda: NotificationService.execute_dispatch(delivery_id))
+
         return Response(TransferRequestSerializer(transfer).data)
 
     @action(detail=True, methods=['post'])
@@ -325,5 +372,19 @@ class TransferRequestViewSet(viewsets.ModelViewSet):
                 entity_id=transfer.id,
                 details={'status': transfer.status, 'destination_added': transfer.destination_added}
             )
+
+            delivery, created = NotificationService.stage_notification(
+                event_type=NotificationEventType.TRANSFER_RECEIVED,
+                recipient_role='blood_bank_staff',
+                recipient_reference=transfer.source_facility.name,
+                title='Transfer received',
+                message=f'Delivery confirmed: {transfer.requested_quantity} units {transfer.blood_group} successfully received.',
+                reference_details={'transfer_reference': str(transfer.id)},
+                priority=transfer.priority.lower(),
+                notification_id=f'bc-notif-transfer_received-{transfer.id}'
+            )
+            if created and delivery.status == NotificationStatus.PENDING:
+                delivery_id = delivery.id
+                transaction.on_commit(lambda: NotificationService.execute_dispatch(delivery_id))
 
         return Response(TransferRequestSerializer(transfer).data)

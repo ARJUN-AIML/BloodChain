@@ -13,6 +13,9 @@ from .services import calculate_safe_to_share
 from apps.facilities.models import Facility
 from apps.audit.services import log_audit_event, create_alert
 from apps.audit.models import AlertType, AlertSeverity
+from apps.notifications.integration_service import NotificationService
+from apps.notifications.models import NotificationEventType, NotificationStatus
+
 
 def _get_user_role(request):
     meta = getattr(request, 'META', {})
@@ -108,6 +111,20 @@ class UsageRecordViewSet(viewsets.ModelViewSet):
                         component_type=usage.component_type,
                         message=f"Low stock alert: {usage.facility.name} has only {summary.available_units} units of {usage.blood_group} {usage.component_type} (Target: {summary.safety_stock_target})."
                     )
+
+                    delivery, created = NotificationService.stage_notification(
+                        event_type=NotificationEventType.LOW_STOCK_WARNING,
+                        recipient_role='blood_bank_staff',
+                        recipient_reference=usage.facility.name,
+                        title='Low stock warning',
+                        message=f'Low inventory: {usage.facility.name} has only {summary.available_units} units of {usage.blood_group} {usage.component_type} (Target: {summary.safety_stock_target}).',
+                        reference_details={'usage_record_id': str(usage.id), 'facility_id': usage.facility.id},
+                        priority='urgent',
+                        notification_id=f'bc-notif-low_stock-{usage.facility.id}-{usage.blood_group}-{usage.component_type}-{usage.id}'
+                    )
+                    if created and delivery.status == NotificationStatus.PENDING:
+                        delivery_id = delivery.id
+                        transaction.on_commit(lambda: NotificationService.execute_dispatch(delivery_id))
 
             log_audit_event(
                 actor=usage.recorded_by,

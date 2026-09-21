@@ -33,5 +33,6 @@ urlpatterns = [
     path('api/simulations/run/', run_simulation_api, name='run_simulation_api'),
     path('api/inventory/safe-share/', calculate_safe_share_api, name='calculate_safe_share_api'),
     path('api/inventory/expiry-rescue/', expiry_rescue_api, name='expiry_rescue_api'),
+    path('api/notifications/', include('apps.notifications.urls')),
     path('api/', include(router.urls)),
 ]

@@ -5,7 +5,7 @@ import {
 } from '../demo-data';
 import { calculateSafeToShare } from '../safe-to-share';
 import { isAuthorizedApproverRole, transitionTransferState, type TransferStateRecord } from '../transfer-state-machine';
-import { sendMakeWebhookNotification } from '../make-webhook';
+import { sendTransactionalNotification } from '../brevo-notification';
 import { isBloodCompatible } from '../data-validation';
 import type { User, InventorySummary } from '../../types';
 
@@ -158,10 +158,10 @@ async function runTrichyEmergencyScenarioSuite() {
   assert(mockInventory[1].availableUnits === 7, 'Idempotence verified: Duplicate receipt call does not double-count units');
 
   // ------------------------------------------------------------------------
-  // STEP 9: Make.com Notification Integration Payload
+  // STEP 9: Brevo Transactional Email Notification Outbox
   // ------------------------------------------------------------------------
-  console.log('\n--- STEP 9: MAKE.COM NOTIFICATION WEBHOOK ---');
-  const webhookResult = await sendMakeWebhookNotification({
+  console.log('\n--- STEP 9: BREVO TRANSACTIONAL EMAIL NOTIFICATION ---');
+  const webhookResult = await sendTransactionalNotification({
     event: 'TRANSFER_RECEIVED',
     scenarioName: 'NH 83 Highway Collision Emergency (Tiruchirappalli)',
     transferId: 'TR-TRY-8821',
@@ -172,7 +172,7 @@ async function runTrichyEmergencyScenarioSuite() {
     units: 6,
   });
 
-  assert(webhookResult.success === true, 'Make.com notification successfully dispatched/logged');
+  assert(webhookResult.success === true, 'Brevo notification successfully dispatched/logged');
   assert(webhookResult.payload.syntheticNotice.includes('SYNTHETIC DEMO DATA'), 'Payload includes mandatory synthetic data disclosure');
   assert(webhookResult.payload.units === 6 && webhookResult.payload.bloodGroup === 'O_NEGATIVE', 'Payload fields correctly mapped');
 

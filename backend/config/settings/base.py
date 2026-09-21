@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'apps.transfers',
     'apps.audit',
     'apps.simulations',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # FastAPI ML Service Integration URL
 ML_SERVICE_URL = os.environ.get('ML_SERVICE_URL', 'http://127.0.0.1:8001')
+
+# Brevo Transactional Email Integration Settings
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
+BREVO_SENDER_EMAIL = os.environ.get('BREVO_SENDER_EMAIL', '')
+BREVO_SENDER_NAME = os.environ.get('BREVO_SENDER_NAME', 'BloodChain AI Emergency Notifications')
+BREVO_INTEGRATION_ENABLED = os.environ.get('BREVO_INTEGRATION_ENABLED', 'false').lower() in ('true', '1', 'yes')
+BREVO_WEBHOOK_SECRET = os.environ.get('BREVO_WEBHOOK_SECRET', '')
+

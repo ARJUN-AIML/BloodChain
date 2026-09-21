@@ -9,7 +9,7 @@ import { cn, formatBloodGroup, COMPONENT_LABELS } from '@/lib/utils';
 import { DEMO_ORGANIZATIONS, DEMO_INVENTORY } from '@/lib/demo-data';
 import { useAuthStore } from '@/lib/auth-store';
 import { useAuditStore } from '@/lib/audit-store';
-import { dispatchMakeNotification } from '@/lib/make-webhook';
+import { dispatchNotification } from '@/lib/brevo-notification';
 import type { BloodGroup, ComponentType } from '@/types';
 
 export interface PlainTransferRequest {
@@ -192,7 +192,7 @@ export function RequestsPage() {
       reason: `Clinical authorization granted by ${currentUser.name}. ${req.reason}`,
     });
 
-    dispatchMakeNotification({
+    dispatchNotification({
       event: 'TRANSFER_APPROVED',
       scenarioName: 'Trichy Regional Transfer Approval',
       transferId: req.id,
@@ -294,7 +294,7 @@ export function RequestsPage() {
       reason: `Courier departed from ${req.sourceFacilityName}. Temperature logged.`,
     });
 
-    dispatchMakeNotification({
+    dispatchNotification({
       event: 'TRANSFER_DISPATCHED',
       scenarioName: 'Trichy Regional Cold-Chain Dispatch',
       transferId: req.id,
@@ -348,7 +348,7 @@ export function RequestsPage() {
       reason: `Cold-chain integrity verified at ${req.destinationFacilityName}. Inventory credited.`,
     });
 
-    dispatchMakeNotification({
+    dispatchNotification({
       event: 'TRANSFER_RECEIVED',
       scenarioName: 'Trichy Regional Transfer Receipt',
       transferId: req.id,

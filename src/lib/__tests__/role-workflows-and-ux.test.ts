@@ -1,6 +1,6 @@
 import { DEMO_USERS, useAuthStore } from '../auth-store';
 import { calculateSafeToShare } from '../safe-to-share';
-import { sendMakeWebhookNotification } from '../make-webhook';
+import { sendTransactionalNotification } from '../brevo-notification';
 import type { UserRole, BloodGroup, ComponentType } from '../../types';
 
 console.log("====================================================================");
@@ -272,12 +272,12 @@ processTransferTransition(mockTransfer, 'RECEIVED', 'LOGISTICS_STAFF');
 assert(mockTransfer.destUnits === 9, "Repeated receipt call does not double-credit units (Idempotency)");
 
 // --------------------------------------------------------------------
-// 6. MAKE.COM NOTIFICATION WEBHOOK HANDLING
+// 6. BREVO TRANSACTIONAL NOTIFICATION HANDLING
 // --------------------------------------------------------------------
-console.log("\n--- SECTION 6: MAKE.COM NOTIFICATION HANDLING ---");
+console.log("\n--- SECTION 6: BREVO TRANSACTIONAL NOTIFICATION HANDLING ---");
 
-async function testMakeNotification() {
-  const result = await sendMakeWebhookNotification({
+async function testBrevoNotification() {
+  const result = await sendTransactionalNotification({
     event: 'TRANSFER_APPROVED',
     scenarioName: 'Role Workflow Test',
     sourceFacility: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
@@ -287,7 +287,7 @@ async function testMakeNotification() {
     units: 4,
   });
 
-  assert(result.success, "Make.com notification handler executed without exception");
+  assert(result.success, "Brevo notification handler executed without exception");
   assert(result.payload.syntheticNotice === 'SYNTHETIC DEMO DATA — NOT LIVE BLOOD AVAILABILITY', "Notification payload includes mandatory synthetic data notice");
   assert(result.payload.units === 4, "Notification payload correctly records transferred units");
 
@@ -300,4 +300,4 @@ async function testMakeNotification() {
   }
 }
 
-testMakeNotification();
+testBrevoNotification();

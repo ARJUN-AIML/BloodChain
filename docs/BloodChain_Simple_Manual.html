@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BloodChain AI — Simple User Manual</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; line-height: 1.5; padding: 25px; font-size: 13px; }
+  .title { color: #991b1b; border-bottom: 2px solid #b91c1c; padding-bottom: 8px; font-size: 22px; }
+  .sec { color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 25px; font-size: 16px; page-break-after: avoid; }
+  .subsec { color: #b91c1c; margin-top: 14px; font-size: 14px; page-break-after: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  th { background: #f1f5f9; text-align: left; padding: 8px; border: 1px solid #cbd5e1; }
+  td { padding: 6px 8px; border: 1px solid #e2e8f0; vertical-align: top; }
+  tr:nth-child(even) { background: #f8fafc; }
+  pre { background: #0f172a; color: #f8fafc; padding: 10px; border-radius: 4px; font-size: 11px; overflow-x: auto; }
+  hr { border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+</style>
+</head>
+<body>
+<h1 class="title">🩸 BloodChain AI — Simple Operational Guide & User Manual</h1><br/>> <strong>System Note</strong>: BloodChain AI is a development prototype and demonstration benchmark. All hospital names, inventory numbers, and scenarios are synthetic demonstration data.<br/><hr/><br/><h2 class="sec">1. What is BloodChain AI?</h2><br/><strong>BloodChain AI</strong> is a regional blood supply coordination platform. It solves two critical problems:
+1. <strong>Emergency Shortages</strong>: Hospitals running out of blood during trauma influxes.
+2. <strong>Preventable Wastage</strong>: Blood expiring on hospital shelves because newer stock was used first.<br/>It connects <strong>hospitals</strong>, <strong>central blood banks</strong>, <strong>approving medical officers</strong>, and <strong>courier couriers</strong> into one system to coordinate blood requests, clinical approvals, batch-level cold transport, and audit tracking.<br/><hr/><br/><h2 class="sec">2. Who Uses BloodChain AI? (The 5 Roles)</h2><br/>Every role has a strict job and cannot perform actions reserved for other roles:<br/><pre><code>┌─────────────────────────┬─────────────────────────┬─────────────────────────────┐
+│ Role & Persona          │ Where they work         │ What they can & cannot do   │
+├─────────────────────────┼─────────────────────────┼─────────────────────────────┤
+│ 1. HOSPITAL STAFF       │ Emergency Trauma Wards  │ ✅ Request emergency blood   │
+│    (Dr. Rajesh Kumar)   │ & Surgery Theaters      │ ✅ Record patient ward usage │
+│                         │                         │ ❌ CANNOT approve transfers │
+├─────────────────────────┼─────────────────────────┼─────────────────────────────┤
+│ 2. AUTHORIZED APPROVER  │ Regional Transfusion    │ ✅ Approve transfer requests│
+│    (Dr. Sarah Jenkins)  │ Medical Council         │ ✅ Reject with mandatory reason│
+│                         │                         │ ❌ CANNOT request blood     │
+├─────────────────────────┼─────────────────────────┼─────────────────────────────┤
+│ 3. BLOOD BANK STAFF     │ Central Blood Centers   │ ✅ Inspect FEFO picklists   │
+│    (Ananya Roy)         │ & Storage Hubs          │ ✅ Manage testing & batches │
+│                         │                         │ ❌ CANNOT approve requests  │
+├─────────────────────────┼─────────────────────────┼─────────────────────────────┤
+│ 4. LOGISTICS COURIER    │ Kaveri Cold-Chain       │ ✅ Start transport (dispatch)│
+│    (Vikram Sethi)       │ Transport Fleet         │ ✅ Confirm delivery receipt │
+│                         │                         │ ❌ CANNOT approve transfers │
+├─────────────────────────┼─────────────────────────┼─────────────────────────────┤
+│ 5. ADMINISTRATOR        │ System Operations       │ ✅ Manage facility directory│
+│    (R. Administrator)   │ & Regional Audit        │ ✅ Review immutable audits  │
+│                         │                         │ ❌ CANNOT bypass approver   │
+└─────────────────────────┴─────────────────────────┴─────────────────────────────┘
+</code></pre><br/><hr/><br/><h2 class="sec">3. The Emergency Story: Step-by-Step</h2><br/>To see how BloodChain AI works in real life, follow this emergency highway trauma scenario:<br/><h3 class="subsec">The Problem</h3>
+<li>At 02:15 AM, two highway accident victims arrive at <strong>Manapparai Trauma Unit</strong>.</li>
+<li>The surgeon needs <strong>4 units of O-Negative blood</strong> immediately.</li>
+<li>Manapparai has only 1 unit in stock, already reserved for an ICU patient (<strong>0 usable units</strong>).</li><br/><hr/><br/><h3 class="subsec">Step 1: Hospital Requests Blood</h3>
+<li><strong>Who</strong>: Dr. Rajesh Kumar (`HOSPITAL_STAFF`).</li>
+<li><strong>Where</strong>: Screen: <strong>Request Blood</strong> (`/requests`).</li>
+<li><strong>Action</strong>: Clicks <strong>+ Request Emergency Blood</strong>, selects `O_NEGATIVE`, quantity `4`, priority `EMERGENCY`.</li>
+<li><strong>Result</strong>: Transfer created with status <strong>Waiting for approval</strong> (`PENDING_APPROVAL`).</li><br/><hr/><br/><h3 class="subsec">Step 2: System Checks "Safe-to-Share"</h3>
+<li><strong>Who</strong>: BloodChain AI platform (automatic).</li>
+<li><strong>Rule</strong>: A donor hospital is <strong>never</strong> asked to give blood if doing so risks its own patients.</li>
+<li><strong>Calculation</strong>:</li>
+  $$\text{Safe-to-Share} = \text{Available} - \text{Reserved} - \text{Safety Buffer}$$
+<li><strong>Result</strong>: <strong>Tiruchirappalli Central Hub</strong> has 20 units total. After protecting its own safety buffer, it has <strong>14 Safe-to-Share units</strong>. The system recommends it as the donor.</li><br/><hr/><br/><h3 class="subsec">Step 3: Medical Officer Approves</h3>
+<li><strong>Who</strong>: Dr. Sarah Jenkins (`AUTHORIZED_APPROVER`).</li>
+<li><strong>Where</strong>: Screen: <strong>Approvals Queue</strong> (`/command-center`).</li>
+<li><strong>Action</strong>: Dr. Sarah reviews the trauma urgency and the donor hub's safety margin, then clicks <strong>Approve Transfer</strong>.</li>
+<li><strong>Result</strong>: Status changes to <strong>Approved for dispatch</strong> (`APPROVED`). An email alert is staged for dispatch.</li>
+<em> </em>(Alternative)<em>: If Dr. Sarah clicks <strong>Reject</strong>, she <strong>must</strong> enter a clinical reason (e.g., </em>"Alternative B+ blood available locally"*). Leaving the reason blank is blocked.<br/><hr/><br/><h3 class="subsec">Step 4: Blood Bank Packs the Soonest-Expiring Batch (FEFO)</h3>
+<li><strong>Who</strong>: Ananya Roy (`BLOOD_BANK_STAFF`).</li>
+<li><strong>Where</strong>: Screen: <strong>Batches & Stock</strong> (`/inventory`).</li>
+<li><strong>Rule</strong>: <strong>FEFO (First Expiry, First Out)</strong>. Always use blood that expires soonest.</li>
+<li><strong>Action</strong>: The system generates a picklist:</li>
+  * `Batch A` (expires in 5 days): <strong>Pick 2 units</strong> (depleted first!).
+  * `Batch B` (expires in 25 days): <strong>Pick 2 units</strong>.
+<li><strong>Result</strong>: Zero wastage. The cooler box is packed and sealed for the courier.</li><br/><hr/><br/><h3 class="subsec">Step 5: Logistics Courier Dispatches</h3>
+<li><strong>Who</strong>: Vikram Sethi (`LOGISTICS_STAFF`).</li>
+<li><strong>Where</strong>: Screen: <strong>Cold Transport</strong> (`/logistics`).</li>
+<li><strong>Action</strong>: Vikram collects the box and clicks <strong>Start Transport</strong>.</li>
+<li><strong>Result</strong>: </li>
+  * Status changes to <strong>Being transported</strong> (`IN_TRANSIT`).
+  * Central Hub's available stock <strong>immediately drops from 20 to 16 units</strong>.<br/><hr/><br/><h3 class="subsec">Step 6: Destination Receives the Blood</h3>
+<li><strong>Who</strong>: Vikram Sethi (`LOGISTICS_STAFF`) hands over to Dr. Rajesh.</li>
+<li><strong>Where</strong>: Screen: <strong>Active Shipments</strong> (`/requests`).</li>
+<li><strong>Action</strong>: Clicks <strong>Confirm Delivery</strong>.</li>
+<li><strong>Result</strong>:</li>
+  * Status changes to <strong>Received by destination</strong> (`RECEIVED`).
+  * Manapparai Trauma Unit's stock <strong>immediately increases from 1 to 5 units</strong>.
+  * The patient receives the transfusion in surgery.<br/><hr/><br/><h3 class="subsec">Step 7: Inventory Reconciled & Audited</h3>
+<li><strong>Conservation Check</strong>: Total blood units across both hospitals before transfer ($20 + 1 = 21$). Total units after transfer ($16 + 5 = 21$). <strong>Zero phantom units created or lost.</strong></li>
+<li><strong>Audit History</strong>: Screen: <strong>Audit History</strong> (`/audit-logs`). An unchangeable log records:</li>
+  1. `TRANSFER_CREATED` by Dr. Rajesh Kumar.
+  2. `TRANSFER_APPROVED` by Dr. Sarah Jenkins.
+  3. `TRANSFER_DISPATCHED` by Vikram Sethi.
+  4. `TRANSFER_RECEIVED` by Vikram Sethi.<br/><hr/><br/><h2 class="sec">4. The 5 Transfer Statuses</h2><br/>BloodChain AI moves every request through a strict sequence:<br/><pre><code>[Request Submitted]
+        │
+        ▼
+1. PENDING_APPROVAL  ──► (Waiting for medical approver review)
+        │
+        ├──► REJECTED  ──► (Request denied with clinical reason; ends here)
+        │
+        ▼
+2. APPROVED          ──► (Approved by doctor; waiting for courier)
+        │
+        ▼
+3. IN_TRANSIT        ──► (Courier on the road; donor stock deducted)
+        │
+        ▼
+4. RECEIVED          ──► (Delivered at hospital; destination stock credited)
+</code></pre><br/><li>🚫 <strong>Cannot skip steps</strong>: A courier cannot dispatch blood before an approver signs off.</li>
+<li>🚫 <strong>Cannot double-credit</strong>: Clicking "Confirm Delivery" twice will not add extra blood.</li><br/><hr/><br/><h2 class="sec">5. Key Safety Rules</h2><br/><h3 class="subsec">1. Safe-to-Share Guardrail</h3>
+A hospital will <strong>never</strong> be stripped of blood needed for its own local emergencies. If a hospital needs 6 units for safety, those 6 units are locked and cannot be transferred away.<br/><h3 class="subsec">2. FEFO (First Expiry, First Out)</h3>
+The algorithm automatically selects blood bags that will expire earliest so they are used first. Newer blood remains in storage.<br/><h3 class="subsec">3. Separation of Duties (No Self-Approval)</h3>
+<li>A doctor requesting blood <strong>cannot</strong> approve their own request.</li>
+<li>A courier <strong>cannot</strong> change blood amounts or approve requests.</li>
+<li>An administrator <strong>cannot</strong> bypass doctors to approve transfers.</li><br/><h3 class="subsec">4. Zero Patient Privacy Risks (No PHI)</h3>
+Email notifications and audit logs contain <strong>only logistical information</strong> (Hospital names, blood type, quantity, urgency). Patient names, bed numbers, and medical conditions are never sent in emails or exposed.<br/><hr/><br/><h2 class="sec">6. How the AI Prediction & Solver Work</h2><br/><li><strong>Demand Forecasting</strong>: Uses an `XGBoost` model trained on synthetic historical blood usage to forecast how many units each hospital will need over the next 24 hours.</li>
+<li><strong>Shortage Detection</strong>: If projected usage exceeds current usable stock, the system raises an alert (`CRITICAL` or `WARNING`).</li>
+<li><strong>Route & Allocation Solver</strong>:</li>
+  * In the full design, Google OR-Tools calculates optimal multi-hospital routes.
+  * In this local prototype, OR-Tools is uninstalled, so the system uses a built-in <strong>Greedy Heuristic Fallback</strong> (prioritizing lowest risk and shortest travel time).
+  <em> </em>Note*: While the API response shows `OPTIMAL`, mathematical global optimality is a future enhancement when OR-Tools is installed.<br/><hr/><br/><h2 class="sec">7. Email Notifications: "Submitted" vs "Delivered"</h2><br/>BloodChain AI uses Brevo Transactional Email to alert staff:
+<li><strong>`submitted`</strong>: Brevo accepted the email into its delivery queue. (This happens immediately).</li>
+<li><strong>`delivered`</strong>: An authenticated webhook confirms the email reached the inbox.</li>
+<em> </em>Prototype Note*: In local testing without a public web address, emails are marked `submitted`. The system never pretends an email was delivered without proof.<br/><hr/><br/><h2 class="sec">8. Common Troubleshooting</h2><br/><table>
+<thead><tr><th>Issue / Error</th><th>Why it happened</th><th>What to do</th></tr></thead><tbody>
+<tr><td>:---</td><td>:---</td><td>:---</td></tr>
+<tr><td><strong>"Unauthorized Role" (403)</strong></td><td>You tried to do an action not allowed for your role (e.g. Hospital Staff trying to approve).</td><td>Switch to the correct role using the top-right menu (e.g. Authorized Approver).</td></tr>
+<tr><td><strong>"Duplicate Transfer Request" (400)</strong></td><td>A transfer for the same hospital and blood type is already active.</td><td>Wait for the active shipment to finish before requesting another.</td></tr>
+<tr><td><strong>"Reason Mandatory" (400)</strong></td><td>You clicked Reject but left the explanation blank.</td><td>Type a clinical reason (e.g. <em>"Alternative stock available"</em>) and confirm.</td></tr>
+<tr><td><strong>"Exceeds Safe-Share" (400)</strong></td><td>The donor hospital would be left with dangerously low stock.</td><td>Request a smaller quantity or pick another donor facility.</td></tr>
+</tbody></table><br/><hr/><br/><h2 class="sec">9. Quick Cheat-Sheet for New Users</h2><br/><pre><code>Need to request blood?        ──► Switch to HOSPITAL STAFF ──► Go to /requests ──► Click "+ Request Blood"
+Need to approve a request?    ──► Switch to AUTHORIZED APPROVER ──► Go to /command-center ──► Click "Approve"
+Need to pick blood bags?       ──► Switch to BLOOD BANK STAFF ──► Go to /inventory ──► Check FEFO Picklist
+Need to start courier trip?   ──► Switch to LOGISTICS STAFF ──► Go to /logistics ──► Click "Start Transport"
+Need to confirm arrival?      ──► Switch to LOGISTICS STAFF ──► Go to /requests ──► Click "Confirm Delivery"
+Need to record surgery usage? ──► Switch to HOSPITAL STAFF ──► Go to /inventory ──► Click "Record Ward Usage"
+Need to inspect audit trail?  ──► Switch to ADMINISTRATOR ──► Go to /audit-logs
+</code></pre><br/><hr/><br/><h2 class="sec">10. Prototype Limitations</h2><br/>1. <strong>Synthetic Data</strong>: All facilities, batches, and patient transfers are demo simulations.
+2. <strong>No EHR Integration</strong>: BloodChain AI does not pull directly from live hospital record systems.
+3. <strong>Medical Supervision Required</strong>: BloodChain AI does not perform physical laboratory cross-matching or replace clinical medical judgment.
+
+</body>
+</html>

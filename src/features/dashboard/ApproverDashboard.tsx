@@ -7,7 +7,7 @@ import {
 import { cn, formatBloodGroup, COMPONENT_LABELS } from '@/lib/utils';
 import { useAuthStore } from '@/lib/auth-store';
 import { useAuditStore } from '@/lib/audit-store';
-import { dispatchMakeNotification } from '@/lib/make-webhook';
+import { dispatchNotification } from '@/lib/brevo-notification';
 import { DEMO_SHORTAGES, DEMO_SAFE_SHARE } from '@/lib/demo-data';
 import type { BloodGroup, ComponentType } from '@/types';
 
@@ -93,7 +93,7 @@ export function ApproverDashboard() {
       reason: `Clinical authorization signed by ${currentUser.name}. ${req.reason}`,
     });
 
-    dispatchMakeNotification({
+    dispatchNotification({
       event: 'TRANSFER_APPROVED',
       scenarioName: 'Trichy Regional Clinical Approval',
       transferId: req.id,

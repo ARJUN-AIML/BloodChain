@@ -8,7 +8,7 @@ import {
 import { DEMO_SCENARIOS, DEMO_SHORTAGES, DEMO_ORGANIZATIONS, SYNTHETIC_DATA_NOTICE } from '@/lib/demo-data';
 import { useAuditStore } from '@/lib/audit-store';
 import { useAuthStore } from '@/lib/auth-store';
-import { sendMakeWebhookNotification, MakeWebhookPayload } from '@/lib/make-webhook';
+import { sendTransactionalNotification, TransactionalNotificationPayload } from '@/lib/brevo-notification';
 import type { SimulationScenario } from '@/types';
 
 export function EmergencySimulationCenter() {
@@ -59,8 +59,8 @@ export function EmergencySimulationCenter() {
         reason: 'Authorized emergency O-Negative transfer (6 units) from Central Hub to Manapparai Trauma Unit following NH 83 collision.',
       });
 
-      // Step 9: Make.com Notification Webhook
-      const dispatchResult = await sendMakeWebhookNotification({
+      // Step 9: Brevo Transactional Email Notification Outbox
+      const dispatchResult = await sendTransactionalNotification({
         event: 'TRANSFER_APPROVED',
         scenarioName: 'NH 83 Highway Collision Emergency (Tiruchirappalli)',
         transferId: 'TR-TRY-8821',
@@ -98,7 +98,7 @@ export function EmergencySimulationCenter() {
         reason: 'Courier departure verified. Cold storage container sealed with BLE temperature logger #SENSOR_TRY_01.',
       });
 
-      const dispatchResult = await sendMakeWebhookNotification({
+      const dispatchResult = await sendTransactionalNotification({
         event: 'TRANSFER_DISPATCHED',
         scenarioName: 'NH 83 Highway Collision Emergency (Tiruchirappalli)',
         transferId: 'TR-TRY-8821',
@@ -134,7 +134,7 @@ export function EmergencySimulationCenter() {
         reason: 'Units received at Manapparai. Cold-chain verified at 3.8°C. Blood added to usable inventory idempotently.',
       });
 
-      const dispatchResult = await sendMakeWebhookNotification({
+      const dispatchResult = await sendTransactionalNotification({
         event: 'TRANSFER_RECEIVED',
         scenarioName: 'NH 83 Highway Collision Emergency (Tiruchirappalli)',
         transferId: 'TR-TRY-8821',
@@ -535,15 +535,15 @@ export function EmergencySimulationCenter() {
                 </div>
               </div>
 
-              {/* Step 9: Make.com Notification Log */}
+              {/* Step 9: Brevo Transactional Email Notification Log */}
               <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Send className="w-3.5 h-3.5 text-purple-600" />
-                    9. Make.com Webhook Stream
+                    <Send className="w-3.5 h-3.5 text-rose-600" />
+                    9. Brevo Transactional Email Stream
                   </span>
-                  <span className="text-[10px] font-mono text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
-                    Notification Bus
+                  <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-2 py-0.5 rounded">
+                    Brevo Outbox
                   </span>
                 </div>
 
@@ -559,7 +559,7 @@ export function EmergencySimulationCenter() {
                   </div>
                 ) : (
                   <p className="text-xs text-slate-500 italic">
-                    Execute scenario actions above to view Make.com webhook delivery payloads.
+                    Execute scenario actions above to view Brevo transactional email delivery payloads.
                   </p>
                 )}
               </div>
