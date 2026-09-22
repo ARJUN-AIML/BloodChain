@@ -128,6 +128,11 @@ REST_FRAMEWORK = {
 
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = True
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'x-user-role',
+    'x-user-id',
+]
 
 # FastAPI ML Service Integration URL
 ML_SERVICE_URL = os.environ.get('ML_SERVICE_URL', 'http://127.0.0.1:8001')

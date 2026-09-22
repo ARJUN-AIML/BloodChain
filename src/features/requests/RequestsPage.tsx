@@ -9,6 +9,7 @@ import { cn, formatBloodGroup, COMPONENT_LABELS } from '@/lib/utils';
 import { DEMO_ORGANIZATIONS, DEMO_INVENTORY } from '@/lib/demo-data';
 import { useAuthStore } from '@/lib/auth-store';
 import { useAuditStore } from '@/lib/audit-store';
+import { useRequestsStore } from '@/lib/requests-store';
 import { dispatchNotification } from '@/lib/brevo-notification';
 import type { BloodGroup, ComponentType } from '@/types';
 
@@ -105,7 +106,15 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
 ];
 
 export function RequestsPage() {
-  const [requests, setRequests] = useState<PlainTransferRequest[]>(INITIAL_REQUESTS);
+  const {
+    requests,
+    addRequest,
+    approveRequest,
+    rejectRequest,
+    dispatchRequest,
+    receiveRequest,
+  } = useRequestsStore();
+
   const [activeTab, setActiveTab] = useState<'ALL' | 'PENDING' | 'TRANSIT' | 'COMPLETED'>('ALL');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRequestForDetails, setSelectedRequestForDetails] = useState<PlainTransferRequest | null>(null);
@@ -127,7 +136,6 @@ export function RequestsPage() {
     canStartTransport,
     canConfirmReceipt,
   } = useAuthStore();
-  const { logAction } = useAuditStore();
   const hasApprovalRights = canApproveTransfer();
 
   const [rejectingReq, setRejectingReq] = useState<PlainTransferRequest | null>(null);
@@ -171,37 +179,7 @@ export function RequestsPage() {
       return;
     }
 
-    setRequests(prev =>
-      prev.map(r => r.id === req.id ? {
-        ...r,
-        status: 'APPROVED',
-        approvedBy: `${currentUser.name} (Authorized Approver)`,
-        approvedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
-      } : r)
-    );
-
-    logAction({
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userRole: currentUser.role,
-      action: 'TRANSFER_APPROVED',
-      entityType: 'TRANSFER_REQUEST',
-      entityId: req.id,
-      oldValue: 'Waiting for approval',
-      newValue: 'Approved for dispatch',
-      reason: `Clinical authorization granted by ${currentUser.name}. ${req.reason}`,
-    });
-
-    dispatchNotification({
-      event: 'TRANSFER_APPROVED',
-      scenarioName: 'Trichy Regional Transfer Approval',
-      transferId: req.id,
-      sourceFacility: req.sourceFacilityName,
-      destinationFacility: req.destinationFacilityName,
-      bloodGroup: req.bloodGroup,
-      componentType: req.componentType,
-      units: req.quantity,
-    });
+    approveRequest(req.id, currentUser.name, `Clinical authorization granted by ${currentUser.name}. ${req.reason}`);
 
     setFeedbackMessage({
       type: 'success',
@@ -232,21 +210,7 @@ export function RequestsPage() {
       return;
     }
 
-    setRequests(prev =>
-      prev.map(r => r.id === rejectingReq.id ? { ...r, status: 'REJECTED', reason: `Rejected: ${trimmed}` } : r)
-    );
-
-    logAction({
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userRole: currentUser.role,
-      action: 'TRANSFER_REJECTED',
-      entityType: 'TRANSFER_REQUEST',
-      entityId: rejectingReq.id,
-      oldValue: 'Waiting for approval',
-      newValue: 'Request rejected',
-      reason: `Rejected by ${currentUser.name}: ${trimmed}`,
-    });
+    rejectRequest(rejectingReq.id, trimmed);
 
     setFeedbackMessage({
       type: 'success',
@@ -274,36 +238,7 @@ export function RequestsPage() {
       return;
     }
 
-    setRequests(prev =>
-      prev.map(r => r.id === req.id ? {
-        ...r,
-        status: 'IN_TRANSIT',
-        dispatchedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
-      } : r)
-    );
-
-    logAction({
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userRole: currentUser.role,
-      action: 'TRANSFER_DISPATCHED',
-      entityType: 'TRANSFER_REQUEST',
-      entityId: req.id,
-      oldValue: 'Approved for dispatch',
-      newValue: 'Being transported',
-      reason: `Courier departed from ${req.sourceFacilityName}. Temperature logged.`,
-    });
-
-    dispatchNotification({
-      event: 'TRANSFER_DISPATCHED',
-      scenarioName: 'Trichy Regional Cold-Chain Dispatch',
-      transferId: req.id,
-      sourceFacility: req.sourceFacilityName,
-      destinationFacility: req.destinationFacilityName,
-      bloodGroup: req.bloodGroup,
-      componentType: req.componentType,
-      units: req.quantity,
-    });
+    dispatchRequest(req.id);
 
     setFeedbackMessage({
       type: 'success',
@@ -328,36 +263,7 @@ export function RequestsPage() {
       return;
     }
 
-    setRequests(prev =>
-      prev.map(r => r.id === req.id ? {
-        ...r,
-        status: 'RECEIVED',
-        receivedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
-      } : r)
-    );
-
-    logAction({
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userRole: currentUser.role,
-      action: 'TRANSFER_RECEIVED',
-      entityType: 'TRANSFER_REQUEST',
-      entityId: req.id,
-      oldValue: 'Being transported',
-      newValue: 'Received by destination',
-      reason: `Cold-chain integrity verified at ${req.destinationFacilityName}. Inventory credited.`,
-    });
-
-    dispatchNotification({
-      event: 'TRANSFER_RECEIVED',
-      scenarioName: 'Trichy Regional Transfer Receipt',
-      transferId: req.id,
-      sourceFacility: req.sourceFacilityName,
-      destinationFacility: req.destinationFacilityName,
-      bloodGroup: req.bloodGroup,
-      componentType: req.componentType,
-      units: req.quantity,
-    });
+    receiveRequest(req.id);
 
     setFeedbackMessage({
       type: 'success',
@@ -403,21 +309,9 @@ export function RequestsPage() {
       requestedBy: `${currentUser.name} (${currentUser.role.replace('_', ' ')})`,
     };
 
-    setRequests(prev => [newReq, ...prev]);
+    addRequest(newReq);
     setShowCreateModal(false);
     setNewReason('');
-
-    logAction({
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userRole: currentUser.role,
-      action: 'TRANSFER_REQUEST_CREATED',
-      entityType: 'TRANSFER_REQUEST',
-      entityId: newReq.id,
-      oldValue: 'None',
-      newValue: 'Waiting for approval',
-      reason: `Created by ${currentUser.name}: ${newReq.quantity} units ${formatBloodGroup(newReq.bloodGroup)} ${COMPONENT_LABELS[newReq.componentType]}`,
-    });
 
     setFeedbackMessage({
       type: 'success',

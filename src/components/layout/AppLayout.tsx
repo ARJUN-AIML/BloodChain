@@ -41,6 +41,7 @@ export function AppLayout() {
       case 'ADMIN':
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Overview' },
           { path: '/facilities', label: 'Facilities' },
           { path: '/inventory', label: 'Inventory' },
@@ -51,6 +52,7 @@ export function AppLayout() {
       case 'AUTHORIZED_APPROVER':
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Approvals' },
           { path: '/requests', label: 'Transfer Requests' },
           { path: '/safe-to-share', label: 'Safe to Share' },
@@ -60,6 +62,7 @@ export function AppLayout() {
       case 'HOSPITAL_STAFF':
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Hospital Unit' },
           { path: '/requests', label: 'Request Blood' },
           { path: '/inventory', label: 'Local Stock' },
@@ -69,6 +72,7 @@ export function AppLayout() {
       case 'BLOOD_BANK_STAFF':
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Blood Bank Hub' },
           { path: '/inventory', label: 'Batches & Stock' },
           { path: '/expiry-rescue', label: 'Stock Rotation' },
@@ -78,6 +82,7 @@ export function AppLayout() {
       case 'LOGISTICS_STAFF':
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Cold Transport' },
           { path: '/requests', label: 'Active Shipments' },
           { path: '/facilities', label: 'Facilities Map' },
@@ -85,6 +90,7 @@ export function AppLayout() {
       default:
         return [
           { path: '/', label: 'Home' },
+          { path: '/live-demo', label: '⚡ Live Demo' },
           { path: '/command-center', label: 'Dashboard' },
           { path: '/facilities', label: 'Facilities' },
           { path: '/requests', label: 'Transfers' },
@@ -96,6 +102,7 @@ export function AppLayout() {
     switch (role) {
       case 'ADMIN':
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'System Overview', icon: LayoutDashboard },
           { path: '/facilities', label: 'Facility Management', icon: MapPin },
           { path: '/inventory', label: 'Network Blood Stock', icon: Package },
@@ -106,6 +113,7 @@ export function AppLayout() {
         ];
       case 'AUTHORIZED_APPROVER':
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'Approvals Overview', icon: LayoutDashboard },
           { path: '/requests', label: 'Pending Transfer Requests', icon: FileText },
           { path: '/safe-to-share', label: 'Blood Available for Sharing', icon: ShieldCheck },
@@ -115,6 +123,7 @@ export function AppLayout() {
         ];
       case 'HOSPITAL_STAFF':
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'Hospital Unit Dashboard', icon: Building2 },
           { path: '/requests', label: 'Request Blood & Tracking', icon: FileText },
           { path: '/inventory', label: 'Local Blood Stock', icon: Package },
@@ -123,6 +132,7 @@ export function AppLayout() {
         ];
       case 'BLOOD_BANK_STAFF':
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'Blood Bank Hub', icon: Droplets },
           { path: '/inventory', label: 'Batch-Level Inventory', icon: Package },
           { path: '/expiry-rescue', label: 'Expiring Blood & FEFO', icon: AlertTriangle },
@@ -132,12 +142,14 @@ export function AppLayout() {
         ];
       case 'LOGISTICS_STAFF':
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'Cold Transport Status', icon: Truck },
           { path: '/requests', label: 'Active Transfers & Courier', icon: FileText },
           { path: '/facilities', label: 'Route & Facility Map', icon: MapPin },
         ];
       default:
         return [
+          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
           { path: '/command-center', label: 'Dashboard', icon: LayoutDashboard },
           { path: '/facilities', label: 'Facilities Map', icon: MapPin },
         ];

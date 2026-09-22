@@ -9,7 +9,7 @@
  */
 
 export interface TransactionalNotificationPayload {
-  event: 'EMERGENCY_SHORTAGE_DETECTED' | 'TRANSFER_APPROVED' | 'TRANSFER_DISPATCHED' | 'TRANSFER_RECEIVED';
+  event: 'TRANSFER_REQUEST_CREATED' | 'EMERGENCY_SHORTAGE_DETECTED' | 'TRANSFER_APPROVED' | 'TRANSFER_DISPATCHED' | 'TRANSFER_RECEIVED';
   scenarioName: string;
   transferId?: string;
   requestId?: string;

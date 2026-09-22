@@ -14,6 +14,7 @@ import { SafeToShareDashboard } from '@/features/inventory/SafeToShareDashboard'
 import { ExpiryRescuePage } from '@/features/inventory/ExpiryRescuePage';
 import { RequestsPage } from '@/features/requests/RequestsPage';
 import { EmergencySimulationCenter } from '@/features/simulation/EmergencySimulationCenter';
+import { LiveDemoPage } from '@/features/live-demo/LiveDemoPage';
 import { AuditLogsPage } from '@/features/admin/AuditLogsPage';
 import { AIObservability } from '@/features/admin/AIObservability';
 
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route element={<AppLayout />}>
         <Route path="/command-center" element={<RoleDashboardRouter />} />
+        <Route path="/live-demo" element={<LiveDemoPage />} />
         <Route path="/facilities" element={<FacilitiesPage />} />
         <Route path="/hospital" element={<HospitalDashboard />} />
         <Route path="/blood-bank" element={<BloodBankDashboard />} />
