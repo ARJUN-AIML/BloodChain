@@ -8,7 +8,7 @@ from apps.accounts.models import User, UserRole
 DEMO_ORGANIZATIONS = [
     {
         'id': 'SIM_HOSP_TRY_MAIN',
-        'name': 'Tiruchirappalli Regional Trauma Center (Simulated)',
+        'name': 'Tiruchirappalli Regional Trauma Center',
         'type': 'HOSPITAL',
         'region': 'Tiruchirappalli City',
         'city': 'Tiruchirappalli',
@@ -24,7 +24,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'SIM_BB_TRY_CENTRAL',
-        'name': 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+        'name': 'Tiruchirappalli Central Blood Bank Hub',
         'type': 'BLOOD_BANK',
         'region': 'Tiruchirappalli City',
         'city': 'Tiruchirappalli',
@@ -40,7 +40,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'SIM_LOG_TRY_FLEET',
-        'name': 'Kaveri Cold-Chain Fleet Depot (Simulated)',
+        'name': 'Kaveri Cold-Chain Fleet Depot',
         'type': 'LOGISTICS',
         'region': 'Tiruchirappalli City',
         'city': 'Tiruchirappalli',
@@ -56,7 +56,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'SIM_HOSP_SRIRANGAM',
-        'name': 'Srirangam Sub-District Hospital (Simulated)',
+        'name': 'Srirangam Sub-District Hospital',
         'type': 'HOSPITAL',
         'region': 'Srirangam',
         'city': 'Srirangam',
@@ -72,7 +72,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'SIM_HOSP_THUVAKUDI',
-        'name': 'Thuvakudi Industrial Corridor Health Center (Simulated)',
+        'name': 'Thuvakudi Industrial Corridor Health Center',
         'type': 'HOSPITAL',
         'region': 'Thuvakudi',
         'city': 'Thuvakudi',
@@ -88,7 +88,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'SIM_HOSP_MANAPPARAI',
-        'name': 'Manapparai Highway Trauma Unit (Simulated)',
+        'name': 'Manapparai Highway Trauma Unit',
         'type': 'HOSPITAL',
         'region': 'Manapparai',
         'city': 'Manapparai',
@@ -102,10 +102,9 @@ DEMO_ORGANIZATIONS = [
         'address': 'NH 83 Dindigul Highway Junction, Manapparai, Tamil Nadu 621306',
         'phone': '+91 4332 261 100'
     },
-    # Maintain legacy keys as aliases so existing tests pass seamlessly
     {
         'id': 'HOSP_A',
-        'name': 'Tiruchirappalli Regional Trauma Center (Simulated)',
+        'name': 'Tiruchirappalli Regional Trauma Center',
         'type': 'HOSPITAL',
         'region': 'Tiruchirappalli City',
         'city': 'Tiruchirappalli',
@@ -121,7 +120,7 @@ DEMO_ORGANIZATIONS = [
     },
     {
         'id': 'BB_A',
-        'name': 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+        'name': 'Tiruchirappalli Central Blood Bank Hub',
         'type': 'BLOOD_BANK',
         'region': 'Tiruchirappalli City',
         'city': 'Tiruchirappalli',
@@ -141,10 +140,10 @@ BLOOD_GROUPS = ['A_POSITIVE','A_NEGATIVE','B_POSITIVE','B_NEGATIVE','AB_POSITIVE
 COMPONENTS = ['RBC','PLASMA','PLATELETS','WHOLE_BLOOD']
 
 class Command(BaseCommand):
-    help = 'Idempotently seeds synthetic demo facilities, inventory summaries, batches, and users localized to Tiruchirappalli, Tamil Nadu.'
+    help = 'Idempotently seeds operational facilities, inventory summaries, batches, and users localized to Tiruchirappalli, Tamil Nadu.'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write("Seeding BloodChain synthetic demo data for Tiruchirappalli (Trichy)...")
+        self.stdout.write("Seeding BloodChain operational system data for Tiruchirappalli (Trichy)...")
 
         # 1. Seed Facilities
         facilities_map = {}
@@ -173,21 +172,27 @@ class Command(BaseCommand):
 
         # 2. Seed Users
         demo_users = [
-            ('admin_user', 'ADMIN', 'System Admin'),
-            ('approver_user', 'AUTHORIZED_APPROVER', 'Dr. Sarah Jenkins'),
-            ('hospital_staff_user', 'HOSPITAL_STAFF', 'Staff Nurse K. Meena'),
-            ('bloodbank_staff_user', 'BLOOD_BANK_STAFF', 'Lab Officer R. Senthil'),
-            ('logistics_staff_user', 'LOGISTICS_STAFF', 'Courier M. Dinesh'),
+            ('admin_user', 'admin@bloodchain.ai', 'ADMIN', 'R. Administrator', 'SIM_HOSP_TRY_MAIN', 'Tiruchirappalli Regional Trauma Center'),
+            ('approver_user', 'sarah.jenkins@health.gov.in', 'AUTHORIZED_APPROVER', 'Dr. Sarah Jenkins', 'SIM_BB_TRY_CENTRAL', 'Regional Blood Transfusion Council'),
+            ('hospital_staff_user', 'hospital@bloodchain.ai', 'HOSPITAL_STAFF', 'Dr. Rajesh Kumar', 'SIM_HOSP_MANAPPARAI', 'Manapparai Highway Trauma Unit'),
+            ('bloodbank_staff_user', 'bloodbank@bloodchain.ai', 'BLOOD_BANK_STAFF', 'Ananya Roy', 'SIM_BB_TRY_CENTRAL', 'Tiruchirappalli Central Blood Bank Hub'),
+            ('logistics_staff_user', 'logistics@bloodchain.ai', 'LOGISTICS_STAFF', 'Vikram Sethi', 'SIM_LOG_TRY_FLEET', 'Kaveri Cold-Chain Fleet Depot'),
         ]
-        for username, role, full_name in demo_users:
-            if not User.objects.filter(username=username).exists():
-                u = User.objects.create_user(username=username, email=f"{username}@bloodchain.local", password="password123")
-                u.role = role
-                u.first_name = full_name
-                u.organization_id = 'SIM_HOSP_TRY_MAIN'
-                u.save()
+        for username, email, role, full_name, org_id, org_name in demo_users:
+            u = User.objects.filter(username=username).first()
+            if not u:
+                u = User.objects.create_user(username=username, email=email, password="password123")
+            else:
+                u.email = email
+                u.set_password("password123")
+            u.role = role
+            u.first_name = full_name
+            u.organization_id = org_id
+            u.organization_name = org_name
+            u.save()
 
-        self.stdout.write("  [+] Demo Users loaded/updated.")
+        self.stdout.write("  [+] Hackathon Jury Accounts loaded/updated.")
+
 
         # 3. Seed Inventory Summaries & Batches
         today = datetime.date.today()

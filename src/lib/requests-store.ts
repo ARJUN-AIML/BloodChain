@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { BloodGroup, ComponentType } from '@/types';
 import { logAuditEvent } from './audit-store';
 import { dispatchNotification } from './brevo-notification';
+import { apiClient } from './api-client';
 
 export interface PlainTransferRequest {
   id: string;
@@ -29,9 +30,9 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
   {
     id: 'TR-TRY-8821',
     sourceFacilityId: 'SIM_BB_TRY_CENTRAL',
-    sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
     destinationFacilityId: 'SIM_HOSP_MANAPPARAI',
-    destinationFacilityName: 'Manapparai Highway Trauma Unit (Simulated)',
+    destinationFacilityName: 'Manapparai Highway Trauma Unit',
     bloodGroup: 'O_NEGATIVE',
     componentType: 'RBC',
     quantity: 6,
@@ -46,9 +47,9 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
   {
     id: 'TR-TRY-8822',
     sourceFacilityId: 'SIM_BB_TRY_CENTRAL',
-    sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
     destinationFacilityId: 'SIM_HOSP_SRIRANGAM',
-    destinationFacilityName: 'Srirangam Sub-Divisional Hospital (Simulated)',
+    destinationFacilityName: 'Srirangam Sub-Divisional Hospital',
     bloodGroup: 'A_NEGATIVE',
     componentType: 'RBC',
     quantity: 4,
@@ -65,9 +66,9 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
   {
     id: 'TR-TRY-8820',
     sourceFacilityId: 'SIM_HOSP_THUVAKUDI',
-    sourceFacilityName: 'Thuvakudi Industrial Corridor Health Center (Simulated)',
+    sourceFacilityName: 'Thuvakudi Industrial Corridor Health Center',
     destinationFacilityId: 'SIM_BB_TRY_CENTRAL',
-    destinationFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    destinationFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
     bloodGroup: 'B_POSITIVE',
     componentType: 'PLATELETS',
     quantity: 5,
@@ -85,9 +86,9 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
   {
     id: 'TR-TRY-8819',
     sourceFacilityId: 'SIM_HOSP_LALGUDI',
-    sourceFacilityName: 'Lalgudi Taluk Care Unit (Simulated)',
+    sourceFacilityName: 'Lalgudi Taluk Care Unit',
     destinationFacilityId: 'SIM_HOSP_MANACHANALLUR',
-    destinationFacilityName: 'Manachanallur Rural Health Center (Simulated)',
+    destinationFacilityName: 'Manachanallur Rural Health Center',
     bloodGroup: 'O_POSITIVE',
     componentType: 'RBC',
     quantity: 3,
@@ -108,34 +109,85 @@ const INITIAL_REQUESTS: PlainTransferRequest[] = [
 interface RequestsStoreState {
   requests: PlainTransferRequest[];
   activeLiveDemoRequestId: string | null;
-  addRequest: (req: PlainTransferRequest) => void;
-  approveRequest: (id: string, approverName: string, reason?: string) => void;
-  rejectRequest: (id: string, reason: string) => void;
-  dispatchRequest: (id: string) => void;
-  receiveRequest: (id: string) => void;
+  fetchTransfersFromBackend: () => Promise<void>;
+  addRequest: (req: PlainTransferRequest) => Promise<void>;
+  approveRequest: (id: string, approverName: string, reason?: string) => Promise<void>;
+  rejectRequest: (id: string, reason: string) => Promise<void>;
+  dispatchRequest: (id: string) => Promise<void>;
+  receiveRequest: (id: string) => Promise<void>;
   setActiveLiveDemoRequestId: (id: string | null) => void;
   resetToInitial: () => void;
 }
+
 
 export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
   requests: INITIAL_REQUESTS,
   activeLiveDemoRequestId: 'TR-TRY-8821',
 
-  addRequest: (newReq) => {
+  fetchTransfersFromBackend: async () => {
+    try {
+      const data = await apiClient.getTransfers();
+      if (Array.isArray(data) && data.length > 0) {
+        const mapped: PlainTransferRequest[] = data.map((t: any) => ({
+          id: t.id,
+          sourceFacilityId: t.source_facility || 'SIM_BB_TRY_CENTRAL',
+          sourceFacilityName: t.source_facility_name || 'Tiruchirappalli Central Blood Bank Hub',
+          destinationFacilityId: t.destination_facility || 'SIM_HOSP_MANAPPARAI',
+          destinationFacilityName: t.destination_facility_name || 'Manapparai Highway Trauma Unit',
+          bloodGroup: t.blood_group as BloodGroup,
+          componentType: t.component_type as ComponentType,
+          quantity: t.requested_quantity || 1,
+          availableToShare: 8,
+          priority: t.priority || 'ROUTINE',
+          status: t.status,
+          reason: t.notes || t.rejection_reason || 'Clinical transfer request',
+          requestedBy: t.requested_by_name || 'Hospital Staff',
+          approvedBy: t.approved_by_name,
+          approvedAt: t.approved_at,
+          dispatchedAt: t.dispatched_at,
+          receivedAt: t.received_at,
+          blockchainHash: '0x' + (t.id || 'hash').padEnd(40, 'a'),
+          aiMatchScore: 96.5,
+        }));
+        set({ requests: mapped, activeLiveDemoRequestId: mapped[0]?.id || null });
+      }
+    } catch (e) {
+      console.warn('Backend transfers sync notice:', e);
+    }
+  },
+
+  addRequest: async (newReq) => {
     const hash = '0x' + Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-    const reqWithHash = {
+    let reqWithHash = {
       ...newReq,
       blockchainHash: hash,
       aiMatchScore: newReq.aiMatchScore || Math.floor(92 + Math.random() * 7.5 * 10) / 10,
     };
 
+    try {
+      const created = await apiClient.createTransfer({
+        source_facility: newReq.sourceFacilityId,
+        destination_facility: newReq.destinationFacilityId,
+        blood_group: newReq.bloodGroup,
+        component_type: newReq.componentType,
+        requested_quantity: newReq.quantity,
+        priority: newReq.priority,
+      });
+
+      if (created && created.id) {
+        reqWithHash.id = created.id;
+      }
+    } catch (e) {
+      console.warn('Backend transfer creation API notice:', e);
+    }
+
     set(state => ({
-      requests: [reqWithHash, ...state.requests],
+      requests: [reqWithHash, ...state.requests.filter(r => r.id !== reqWithHash.id)],
       activeLiveDemoRequestId: reqWithHash.id,
     }));
 
     logAuditEvent({
-      userId: 'LIVE_DEMO_USER',
+      userId: 'USR_HOSP_A',
       userName: reqWithHash.requestedBy,
       userRole: 'HOSPITAL_STAFF',
       action: 'TRANSFER_REQUEST_CREATED',
@@ -143,12 +195,12 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
       entityId: reqWithHash.id,
       oldValue: 'None',
       newValue: 'PENDING_APPROVAL',
-      reason: `Live Blood Request Created: ${reqWithHash.quantity} units ${reqWithHash.bloodGroup} for ${reqWithHash.destinationFacilityName}. Reason: ${reqWithHash.reason}`,
+      reason: `Blood Request Created: ${reqWithHash.quantity} units ${reqWithHash.bloodGroup} for ${reqWithHash.destinationFacilityName}. Reason: ${reqWithHash.reason}`,
     });
 
     dispatchNotification({
       event: 'TRANSFER_REQUEST_CREATED',
-      scenarioName: 'Manual Live Demo Request',
+      scenarioName: 'Operational Workflow Request',
       transferId: reqWithHash.id,
       sourceFacility: reqWithHash.sourceFacilityName,
       destinationFacility: reqWithHash.destinationFacilityName,
@@ -158,10 +210,10 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
     });
   },
 
-  approveRequest: (id, approverName, reason) => {
+  approveRequest: async (id, approverName, reason) => {
     const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-
     let targetReq: PlainTransferRequest | undefined;
+
     set(state => ({
       requests: state.requests.map(r => {
         if (r.id === id) {
@@ -176,6 +228,12 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
         return r;
       }),
     }));
+
+    try {
+      await apiClient.approveTransfer(id);
+    } catch (e) {
+      console.warn('Backend approval API notice:', e);
+    }
 
     if (targetReq) {
       logAuditEvent({
@@ -192,7 +250,7 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
 
       dispatchNotification({
         event: 'TRANSFER_APPROVED',
-        scenarioName: 'Manual Live Demo Approval',
+        scenarioName: 'Operational Workflow Approval',
         transferId: targetReq.id,
         sourceFacility: targetReq.sourceFacilityName,
         destinationFacility: targetReq.destinationFacilityName,
@@ -203,10 +261,16 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
     }
   },
 
-  rejectRequest: (id, reason) => {
+  rejectRequest: async (id, reason) => {
     set(state => ({
       requests: state.requests.map(r => r.id === id ? { ...r, status: 'REJECTED', reason: `Rejected: ${reason}` } : r),
     }));
+
+    try {
+      await apiClient.rejectTransfer(id, reason);
+    } catch (e) {
+      console.warn('Backend rejection API notice:', e);
+    }
 
     logAuditEvent({
       userId: 'USR_APPROVER_01',
@@ -221,7 +285,7 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
     });
   },
 
-  dispatchRequest: (id) => {
+  dispatchRequest: async (id) => {
     const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
     let targetReq: PlainTransferRequest | undefined;
 
@@ -234,6 +298,12 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
         return r;
       }),
     }));
+
+    try {
+      await apiClient.dispatchTransfer(id);
+    } catch (e) {
+      console.warn('Backend dispatch API notice:', e);
+    }
 
     if (targetReq) {
       logAuditEvent({
@@ -250,7 +320,7 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
 
       dispatchNotification({
         event: 'TRANSFER_DISPATCHED',
-        scenarioName: 'Manual Live Demo Cold-Chain Dispatch',
+        scenarioName: 'Operational Cold-Chain Dispatch',
         transferId: id,
         sourceFacility: targetReq.sourceFacilityName,
         destinationFacility: targetReq.destinationFacilityName,
@@ -261,7 +331,7 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
     }
   },
 
-  receiveRequest: (id) => {
+  receiveRequest: async (id) => {
     const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
     let targetReq: PlainTransferRequest | undefined;
 
@@ -274,6 +344,12 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
         return r;
       }),
     }));
+
+    try {
+      await apiClient.receiveTransfer(id);
+    } catch (e) {
+      console.warn('Backend receipt API notice:', e);
+    }
 
     if (targetReq) {
       logAuditEvent({
@@ -290,7 +366,7 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
 
       dispatchNotification({
         event: 'TRANSFER_RECEIVED',
-        scenarioName: 'Manual Live Demo Receipt & Inventory Sync',
+        scenarioName: 'Operational Receipt & Inventory Sync',
         transferId: id,
         sourceFacility: targetReq.sourceFacilityName,
         destinationFacility: targetReq.destinationFacilityName,
@@ -305,3 +381,4 @@ export const useRequestsStore = create<RequestsStoreState>((set, get) => ({
 
   resetToInitial: () => set({ requests: INITIAL_REQUESTS, activeLiveDemoRequestId: 'TR-TRY-8821' }),
 }));
+

@@ -10,6 +10,8 @@ from apps.inventory.views import (
 from apps.transfers.views import TransferRequestViewSet
 from apps.audit.views import AuditEventViewSet, AlertViewSet
 from apps.accounts.views import UserViewSet, health_check
+from apps.accounts.auth_views import login_api, me_api
+from apps.transfers.analytics_views import calculate_matching_api, analytics_summary_api
 from apps.simulations.views import SimulationRecordViewSet, run_simulation_api
 from apps.forecasting.views import ForecastRecordViewSet, generate_forecast_api
 
@@ -29,6 +31,10 @@ router.register('forecasting', ForecastRecordViewSet, basename='forecasting')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
+    path('api/auth/login/', login_api, name='login_api'),
+    path('api/auth/me/', me_api, name='me_api'),
+    path('api/matching/calculate/', calculate_matching_api, name='calculate_matching_api'),
+    path('api/analytics/summary/', analytics_summary_api, name='analytics_summary_api'),
     path('api/forecast/', generate_forecast_api, name='generate_forecast_api'),
     path('api/simulations/run/', run_simulation_api, name='run_simulation_api'),
     path('api/inventory/safe-share/', calculate_safe_share_api, name='calculate_safe_share_api'),
@@ -36,3 +42,5 @@ urlpatterns = [
     path('api/notifications/', include('apps.notifications.urls')),
     path('api/', include(router.urls)),
 ]
+
+

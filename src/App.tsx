@@ -24,7 +24,8 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route element={<AppLayout />}>
         <Route path="/command-center" element={<RoleDashboardRouter />} />
-        <Route path="/live-demo" element={<LiveDemoPage />} />
+        <Route path="/workflow-operations" element={<LiveDemoPage />} />
+        <Route path="/live-demo" element={<Navigate to="/workflow-operations" replace />} />
         <Route path="/facilities" element={<FacilitiesPage />} />
         <Route path="/hospital" element={<HospitalDashboard />} />
         <Route path="/blood-bank" element={<BloodBankDashboard />} />

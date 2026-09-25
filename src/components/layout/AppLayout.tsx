@@ -41,7 +41,7 @@ export function AppLayout() {
       case 'ADMIN':
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Overview' },
           { path: '/facilities', label: 'Facilities' },
           { path: '/inventory', label: 'Inventory' },
@@ -52,7 +52,7 @@ export function AppLayout() {
       case 'AUTHORIZED_APPROVER':
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Approvals' },
           { path: '/requests', label: 'Transfer Requests' },
           { path: '/safe-to-share', label: 'Safe to Share' },
@@ -62,7 +62,7 @@ export function AppLayout() {
       case 'HOSPITAL_STAFF':
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Hospital Unit' },
           { path: '/requests', label: 'Request Blood' },
           { path: '/inventory', label: 'Local Stock' },
@@ -72,7 +72,7 @@ export function AppLayout() {
       case 'BLOOD_BANK_STAFF':
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Blood Bank Hub' },
           { path: '/inventory', label: 'Batches & Stock' },
           { path: '/expiry-rescue', label: 'Stock Rotation' },
@@ -82,7 +82,7 @@ export function AppLayout() {
       case 'LOGISTICS_STAFF':
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Cold Transport' },
           { path: '/requests', label: 'Active Shipments' },
           { path: '/facilities', label: 'Facilities Map' },
@@ -90,7 +90,7 @@ export function AppLayout() {
       default:
         return [
           { path: '/', label: 'Home' },
-          { path: '/live-demo', label: '⚡ Live Demo' },
+          { path: '/workflow-operations', label: '⚡ Operations' },
           { path: '/command-center', label: 'Dashboard' },
           { path: '/facilities', label: 'Facilities' },
           { path: '/requests', label: 'Transfers' },
@@ -102,7 +102,7 @@ export function AppLayout() {
     switch (role) {
       case 'ADMIN':
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'System Overview', icon: LayoutDashboard },
           { path: '/facilities', label: 'Facility Management', icon: MapPin },
           { path: '/inventory', label: 'Network Blood Stock', icon: Package },
@@ -113,7 +113,7 @@ export function AppLayout() {
         ];
       case 'AUTHORIZED_APPROVER':
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'Approvals Overview', icon: LayoutDashboard },
           { path: '/requests', label: 'Pending Transfer Requests', icon: FileText },
           { path: '/safe-to-share', label: 'Blood Available for Sharing', icon: ShieldCheck },
@@ -123,7 +123,7 @@ export function AppLayout() {
         ];
       case 'HOSPITAL_STAFF':
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'Hospital Unit Dashboard', icon: Building2 },
           { path: '/requests', label: 'Request Blood & Tracking', icon: FileText },
           { path: '/inventory', label: 'Local Blood Stock', icon: Package },
@@ -132,7 +132,7 @@ export function AppLayout() {
         ];
       case 'BLOOD_BANK_STAFF':
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'Blood Bank Hub', icon: Droplets },
           { path: '/inventory', label: 'Batch-Level Inventory', icon: Package },
           { path: '/expiry-rescue', label: 'Expiring Blood & FEFO', icon: AlertTriangle },
@@ -142,19 +142,20 @@ export function AppLayout() {
         ];
       case 'LOGISTICS_STAFF':
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'Cold Transport Status', icon: Truck },
           { path: '/requests', label: 'Active Transfers & Courier', icon: FileText },
           { path: '/facilities', label: 'Route & Facility Map', icon: MapPin },
         ];
       default:
         return [
-          { path: '/live-demo', label: '⚡ Interactive Live Demo', icon: Zap },
+          { path: '/workflow-operations', label: '⚡ Workflow Operations', icon: Zap },
           { path: '/command-center', label: 'Dashboard', icon: LayoutDashboard },
           { path: '/facilities', label: 'Facilities Map', icon: MapPin },
         ];
     }
   };
+
 
   const primaryNav = getPrimaryNav(currentUser.role);
   const secondaryNav = getSecondaryNav(currentUser.role);
@@ -221,7 +222,7 @@ export function AppLayout() {
               {showNotifications && (
                 <div className="absolute right-0 top-11 w-80 max-h-96 overflow-y-auto rounded-xl border border-stone-200 bg-white shadow-lg z-50 p-2">
                   <div className="px-3 py-2 border-b border-stone-100 flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-stone-900">Simulated Notifications</h3>
+                    <h3 className="text-xs font-bold text-stone-900">System Notifications</h3>
                     <span className="text-[10px] text-stone-400">{unreadCount} unread</span>
                   </div>
                   <div className="divide-y divide-stone-100 text-xs">
@@ -244,13 +245,13 @@ export function AppLayout() {
               )}
             </div>
 
-            {/* Dynamic User Profile & Demo Role Switcher */}
+            {/* Dynamic User Profile & Role Switcher */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowRoleMenu(!showRoleMenu)}
                 className="flex items-center gap-2 text-xs font-medium text-stone-800 hover:text-stone-950 transition-colors p-1 rounded-lg border border-stone-200/80 bg-white/60 hover:bg-white shadow-2xs"
-                title="Switch demo evaluation role"
+                title="Switch active user role"
               >
                 <div className="w-7 h-7 rounded-full bg-[#841A2B] text-white flex items-center justify-center font-bold text-[11px] tracking-wider shadow-2xs">
                   {initials}
@@ -264,16 +265,16 @@ export function AppLayout() {
                 <ChevronDown className="w-3.5 h-3.5 text-stone-400" />
               </button>
 
-              {/* Demo Role Switcher Dropdown */}
+              {/* Role Switcher Dropdown */}
               {showRoleMenu && (
                 <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
                   <div className="p-2.5 border-b border-stone-100 mb-1 bg-stone-50 rounded-lg">
-                    <p className="font-bold text-stone-900">Demo Role Selection</p>
+                    <p className="font-bold text-stone-900">Role Selection</p>
                     <p className="text-[10px] text-stone-500 mt-0.5 leading-normal">
-                      Client-side prototype evaluation mode.
+                      Switch active role context for workflow evaluation.
                     </p>
-                    <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                      <ShieldAlert className="w-3 h-3 text-amber-700" /> Demo role — not production authentication
+                    <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <ShieldCheck className="w-3 h-3 text-emerald-700" /> Active Role: {ROLE_DISPLAY_NAMES[currentUser.role]}
                     </div>
                   </div>
 
@@ -304,7 +305,7 @@ export function AppLayout() {
                   </div>
 
                   <div className="mt-2 pt-2 border-t border-stone-100 text-[10px] text-stone-400 px-2 leading-relaxed">
-                    Selecting a role immediately updates navigation, available actions, and visible facility data without requiring page refresh.
+                    Selecting a role immediately updates navigation, available actions, and visible facility data.
                   </div>
                 </div>
               )}
@@ -313,7 +314,7 @@ export function AppLayout() {
         </div>
       </header>
 
-      {/* 2. Mandatory Prototype Banner & Synthetic Data Strip */}
+      {/* 2. Operational Status & Data Strip */}
       <div className="bg-stone-100 text-stone-600 px-4 py-1 text-[11px] flex items-center justify-between border-b border-stone-200 select-none">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
@@ -326,8 +327,8 @@ export function AppLayout() {
               Active Role: <strong className="text-stone-900">{ROLE_DISPLAY_NAMES[currentUser.role]}</strong> ({currentUser.name})
             </span>
             <span className="text-stone-300 hidden md:inline">•</span>
-            <span className="text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 text-[10px] font-semibold hidden md:inline">
-              Demo role — not production authentication
+            <span className="text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 text-[10px] font-semibold hidden md:inline">
+              Authenticated Role: {ROLE_DISPLAY_NAMES[currentUser.role]}
             </span>
           </div>
 

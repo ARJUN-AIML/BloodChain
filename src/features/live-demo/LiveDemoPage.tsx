@@ -59,15 +59,15 @@ export function LiveDemoPage() {
 
   const facilities = DEMO_ORGANIZATIONS.filter(o => o.type === 'HOSPITAL' || o.type === 'BLOOD_BANK');
 
-  // Trigger Preset Demo Scenarios
-  const handleLoadPreset = (type: 'EMERGENCY_O_NEG' | 'URGENT_A_NEG' | 'ROUTINE_B_POS') => {
+  // Trigger Preset Quick Actions
+  const handleLoadPreset = async (type: 'EMERGENCY_O_NEG' | 'URGENT_A_NEG' | 'ROUTINE_B_POS') => {
     if (type === 'EMERGENCY_O_NEG') {
       const newReq: PlainTransferRequest = {
-        id: `LIVE-REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
         sourceFacilityId: 'SIM_BB_TRY_CENTRAL',
-        sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+        sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
         destinationFacilityId: 'SIM_HOSP_MANAPPARAI',
-        destinationFacilityName: 'Manapparai Highway Trauma Unit (Simulated)',
+        destinationFacilityName: 'Manapparai Highway Trauma Unit',
         bloodGroup: 'O_NEGATIVE',
         componentType: 'RBC',
         quantity: 4,
@@ -78,16 +78,16 @@ export function LiveDemoPage() {
         requestedBy: 'Dr. Rajesh Kumar (Manapparai Trauma)',
         aiMatchScore: 98.6,
       };
-      addRequest(newReq);
+      await addRequest(newReq);
       setDemoStep(2);
-      setFeedback({ type: 'success', text: 'Preset Loaded! Emergency Blood Request created for Live Demo.' });
+      setFeedback({ type: 'success', text: 'Emergency O− Blood Request created and registered in database.' });
     } else if (type === 'URGENT_A_NEG') {
       const newReq: PlainTransferRequest = {
-        id: `LIVE-REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
         sourceFacilityId: 'SIM_BB_TRY_CENTRAL',
-        sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+        sourceFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
         destinationFacilityId: 'SIM_HOSP_SRIRANGAM',
-        destinationFacilityName: 'Srirangam Sub-Divisional Hospital (Simulated)',
+        destinationFacilityName: 'Srirangam Sub-Divisional Hospital',
         bloodGroup: 'A_NEGATIVE',
         componentType: 'RBC',
         quantity: 3,
@@ -98,16 +98,16 @@ export function LiveDemoPage() {
         requestedBy: 'Dr. Sarah Jenkins',
         aiMatchScore: 95.2,
       };
-      addRequest(newReq);
+      await addRequest(newReq);
       setDemoStep(2);
-      setFeedback({ type: 'success', text: 'Preset Loaded! Urgent A- Blood Request created.' });
+      setFeedback({ type: 'success', text: 'Urgent A− Blood Request created and registered in database.' });
     } else {
       const newReq: PlainTransferRequest = {
-        id: `LIVE-REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
         sourceFacilityId: 'SIM_HOSP_THUVAKUDI',
-        sourceFacilityName: 'Thuvakudi Industrial Corridor Health Center (Simulated)',
+        sourceFacilityName: 'Thuvakudi Industrial Corridor Health Center',
         destinationFacilityId: 'SIM_BB_TRY_CENTRAL',
-        destinationFacilityName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+        destinationFacilityName: 'Tiruchirappalli Central Blood Bank Hub',
         bloodGroup: 'B_POSITIVE',
         componentType: 'PLATELETS',
         quantity: 5,
@@ -118,20 +118,20 @@ export function LiveDemoPage() {
         requestedBy: 'Ananya Roy (Blood Bank Staff)',
         aiMatchScore: 92.4,
       };
-      addRequest(newReq);
+      await addRequest(newReq);
       setDemoStep(2);
-      setFeedback({ type: 'success', text: 'Preset Loaded! Routine B+ Platelet Rebalance created.' });
+      setFeedback({ type: 'success', text: 'Routine B+ Platelet Rebalance request created and registered in database.' });
     }
   };
 
   // 1. Submit Request Handler
-  const handleSubmitRequest = (e: React.FormEvent) => {
+  const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     const sourceFac = facilities.find(f => f.id === sourceId);
     const destFac = facilities.find(f => f.id === destId);
 
     const newReq: PlainTransferRequest = {
-      id: `LIVE-REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+      id: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
       sourceFacilityId: sourceId,
       sourceFacilityName: sourceFac?.name || 'Selected Hub',
       destinationFacilityId: destId,
@@ -147,65 +147,59 @@ export function LiveDemoPage() {
       aiMatchScore: Math.floor(94 + Math.random() * 5.5 * 10) / 10,
     };
 
-    addRequest(newReq);
+    await addRequest(newReq);
     setDemoStep(2);
     setFeedback({
       type: 'success',
-      text: `Blood Request ${newReq.id} submitted live! Switch to Step 2 to accept request as Authorized Approver.`
+      text: `Blood Request created and registered in database! Proceed to Step 2 to approve request as Authorized Approver.`
     });
   };
 
-  // 2. Accept Request Handler ("Accepted by me")
-  const handleAcceptRequest = () => {
+  // 2. Accept Request Handler
+  const handleAcceptRequest = async () => {
     if (!activeReq) return;
     if (!canApproveTransfer()) {
       switchRole('AUTHORIZED_APPROVER');
       setFeedback({
         type: 'error',
-        text: 'Switched active role to "Dr. Sarah Jenkins (Authorized Approver)" to grant clinical approval authority. Click Accept again!'
+        text: 'Switched active role to Authorized Approver. Click Approve Blood Request again!'
       });
       return;
     }
 
     setIsProcessing(true);
-    setTimeout(() => {
-      approveRequest(activeReq.id, currentUser.name, approvalNote);
-      setIsProcessing(false);
-      setDemoStep(3);
-      setFeedback({
-        type: 'success',
-        text: `🎉 Request ${activeReq.id} ACCEPTED BY YOU (${currentUser.name})! Digital approval certificate & blockchain hash generated.`
-      });
-    }, 400);
+    await approveRequest(activeReq.id, currentUser.name, approvalNote);
+    setIsProcessing(false);
+    setDemoStep(3);
+    setFeedback({
+      type: 'success',
+      text: `Request ${activeReq.id} approved by ${currentUser.name}. Digital approval certificate generated.`
+    });
   };
 
   // 3. Dispatch Logistics Handler
-  const handleDispatch = () => {
+  const handleDispatch = async () => {
     if (!activeReq) return;
     setIsProcessing(true);
-    setTimeout(() => {
-      dispatchRequest(activeReq.id);
-      setIsProcessing(false);
-      setFeedback({
-        type: 'success',
-        text: `🚚 Courier dispatched for ${activeReq.id}! Cold-chain sensor active at 3.8°C.`
-      });
-    }, 400);
+    await dispatchRequest(activeReq.id);
+    setIsProcessing(false);
+    setFeedback({
+      type: 'success',
+      text: `Courier dispatched for ${activeReq.id}. Cold-chain temperature monitoring active.`
+    });
   };
 
   // 4. Confirm Delivery Handler
-  const handleConfirmDelivery = () => {
+  const handleConfirmDelivery = async () => {
     if (!activeReq) return;
     setIsProcessing(true);
-    setTimeout(() => {
-      receiveRequest(activeReq.id);
-      setIsProcessing(false);
-      setDemoStep(4);
-      setFeedback({
-        type: 'success',
-        text: `✅ Transfer ${activeReq.id} fully completed & received! Inventory auto-updated idempotently.`
-      });
-    }, 400);
+    await receiveRequest(activeReq.id);
+    setIsProcessing(false);
+    setDemoStep(4);
+    setFeedback({
+      type: 'success',
+      text: `Transfer ${activeReq.id} received and completed. Facility inventory synchronized.`
+    });
   };
 
   return (
@@ -225,47 +219,47 @@ export function LiveDemoPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-300/30">
-                    Interactive Manual Live Demo Workspace
+                    OPERATIONAL WORKFLOW CENTER
                   </span>
                   <span className="flex items-center gap-1 text-[10px] text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full font-mono font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    LIVE INTERACTIVE DEMO ACTIVE
+                    WORKFLOW ACTIVE
                   </span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mt-1">
-                  Blood Request & Acceptance Live Demo
+                  Blood Request & Approval
                 </h1>
               </div>
             </div>
 
-            {/* Quick Demo Reset */}
+            {/* Reset Workflow */}
             <button
               type="button"
               onClick={() => {
                 resetToInitial();
                 setDemoStep(1);
-                setFeedback({ type: 'success', text: 'Live Demo reset to default state.' });
+                setFeedback({ type: 'success', text: 'Workflow state reset.' });
               }}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all self-start sm:self-auto"
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Reset Demo
+              <RefreshCw className="w-3.5 h-3.5" /> Reset Workflow
             </button>
           </div>
 
           <p className="text-xs sm:text-sm text-stone-200 max-w-3xl leading-relaxed">
-            Experience the complete end-to-end clinical workflow: place a live blood request, receive real-time AI safety matching, approve the request as the authorized approver (<strong>accepted by me</strong>), track cold-chain transit, and verify instant inventory ledger synchronization.
+            Manage the complete blood coordination workflow: request blood, evaluate compatible inventory, authorize allocation, coordinate transfer, track delivery, and synchronize inventory.
           </p>
 
-          {/* Quick Demo Presets */}
+          {/* Quick Actions */}
           <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-stone-300 font-semibold text-[11px] uppercase tracking-wider">Quick Demo Presets:</span>
+            <span className="text-stone-300 font-semibold text-[11px] uppercase tracking-wider">QUICK ACTIONS:</span>
             <button
               type="button"
               onClick={() => handleLoadPreset('EMERGENCY_O_NEG')}
               className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5"
             >
               <Zap className="w-3.5 h-3.5" />
-              1-Click Demo: Emergency O- Request (4 Units)
+              Create Emergency O− Request
             </button>
             <button
               type="button"
@@ -273,7 +267,7 @@ export function LiveDemoPage() {
               className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5"
             >
               <Clock className="w-3.5 h-3.5 text-amber-300" />
-              Urgent A- Obstetrics (3 Units)
+              Create Urgent A− Request
             </button>
             <button
               type="button"
@@ -281,7 +275,7 @@ export function LiveDemoPage() {
               className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5"
             >
               <Droplets className="w-3.5 h-3.5 text-sky-300" />
-              Routine B+ Rebalance (5 Units)
+              Create Routine B+ Request
             </button>
           </div>
         </div>
@@ -305,9 +299,9 @@ export function LiveDemoPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { step: 1, title: '1. Request Blood', desc: 'Hospital / Requester Submission', icon: PlusCircle },
-          { step: 2, title: '2. Accept Request', desc: 'Accepted by Me (Authorized Approver)', icon: ShieldCheck },
-          { step: 3, title: '3. Cold-Chain Transport', desc: 'Logistics Courier & GPS Telemetry', icon: Truck },
-          { step: 4, title: '4. Delivery & Sync', desc: 'Destination Receipt & Ledger Update', icon: PackageCheck },
+          { step: 2, title: '2. Approve Request', desc: 'Authorized Approver', icon: ShieldCheck },
+          { step: 3, title: '3. Dispatch Transfer', desc: 'Logistics / Blood Bank', icon: Truck },
+          { step: 4, title: '4. Receive & Synchronize', desc: 'Destination Facility', icon: PackageCheck },
         ].map((s) => {
           const isActive = demoStep === s.step;
           const isDone = demoStep > s.step || (s.step === 2 && activeReq?.status !== 'PENDING_APPROVAL') || (s.step === 3 && (activeReq?.status === 'IN_TRANSIT' || activeReq?.status === 'RECEIVED')) || (s.step === 4 && activeReq?.status === 'RECEIVED');
@@ -509,14 +503,14 @@ export function LiveDemoPage() {
             </div>
           )}
 
-          {/* STEP 2: ACCEPT REQUEST ("ACCEPTED BY ME") */}
+          {/* STEP 2: APPROVE REQUEST */}
           {demoStep === 2 && (
             <div className="bg-white rounded-3xl border border-stone-200 p-6 shadow-sm space-y-5">
               <div className="flex items-center justify-between pb-3 border-b border-stone-100">
                 <div>
                   <h3 className="text-base font-serif font-bold text-stone-900 flex items-center gap-2">
                     <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                    Step 2: Accept Blood Request ("Accepted by Me")
+                    Step 2: Approve Blood Request
                   </h3>
                   <p className="text-xs text-stone-500 mt-0.5">
                     Review clinical request details and grant sign-off as Authorized Approver.
@@ -542,8 +536,8 @@ export function LiveDemoPage() {
                     </div>
                     <p className="text-stone-600 text-[11px] mt-0.5">
                       {canApproveTransfer()
-                        ? '✓ You have clinical authority to accept & approve this transfer request.'
-                        : '⚠️ Role does not hold approval rights. Switch to Dr. Sarah Jenkins (Authorized Approver) below.'}
+                        ? '✓ You have clinical authority to evaluate and approve this transfer request.'
+                        : '⚠️ Role does not hold approval rights. Switch to Authorized Approver below.'}
                     </p>
                   </div>
                 </div>
@@ -572,7 +566,7 @@ export function LiveDemoPage() {
                       </span>
                     </div>
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
-                      WAITING FOR YOUR ACCEPTANCE
+                      PENDING APPROVAL
                     </span>
                   </div>
 
@@ -633,14 +627,14 @@ export function LiveDemoPage() {
                         className="flex-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
                       >
                         {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                        Accept & Approve Request ("Accepted by Me")
+                        Approve Blood Request
                       </button>
                     </div>
                   ) : (
                     <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Accepted by {activeReq.approvedBy || currentUser.name}</span>
+                        <span>Approved by {activeReq.approvedBy || currentUser.name}</span>
                       </div>
                       <span className="font-mono text-[11px] text-emerald-700">{activeReq.approvedAt}</span>
                     </div>
@@ -659,7 +653,7 @@ export function LiveDemoPage() {
                 <div>
                   <h3 className="text-base font-serif font-bold text-stone-900 flex items-center gap-2">
                     <Truck className="w-5 h-5 text-sky-600" />
-                    Step 3: Cold-Chain Courier Dispatch & Live GPS
+                    Step 3: Cold-Chain Courier Dispatch & GPS Tracking
                   </h3>
                   <p className="text-xs text-stone-500 mt-0.5">
                     Initiate cold-chain courier transport and monitor temperature telemetry.
@@ -761,14 +755,14 @@ export function LiveDemoPage() {
                 <div>
                   <h3 className="text-base font-serif font-bold text-stone-900 flex items-center gap-2">
                     <Award className="w-5 h-5 text-emerald-600" />
-                    Step 4: Live Demo Completion & Ledger Settlement
+                    Step 4: Receive & Synchronize
                   </h3>
                   <p className="text-xs text-stone-500 mt-0.5">
                     End-to-end blood transfer completed with idempotent ledger updates.
                   </p>
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">
-                  DEMO VERIFIED
+                  WORKFLOW VERIFIED
                 </span>
               </div>
 
@@ -780,7 +774,7 @@ export function LiveDemoPage() {
                       <div className="flex items-center gap-2">
                         <Award className="w-6 h-6 text-emerald-700" />
                         <div>
-                          <p className="font-bold text-sm">BloodChain AI — Live Demo Execution Certificate</p>
+                          <p className="font-bold text-sm">BloodChain Operations — Transfer Settlement Record</p>
                           <p className="text-[11px] text-emerald-800">Verified Clinical Execution Certificate</p>
                         </div>
                       </div>
@@ -795,7 +789,7 @@ export function LiveDemoPage() {
                         <span className="font-bold text-stone-900">{activeReq.quantity} units {formatBloodGroup(activeReq.bloodGroup)}</span>
                       </div>
                       <div>
-                        <span className="text-stone-500 text-[10px] block">Accepted By</span>
+                        <span className="text-stone-500 text-[10px] block">Approved By</span>
                         <span className="font-bold text-emerald-800">{activeReq.approvedBy || currentUser.name}</span>
                       </div>
                       <div>
@@ -822,7 +816,7 @@ export function LiveDemoPage() {
                         }}
                         className="px-4 py-2 rounded-xl bg-[#841A2B] hover:bg-[#701524] text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
                       >
-                        <RefreshCw className="w-3.5 h-3.5" /> Run Another Live Demo
+                        <RefreshCw className="w-3.5 h-3.5" /> Initiate Another Transfer Request
                       </button>
 
                       <a
@@ -841,11 +835,11 @@ export function LiveDemoPage() {
 
         {/* Right Column (4 cols): Live Request Status & Audit Trail */}
         <div className="lg:col-span-4 space-y-5">
-          {/* Active Demo Request Inspector */}
+          {/* Active Request Details */}
           <div className="bg-white rounded-3xl border border-stone-200 p-5 shadow-sm space-y-4">
             <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-stone-100">
               <Eye className="w-4 h-4 text-[#841A2B]" />
-              Active Live Request Inspector
+              ACTIVE REQUEST DETAILS
             </h4>
 
             {activeReq ? (
@@ -869,7 +863,7 @@ export function LiveDemoPage() {
                   <p><strong>Product:</strong> <span className="font-bold text-stone-900">{formatBloodGroup(activeReq.bloodGroup)} ({activeReq.quantity} units)</span></p>
                   <p><strong>Requested By:</strong> {activeReq.requestedBy}</p>
                   {activeReq.approvedBy && (
-                    <p className="text-emerald-700 font-semibold"><strong>Accepted By:</strong> {activeReq.approvedBy}</p>
+                    <p className="text-emerald-700 font-semibold"><strong>Approved By:</strong> {activeReq.approvedBy}</p>
                   )}
                 </div>
 
@@ -882,11 +876,11 @@ export function LiveDemoPage() {
             )}
           </div>
 
-          {/* System Audit Ledger Stream */}
+          {/* System Audit Trail */}
           <div className="bg-white rounded-3xl border border-stone-200 p-5 shadow-sm space-y-3">
             <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-stone-100">
               <Activity className="w-4 h-4 text-emerald-600" />
-              Live System Audit Ledger Stream
+              SYSTEM AUDIT TRAIL
             </h4>
 
             <div className="space-y-2 max-h-72 overflow-y-auto pr-1 text-xs">

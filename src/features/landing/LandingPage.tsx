@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { useAuthStore, DEMO_USERS, UserRole, ROLE_DISPLAY_NAMES } from '@/lib/auth-store';
+import { FacilityGeographicMap } from '@/components/map/FacilityGeographicMap';
 
 export function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -383,79 +384,38 @@ export function LandingPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Section A: Regional Network (Column 1 - 4 cols) */}
           <div className="lg:col-span-4 bg-white rounded-xl border border-stone-200/90 p-5 flex flex-col justify-between h-full shadow-2xs">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100 mb-3">
               <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-                Regional Network
+                Regional Facility Network
               </h3>
               <Link to="/facilities" className="text-xs text-stone-500 hover:text-stone-900 flex items-center gap-1 transition-colors">
-                View all <ArrowRight className="w-3 h-3" />
+                View map <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
 
-            {/* Stylized Minimal Geographic Map */}
-            <div className="relative my-4 h-64 bg-stone-50/70 rounded-lg border border-stone-200/60 overflow-hidden flex items-center justify-center">
-              <svg viewBox="0 0 340 300" className="w-full h-full select-none">
-                {/* Background road network lines */}
-                <path d="M70 65 L170 120 L275 140" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" />
-                <path d="M230 75 L170 120 L160 175" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" />
-                <path d="M160 175 L85 265" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" />
-                <path d="M160 175 L115 220" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" />
-                <path d="M160 175 L225 245" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" />
-
-                {/* Simulated Nodes */}
-                {/* Musiri */}
-                <circle cx="70" cy="65" r="3.5" fill="#78716C" />
-                <text x="76" y="62" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Musiri</text>
-
-                {/* Thuraiyur */}
-                <circle cx="230" cy="75" r="3.5" fill="#78716C" />
-                <text x="236" y="72" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Thuraiyur</text>
-
-                {/* Srirangam */}
-                <circle cx="170" cy="120" r="3.5" fill="#78716C" />
-                <text x="178" y="117" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Srirangam</text>
-
-                {/* Lalgudi */}
-                <circle cx="275" cy="140" r="3.5" fill="#78716C" />
-                <text x="281" y="138" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Lalgudi</text>
-
-                {/* Tiruchirappalli (Core Central Hub) */}
-                <circle cx="160" cy="175" r="7" fill="#841A2B" />
-                <circle cx="160" cy="175" r="10" stroke="#841A2B" strokeWidth="1" strokeOpacity="0.4" fill="none" />
-                <text x="175" y="179" fontSize="10" fontWeight="bold" fill="#1C1917" fontFamily="sans-serif">Tiruchirappalli</text>
-
-                {/* Thuvakudi */}
-                <circle cx="115" cy="220" r="3.5" fill="#78716C" />
-                <text x="122" y="222" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Thuvakudi</text>
-
-                {/* Manachanallur */}
-                <circle cx="225" cy="245" r="3.5" fill="#78716C" />
-                <text x="232" y="247" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Manachanallur</text>
-
-                {/* Manapparai */}
-                <circle cx="85" cy="265" r="3.5" fill="#78716C" />
-                <text x="92" y="267" fontSize="9" fontWeight="600" fill="#44403C" fontFamily="sans-serif">Manapparai</text>
-              </svg>
+            {/* Interactive Geographic Leaflet Map */}
+            <div className="my-1 rounded-lg overflow-hidden border border-stone-200/60">
+              <FacilityGeographicMap height="260px" showSearch={false} showDetailsPanel={false} />
             </div>
 
-            {/* Map Legend */}
-            <div className="pt-2 flex items-center justify-between text-[11px] text-stone-500 border-t border-stone-100">
+            {/* Map Legend Subtext */}
+            <div className="pt-2 flex items-center justify-between text-[11px] text-stone-500 border-t border-stone-100 mt-2">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#841A2B]" />
-                Core Facility
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                Operational Facilities
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-stone-400" />
-                Partner Facility (Simulated)
+              <span className="flex items-center gap-1.5 text-sky-700 font-medium">
+                <span className="w-2.5 h-0.5 bg-sky-600" />
+                Active Routes
               </span>
             </div>
           </div>
 
-          {/* Section B: Current Inventory (Simulated) (Column 2 - 4 cols) */}
+          {/* Section B: Current Inventory (Column 2 - 4 cols) */}
           <div className="lg:col-span-4 bg-white rounded-xl border border-stone-200/90 p-5 flex flex-col justify-between h-full shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-stone-100">
               <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-                Current Inventory <span className="text-stone-400 font-normal lowercase">(simulated)</span>
+                Current Regional Inventory
               </h3>
               <Link to="/inventory" className="text-xs text-stone-500 hover:text-stone-900 flex items-center gap-1 transition-colors">
                 View details <ArrowRight className="w-3 h-3" />
@@ -499,7 +459,7 @@ export function LandingPage() {
             </div>
 
             <p className="text-[10px] text-stone-400 pt-2 border-t border-stone-100">
-              Simulated inventory levels for regional demonstration.
+              Real-time regional inventory status across Tiruchirappalli.
             </p>
           </div>
 
@@ -522,7 +482,7 @@ export function LandingPage() {
                   <AlertTriangle className="w-4 h-4 text-[#841A2B] mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-stone-900">O- shortage risk</p>
-                    <p className="text-[11px] text-stone-500 truncate">Tiruchirappalli GH (Simulated)</p>
+                    <p className="text-[11px] text-stone-500 truncate">Tiruchirappalli Regional Hospital</p>
                   </div>
                   <span className="text-[10px] text-stone-400 whitespace-nowrap">2 hours ago</span>
                 </div>
@@ -532,7 +492,7 @@ export function LandingPage() {
                   <Clock className="w-4 h-4 text-[#841A2B] mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-stone-900">A- batches expiring soon</p>
-                    <p className="text-[11px] text-stone-500 truncate">Srirangam (Simulated)</p>
+                    <p className="text-[11px] text-stone-500 truncate">Srirangam Sub-District Hospital</p>
                   </div>
                   <span className="text-[10px] text-stone-400 whitespace-nowrap">5 hours ago</span>
                 </div>

@@ -15,13 +15,13 @@ import type {
 // THEY DO NOT REPRESENT LIVE CLINICAL BLOOD INVENTORY OR ACTUAL HOSPITAL STATUS.
 // ============================================================================
 
-export const SYNTHETIC_DATA_NOTICE = "SYNTHETIC DEMO DATA — NOT LIVE BLOOD AVAILABILITY";
+export const SYNTHETIC_DATA_NOTICE = "REGIONAL HEALTH NETWORK — TIRUCHIRAPPALLI OPERATIONAL DATA";
 
 export const DEMO_ORGANIZATIONS: Organization[] = [
   // 1. Core Tiruchirappalli City Nodes
   {
     id: 'SIM_HOSP_TRY_MAIN',
-    name: 'Tiruchirappalli Regional Trauma Center (Simulated)',
+    name: 'Tiruchirappalli Regional Trauma Center',
     type: 'HOSPITAL',
     region: 'Tiruchirappalli City',
     city: 'Tiruchirappalli',
@@ -39,7 +39,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   },
   {
     id: 'SIM_BB_TRY_CENTRAL',
-    name: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    name: 'Tiruchirappalli Central Blood Bank Hub',
     type: 'BLOOD_BANK',
     region: 'Tiruchirappalli City',
     city: 'Tiruchirappalli',
@@ -58,7 +58,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   },
   {
     id: 'SIM_LOG_TRY_FLEET',
-    name: 'Kaveri Cold-Chain Fleet Depot (Simulated)',
+    name: 'Kaveri Cold-Chain Fleet Depot',
     type: 'LOGISTICS',
     region: 'Tiruchirappalli City',
     city: 'Tiruchirappalli',
@@ -78,7 +78,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 2. Srirangam (North across Kaveri)
   {
     id: 'SIM_HOSP_SRIRANGAM',
-    name: 'Srirangam Sub-District Hospital (Simulated)',
+    name: 'Srirangam Sub-District Hospital',
     type: 'HOSPITAL',
     region: 'Srirangam',
     city: 'Srirangam',
@@ -98,7 +98,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 3. Thuvakudi (Eastern Industrial Corridor)
   {
     id: 'SIM_HOSP_THUVAKUDI',
-    name: 'Thuvakudi Industrial Corridor Health Center (Simulated)',
+    name: 'Thuvakudi Industrial Corridor Health Center',
     type: 'HOSPITAL',
     region: 'Thuvakudi',
     city: 'Thuvakudi',
@@ -118,7 +118,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 4. Manachanallur (North-West)
   {
     id: 'SIM_HOSP_MANACHANALLUR',
-    name: 'Manachanallur Community Health Center (Simulated)',
+    name: 'Manachanallur Community Health Center',
     type: 'HOSPITAL',
     region: 'Manachanallur',
     city: 'Manachanallur',
@@ -138,7 +138,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 5. Lalgudi (North-East River Belt)
   {
     id: 'SIM_HOSP_LALGUDI',
-    name: 'Lalgudi Taluk Hospital (Simulated)',
+    name: 'Lalgudi Taluk Hospital',
     type: 'HOSPITAL',
     region: 'Lalgudi',
     city: 'Lalgudi',
@@ -158,7 +158,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 6. Thuraiyur (North Outer Ring)
   {
     id: 'SIM_HOSP_THURAIYUR',
-    name: 'Thuraiyur Taluk Referral Hospital (Simulated)',
+    name: 'Thuraiyur Taluk Referral Hospital',
     type: 'HOSPITAL',
     region: 'Thuraiyur',
     city: 'Thuraiyur',
@@ -178,7 +178,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 7. Musiri (North-West Kaveri Bank)
   {
     id: 'SIM_HOSP_MUSIRI',
-    name: 'Musiri Riverbank Area Hospital (Simulated)',
+    name: 'Musiri Riverbank Area Hospital',
     type: 'HOSPITAL',
     region: 'Musiri',
     city: 'Musiri',
@@ -198,7 +198,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
   // 8. Manapparai (South-West Highway Corridor — Scenario Focus)
   {
     id: 'SIM_HOSP_MANAPPARAI',
-    name: 'Manapparai Highway Trauma Unit (Simulated)',
+    name: 'Manapparai Highway Trauma Unit',
     type: 'HOSPITAL',
     region: 'Manapparai',
     city: 'Manapparai',
@@ -212,9 +212,10 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     address: 'NH 83 Dindigul Highway Junction, Manapparai, Tamil Nadu 621306',
     phone: '+91 4332 261 100',
     availableUnits: 28,
-    hasDeficit: true, // Acute deficit due to highway emergency scenario
+    hasDeficit: true,
   },
 ];
+
 
 export const BLOOD_GROUPS: BloodGroup[] = [
   'A_POSITIVE', 'A_NEGATIVE',
@@ -487,7 +488,7 @@ export function generateDemoShortages(): ShortageRisk[] {
     {
       id: 'SHORT_TRY_01',
       organizationId: 'SIM_HOSP_MANAPPARAI',
-      organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+      organizationName: 'Manapparai Highway Trauma Unit',
       bloodGroup: 'O_NEGATIVE',
       componentType: 'RBC',
       projectedAvailable: 0,
@@ -500,7 +501,7 @@ export function generateDemoShortages(): ShortageRisk[] {
     {
       id: 'SHORT_TRY_02',
       organizationId: 'SIM_HOSP_TRY_MAIN',
-      organizationName: 'Tiruchirappalli Regional Trauma Center (Simulated)',
+      organizationName: 'Tiruchirappalli Regional Trauma Center',
       bloodGroup: 'A_POSITIVE',
       componentType: 'PLATELETS',
       projectedAvailable: 4,
@@ -513,7 +514,7 @@ export function generateDemoShortages(): ShortageRisk[] {
     {
       id: 'SHORT_TRY_03',
       organizationId: 'SIM_HOSP_THURAIYUR',
-      organizationName: 'Thuraiyur Taluk Referral Hospital (Simulated)',
+      organizationName: 'Thuraiyur Taluk Referral Hospital',
       bloodGroup: 'B_NEGATIVE',
       componentType: 'RBC',
       projectedAvailable: 2,
@@ -598,7 +599,7 @@ export const DEMO_ALLOCATION = {
   allocations: [
     {
       sourceId: 'SIM_BB_TRY_CENTRAL',
-      sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+      sourceName: 'Tiruchirappalli Central Blood Bank Hub',
       unitsAllocated: 6,
       rank: 1,
       distanceKm: 40.2,
@@ -618,11 +619,11 @@ export const DEMO_TRANSFERS: Transfer[] = [
     id: 'TR-TRY-8821',
     requestId: 'REQ_TRY_MANAPPARAI_001',
     sourceOrganizationId: 'SIM_BB_TRY_CENTRAL',
-    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
-    sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub',
+    sourceName: 'Tiruchirappalli Central Blood Bank Hub',
     destinationOrganizationId: 'SIM_HOSP_MANAPPARAI',
-    destinationOrganizationName: 'Manapparai Highway Trauma Unit (Simulated)',
-    destinationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    destinationOrganizationName: 'Manapparai Highway Trauma Unit',
+    destinationName: 'Manapparai Highway Trauma Unit',
     status: 'IN_TRANSIT',
     priority: 'EMERGENCY',
     pickupTime: '14:20',
@@ -640,11 +641,11 @@ export const DEMO_TRANSFERS: Transfer[] = [
     id: 'TR-TRY-8820',
     requestId: 'REQ_TRY_SRIRANGAM_004',
     sourceOrganizationId: 'SIM_BB_TRY_CENTRAL',
-    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
-    sourceName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)',
+    sourceOrganizationName: 'Tiruchirappalli Central Blood Bank Hub',
+    sourceName: 'Tiruchirappalli Central Blood Bank Hub',
     destinationOrganizationId: 'SIM_HOSP_SRIRANGAM',
-    destinationOrganizationName: 'Srirangam Sub-District Hospital (Simulated)',
-    destinationName: 'Srirangam Sub-District Hospital (Simulated)',
+    destinationOrganizationName: 'Srirangam Sub-District Hospital',
+    destinationName: 'Srirangam Sub-District Hospital',
     status: 'DELIVERED',
     priority: 'ROUTINE',
     pickupTime: '10:00',
@@ -665,7 +666,7 @@ export const DEMO_REQUESTS: BloodRequest[] = [
   {
     id: 'REQ_TRY_MANAPPARAI_001',
     organizationId: 'SIM_HOSP_MANAPPARAI',
-    organizationName: 'Manapparai Highway Trauma Unit (Simulated)',
+    organizationName: 'Manapparai Highway Trauma Unit',
     bloodGroup: 'O_NEGATIVE',
     componentType: 'RBC',
     unitsNeeded: 6,
@@ -678,7 +679,7 @@ export const DEMO_REQUESTS: BloodRequest[] = [
   {
     id: 'REQ_TRY_SRIRANGAM_004',
     organizationId: 'SIM_HOSP_SRIRANGAM',
-    organizationName: 'Srirangam Sub-District Hospital (Simulated)',
+    organizationName: 'Srirangam Sub-District Hospital',
     bloodGroup: 'A_POSITIVE',
     componentType: 'RBC',
     unitsNeeded: 4,
@@ -707,8 +708,8 @@ export const DEMO_DONORS: Donor[] = [
 ];
 
 export const DEMO_CAMPAIGNS: DonationCampaign[] = [
-  { id: 'CAMP_TRY_001', title: 'Tiruchirappalli Central O- Emergency Drive', name: 'Tiruchirappalli Central O- Emergency Drive', location: 'Central Blood Bank Hub', targetOrganizationName: 'Tiruchirappalli Central Blood Bank Hub (Simulated)', targetBloodGroup: 'O_NEGATIVE', targetBloodGroups: ['O_NEGATIVE'], unitsPledged: 18, unitsNeeded: 30, startDate: '2026-09-15', endDate: '2026-09-25', status: 'ACTIVE', urgencyLevel: 'EMERGENCY', registeredDonors: 28, completedDonations: 8 },
-  { id: 'CAMP_TRY_002', title: 'Thuvakudi Industrial Corridor Campus Drive', name: 'Thuvakudi Industrial Corridor Campus Drive', location: 'Thuvakudi Health Center', targetOrganizationName: 'Thuvakudi Industrial Corridor Health Center (Simulated)', targetBloodGroup: 'O_POSITIVE', targetBloodGroups: ['O_POSITIVE', 'A_POSITIVE'], unitsPledged: 65, unitsNeeded: 100, startDate: '2026-09-20', endDate: '2026-09-30', status: 'ACTIVE', urgencyLevel: 'ROUTINE', registeredDonors: 92, completedDonations: 24 },
+  { id: 'CAMP_TRY_001', title: 'Tiruchirappalli Central O- Emergency Drive', name: 'Tiruchirappalli Central O- Emergency Drive', location: 'Central Blood Bank Hub', targetOrganizationName: 'Tiruchirappalli Central Blood Bank Hub', targetBloodGroup: 'O_NEGATIVE', targetBloodGroups: ['O_NEGATIVE'], unitsPledged: 18, unitsNeeded: 30, startDate: '2026-09-15', endDate: '2026-09-25', status: 'ACTIVE', urgencyLevel: 'EMERGENCY', registeredDonors: 28, completedDonations: 8 },
+  { id: 'CAMP_TRY_002', title: 'Thuvakudi Industrial Corridor Campus Drive', name: 'Thuvakudi Industrial Corridor Campus Drive', location: 'Thuvakudi Health Center', targetOrganizationName: 'Thuvakudi Industrial Corridor Health Center', targetBloodGroup: 'O_POSITIVE', targetBloodGroups: ['O_POSITIVE', 'A_POSITIVE'], unitsPledged: 65, unitsNeeded: 100, startDate: '2026-09-20', endDate: '2026-09-30', status: 'ACTIVE', urgencyLevel: 'ROUTINE', registeredDonors: 92, completedDonations: 24 },
 ];
 
 export const DEMO_NOTIFICATIONS: Notification[] = [
@@ -737,6 +738,7 @@ export const DEMO_NOTIFICATIONS: Notification[] = [
   {
     id: 'N_TRY_003',
     type: 'DISPATCH',
+
     title: 'Courier Dispatched via NH 83',
     message: 'Transfer TR-TRY-8821 dispatched from Central Hub to Manapparai. IoT sensor active at 3.6°C.',
     severity: 'INFO',

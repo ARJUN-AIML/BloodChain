@@ -299,6 +299,17 @@ def train_pipeline(data_path: str):
         json.dump(registry, f, indent=2)
     print(f"       Registry saved: {registry_path}")
 
+    # Save fast-load recent demand cache (last 60 days)
+    try:
+        dataset_dir = os.path.dirname(data_path)
+        recent_path = os.path.join(dataset_dir, "recent_demand_history.csv")
+        cutoff = df["date"].max() - pd.Timedelta(days=60)
+        recent_df = df[df["date"] >= cutoff]
+        recent_df.to_csv(recent_path, index=False)
+        print(f"       Recent demand cache saved: {recent_path}")
+    except Exception as e:
+        print(f"       [WARNING] Could not save recent demand cache: {e}")
+
     print()
     print("=" * 70)
     print("✅ Training pipeline completed successfully!")

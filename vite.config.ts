@@ -11,6 +11,15 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    host: true,
+    warmup: {
+      clientFiles: [
+        './src/main.tsx',
+        './src/App.tsx',
+        './src/components/layout/Navbar.tsx',
+        './src/features/dashboard/DashboardOverview.tsx',
+      ],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
@@ -22,5 +31,21 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/ml/, ''),
       },
     },
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'zustand',
+      'recharts',
+      'framer-motion',
+      'lucide-react',
+      'leaflet',
+      'react-leaflet',
+      '@tanstack/react-query',
+      'clsx',
+      'tailwind-merge',
+    ],
   },
 });

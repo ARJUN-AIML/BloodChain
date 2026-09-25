@@ -123,14 +123,25 @@ def load_models():
             with open(reg_path) as f:
                 model_state["registry"] = json.load(f)
 
-        # Load recent demand data for context features
+        # Load recent demand data for context features (uses pre-filtered 60-day cache for instant startup)
+        recent_demand_path = os.path.join(DATASET_DIR, "recent_demand_history.csv")
         demand_path = os.path.join(DATASET_DIR, "blood_demand_history.csv")
-        if os.path.exists(demand_path):
+
+        if os.path.exists(recent_demand_path):
+            df = pd.read_csv(recent_demand_path)
+            df["date"] = pd.to_datetime(df["date"])
+            model_state["demand_data"] = df
+        elif os.path.exists(demand_path):
             df = pd.read_csv(demand_path)
             df["date"] = pd.to_datetime(df["date"])
             # Keep last 60 days for lag computation
             cutoff = df["date"].max() - timedelta(days=60)
-            model_state["demand_data"] = df[df["date"] >= cutoff].copy()
+            recent_df = df[df["date"] >= cutoff].copy()
+            model_state["demand_data"] = recent_df
+            try:
+                recent_df.to_csv(recent_demand_path, index=False)
+            except Exception:
+                pass
 
         model_state["loaded"] = True
         print("[INFO] Models loaded successfully")

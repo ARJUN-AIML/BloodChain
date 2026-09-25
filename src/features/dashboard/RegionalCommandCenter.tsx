@@ -6,6 +6,7 @@ import {
   DEMO_SUMMARY, DEMO_SHORTAGES, DEMO_DEMAND_TREND,
   DEMO_ORGANIZATIONS, DEMO_TRANSFERS, DEMO_BLOOD_GROUP_DISTRIBUTION,
 } from '@/lib/demo-data';
+import { FacilityGeographicMap } from '@/components/map/FacilityGeographicMap';
 
 const BLOOD_COLORS = ['#C85A3F', '#5B8C7A', '#D99B38', '#5C768D', '#8C5B7A', '#5B7A8C', '#B24930', '#477262'];
 
@@ -55,15 +56,15 @@ export function RegionalCommandCenter() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Synthetic Data Governance Header Notice */}
-      <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      {/* Regional Operational Header Notice */}
+      <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-md">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
-          <span className="font-bold font-mono tracking-wide">SYNTHETIC DEMO DATA — NOT LIVE BLOOD AVAILABILITY</span>
-          <span className="text-amber-700 hidden md:inline">• Tiruchirappalli Regional Research Cluster</span>
+          <AlertTriangle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <span className="font-bold font-mono tracking-wide">REGIONAL HEALTH NETWORK — TIRUCHIRAPPALLI OPERATIONAL MAP</span>
+          <span className="text-slate-400 hidden md:inline">• Live Geographic Facility Network</span>
         </div>
-        <span className="text-[10px] font-mono text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded">
-          Core Nodes: Trichy, Srirangam, Thuvakudi, Manapparai
+        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+          OpenStreetMap Basemap & Real-Time APIs Active
         </span>
       </div>
 
@@ -127,6 +128,19 @@ export function RegionalCommandCenter() {
             <p className="text-2xl font-bold text-[#1A1F26] tracking-tight font-mono">{activeTransfers.length} <span className="text-xs font-normal text-[#64748B]">transits</span></p>
           </div>
         </div>
+      </div>
+
+      {/* Primary Interactive Geographic Facility & Active Transfer Map */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+            Interactive Regional Geographic Map
+          </h3>
+          <span className="text-xs text-slate-500">
+            OpenStreetMap basemap • Real-time database markers & active transfer routes
+          </span>
+        </div>
+        <FacilityGeographicMap height="480px" showSearch={true} showDetailsPanel={true} />
       </div>
 
       {/* Main Grid: Chart & Shortage Alerts */}
