@@ -774,7 +774,7 @@ export function LiveDemoPage() {
                       <div className="flex items-center gap-2">
                         <Award className="w-6 h-6 text-emerald-700" />
                         <div>
-                          <p className="font-bold text-sm">BloodChain Operations — Transfer Settlement Record</p>
+                          <p className="font-bold text-sm">BloodChain Operations - Transfer Settlement Record</p>
                           <p className="text-[11px] text-emerald-800">Verified Clinical Execution Certificate</p>
                         </div>
                       </div>

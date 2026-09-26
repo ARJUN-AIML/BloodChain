@@ -103,7 +103,7 @@ export function LogisticsDashboard() {
           <div className="bg-[#FFFFFF] border border-[#E2E2DC] rounded-xl p-5 shadow-flat">
             <div className="flex items-center justify-between pb-3 border-b border-[#E2E2DC] mb-3">
               <div>
-                <h3 className="text-sm font-bold text-[#1A1F26]">Waypoints & Custody Timeline — {activeTransfer.id}</h3>
+                <h3 className="text-sm font-bold text-[#1A1F26]">Waypoints & Custody Timeline - {activeTransfer.id}</h3>
                 <p className="text-[11px] text-[#64748B]">{activeTransfer.sourceName || activeTransfer.sourceOrganizationName} → {activeTransfer.destinationName || activeTransfer.destinationOrganizationName}</p>
               </div>
               <span className="px-2.5 py-1 rounded bg-[#F7F7F5] border border-[#E2E2DC] text-xs font-mono font-bold text-[#1A1F26]">

@@ -8,11 +8,13 @@ const TRICHY_SUB_REGIONS = [
   'ALL',
   'Tiruchirappalli City',
   'Srirangam',
+  'Kattur',
+  'Navalpattu',
   'Thuvakudi',
   'Manachanallur',
   'Lalgudi',
-  'Thuraiyur',
   'Musiri',
+  'Viralimalai',
   'Manapparai',
 ];
 
@@ -109,13 +111,13 @@ export function FacilitiesPage() {
               <div className="bg-slate-50 p-2 rounded-lg">
                 <span className="text-[10px] text-slate-500 block">Beds</span>
                 <span className="text-sm font-mono font-bold text-slate-900">
-                  {facility.bedCapacity || '—'}
+                  {facility.bedCapacity || '-'}
                 </span>
               </div>
               <div className="bg-slate-50 p-2 rounded-lg">
                 <span className="text-[10px] text-slate-500 block">ICU Beds</span>
                 <span className="text-sm font-mono font-bold text-slate-900">
-                  {facility.icuBeds || '—'}
+                  {facility.icuBeds || '-'}
                 </span>
               </div>
             </div>

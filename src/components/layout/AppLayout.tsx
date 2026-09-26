@@ -10,6 +10,9 @@ import { cn } from '@/lib/utils';
 import { DEMO_NOTIFICATIONS, SYNTHETIC_DATA_NOTICE } from '@/lib/demo-data';
 import { useAuthStore, DEMO_USERS, UserRole, ROLE_DISPLAY_NAMES } from '@/lib/auth-store';
 import { BrandLogo } from '@/components/common/BrandLogo';
+import { Breadcrumb } from '@/components/common/Breadcrumb';
+import { RolePermissionsInspector } from '@/components/common/RolePermissionsInspector';
+import { CompatibilityMatrixModal } from '@/components/common/CompatibilityMatrixModal';
 
 interface NavItem {
   path: string;
@@ -22,6 +25,8 @@ export function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRoleMenu, setShowRoleMenu] = useState(false);
+  const [showRoleInspector, setShowRoleInspector] = useState(false);
+  const [showCompatibilityModal, setShowCompatibilityModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
   const { currentUser, switchRole } = useAuthStore();
@@ -36,66 +41,14 @@ export function AppLayout() {
     .toUpperCase();
 
   // Dynamic Navigation definitions based on current role
-  const getPrimaryNav = (role: UserRole): NavItem[] => {
-    switch (role) {
-      case 'ADMIN':
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Overview' },
-          { path: '/facilities', label: 'Facilities' },
-          { path: '/inventory', label: 'Inventory' },
-          { path: '/requests', label: 'Transfers' },
-          { path: '/emergency-simulation', label: 'Simulation' },
-          { path: '/audit-logs', label: 'Audit History' },
-        ];
-      case 'AUTHORIZED_APPROVER':
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Approvals' },
-          { path: '/requests', label: 'Transfer Requests' },
-          { path: '/safe-to-share', label: 'Safe to Share' },
-          { path: '/forecasting', label: 'Forecast Context' },
-          { path: '/facilities', label: 'Facilities' },
-        ];
-      case 'HOSPITAL_STAFF':
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Hospital Unit' },
-          { path: '/requests', label: 'Request Blood' },
-          { path: '/inventory', label: 'Local Stock' },
-          { path: '/forecasting', label: 'Demand Forecast' },
-          { path: '/facilities', label: 'Facilities' },
-        ];
-      case 'BLOOD_BANK_STAFF':
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Blood Bank Hub' },
-          { path: '/inventory', label: 'Batches & Stock' },
-          { path: '/expiry-rescue', label: 'Stock Rotation' },
-          { path: '/safe-to-share', label: 'Safe to Share' },
-          { path: '/requests', label: 'Dispatches' },
-        ];
-      case 'LOGISTICS_STAFF':
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Cold Transport' },
-          { path: '/requests', label: 'Active Shipments' },
-          { path: '/facilities', label: 'Facilities Map' },
-        ];
-      default:
-        return [
-          { path: '/', label: 'Home' },
-          { path: '/workflow-operations', label: '⚡ Operations' },
-          { path: '/command-center', label: 'Dashboard' },
-          { path: '/facilities', label: 'Facilities' },
-          { path: '/requests', label: 'Transfers' },
-        ];
-    }
+  const getPrimaryNav = (_role: UserRole): NavItem[] => {
+    return [
+      { path: '/', label: 'Home' },
+      { path: '/workflow-operations', label: '⚡ Operations' },
+      { path: '/command-center', label: 'Dashboard' },
+      { path: '/requests', label: 'Transfers' },
+      { path: '/facilities', label: 'Facilities' },
+    ];
   };
 
   const getSecondaryNav = (role: UserRole): NavItem[] => {
@@ -245,6 +198,27 @@ export function AppLayout() {
               )}
             </div>
 
+            {/* Quick Clinical Tool Buttons */}
+            <button
+              type="button"
+              onClick={() => setShowCompatibilityModal(true)}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-red-200 bg-red-50/70 hover:bg-red-100 text-[#841A2B] text-xs font-semibold transition shadow-2xs"
+              title="Open Blood Group Compatibility Matrix Solver"
+            >
+              <Droplets className="w-3.5 h-3.5 text-[#841A2B]" />
+              <span>Compatibility</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowRoleInspector(true)}
+              className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold transition shadow-2xs"
+              title="Inspect Role Capabilities & Separation of Duties Matrix"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-[#841A2B]" />
+              <span>Role Matrix</span>
+            </button>
+
             {/* Dynamic User Profile & Role Switcher */}
             <div className="relative">
               <button
@@ -267,7 +241,7 @@ export function AppLayout() {
 
               {/* Role Switcher Dropdown */}
               {showRoleMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
+                <div className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-stone-200 p-2 z-50 text-xs origin-top-right">
                   <div className="p-2.5 border-b border-stone-100 mb-1 bg-stone-50 rounded-lg">
                     <p className="font-bold text-stone-900">Role Selection</p>
                     <p className="text-[10px] text-stone-500 mt-0.5 leading-normal">
@@ -382,12 +356,23 @@ export function AppLayout() {
         </aside>
 
         {/* Main View Outlet */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#F9F9F8]">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[#F9F9F8] w-full">
+          <Breadcrumb />
+          <div className="max-w-7xl mx-auto p-4 sm:p-6 w-full overflow-hidden">
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Interactive Global Modals */}
+      <RolePermissionsInspector
+        isOpen={showRoleInspector}
+        onClose={() => setShowRoleInspector(false)}
+      />
+      <CompatibilityMatrixModal
+        isOpen={showCompatibilityModal}
+        onClose={() => setShowCompatibilityModal(false)}
+      />
     </div>
   );
 }

@@ -228,7 +228,7 @@ export function EmergencySimulationCenter() {
                   <span className="text-xs font-mono text-slate-400">DEMO-TRY-NH83-01</span>
                 </div>
                 <h3 className="text-lg font-bold">
-                  NH 83 Multi-Vehicle Collision — Acute O-Negative Deficit at Manapparai
+                  NH 83 Multi-Vehicle Collision - Acute O-Negative Deficit at Manapparai
                 </h3>
                 <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
                   Mass casualty emergency trauma intake arrives at Manapparai Highway Trauma Unit (Simulated) with zero usable O-Negative PRBC units in reserve. System coordinates safe-to-share extraction from Tiruchirappalli Central Hub with mandatory human sign-off.
@@ -422,7 +422,7 @@ export function EmergencySimulationCenter() {
                     2. <strong>Deficit Protection:</strong> Srirangam Hospital has 0 units available for sharing; extracting blood would cause a secondary shortage, so it was not selected.
                   </p>
                   <p className="text-[11px] leading-relaxed">
-                    3. <strong>Route Feasibility:</strong> Direct transit via NH 83 highway requires ~48 minutes, well within the 120-minute cold-chain limit. <span className="text-amber-700 italic">(Demonstration route information — not live navigation.)</span>
+                    3. <strong>Route Feasibility:</strong> Direct transit via NH 83 highway requires ~48 minutes, well within the 120-minute cold-chain limit. <span className="text-amber-700 italic">(Demonstration route information - not live navigation.)</span>
                   </p>
                 </div>
               </div>

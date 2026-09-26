@@ -97,7 +97,7 @@ function resolveEventDisplay(log: AuditLogEntry): ResolvedEvent {
       performer = 'Recorded by the System';
     } else {
       const friendlyRole = formatFriendlyRole(log.userRole);
-      performer = `${log.userName} — ${friendlyRole}`;
+      performer = `${log.userName} - ${friendlyRole}`;
     }
   }
 
@@ -111,7 +111,7 @@ function resolveEventDisplay(log: AuditLogEntry): ResolvedEvent {
         explanation = 'The system created an estimate of the blood units that may be needed over the next 72 hours using available demonstration information.';
       }
       if (!additionalNote) {
-        additionalNote = 'Demonstration estimate — not medically validated.';
+        additionalNote = 'Demonstration estimate - not medically validated.';
       }
       break;
 

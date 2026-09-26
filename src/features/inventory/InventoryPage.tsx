@@ -49,7 +49,7 @@ export function InventoryPage() {
 
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 border border-stone-200 text-stone-700 text-xs font-medium self-start sm:self-auto">
           <AlertCircle className="w-3.5 h-3.5 text-[#841A2B]" />
-          <span>Synthetic data — not live availability</span>
+          <span>Synthetic data - not live availability</span>
         </div>
       </div>
 

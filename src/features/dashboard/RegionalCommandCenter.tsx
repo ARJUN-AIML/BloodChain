@@ -60,7 +60,7 @@ export function RegionalCommandCenter() {
       <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-md">
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-          <span className="font-bold font-mono tracking-wide">REGIONAL HEALTH NETWORK — TIRUCHIRAPPALLI OPERATIONAL MAP</span>
+          <span className="font-bold font-mono tracking-wide">REGIONAL HEALTH NETWORK - TIRUCHIRAPPALLI OPERATIONAL MAP</span>
           <span className="text-slate-400 hidden md:inline">• Live Geographic Facility Network</span>
         </div>
         <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">

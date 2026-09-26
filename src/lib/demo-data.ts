@@ -18,7 +18,44 @@ import type {
 export const SYNTHETIC_DATA_NOTICE = "REGIONAL HEALTH NETWORK — TIRUCHIRAPPALLI OPERATIONAL DATA";
 
 export const DEMO_ORGANIZATIONS: Organization[] = [
-  // 1. Core Tiruchirappalli City Nodes
+  // 1. Core Tiruchirappalli City Hubs & Tertiary Hospitals
+  {
+    id: 'SIM_BB_TRY_CENTRAL',
+    name: 'Tiruchirappalli Central Blood Bank Hub',
+    type: 'BLOOD_BANK',
+    region: 'Tiruchirappalli City',
+    city: 'Tiruchirappalli',
+    latitude: 10.8010,
+    longitude: 78.6920,
+    populationServed: 1600000,
+    bedCapacity: 0,
+    icuBeds: 0,
+    emergencyCapacity: 0,
+    isActive: true,
+    address: 'Central District Health Complex, Cantonment, Tiruchirappalli, Tamil Nadu 620001',
+    phone: '+91 431 241 5500',
+    availableUnits: 490,
+    storageCapacityUnits: 2500,
+    hasDeficit: false,
+  },
+  {
+    id: 'SIM_HOSP_MGMGH_TRY',
+    name: 'Mahatma Gandhi Memorial Govt Hospital (MGMGH Trichy)',
+    type: 'HOSPITAL',
+    region: 'Tiruchirappalli City',
+    city: 'Tiruchirappalli',
+    latitude: 10.7990,
+    longitude: 78.6850,
+    populationServed: 1400000,
+    bedCapacity: 1200,
+    icuBeds: 80,
+    emergencyCapacity: 120,
+    isActive: true,
+    address: 'Puthur High Road, Tiruchirappalli, Tamil Nadu 620017',
+    phone: '+91 431 241 2000',
+    availableUnits: 320,
+    hasDeficit: false,
+  },
   {
     id: 'SIM_HOSP_TRY_MAIN',
     name: 'Tiruchirappalli Regional Trauma Center',
@@ -38,22 +75,21 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
   {
-    id: 'SIM_BB_TRY_CENTRAL',
-    name: 'Tiruchirappalli Central Blood Bank Hub',
-    type: 'BLOOD_BANK',
+    id: 'SIM_HOSP_APOLLO_TRY',
+    name: 'Apollo Speciality Hospital Trichy',
+    type: 'HOSPITAL',
     region: 'Tiruchirappalli City',
     city: 'Tiruchirappalli',
-    latitude: 10.8010,
-    longitude: 78.6920,
-    populationServed: 1600000,
-    bedCapacity: 0,
-    icuBeds: 0,
-    emergencyCapacity: 0,
+    latitude: 10.7780,
+    longitude: 78.6890,
+    populationServed: 650000,
+    bedCapacity: 400,
+    icuBeds: 45,
+    emergencyCapacity: 60,
     isActive: true,
-    address: 'Central District Health Complex, Cantonment, Tiruchirappalli, Tamil Nadu 620001',
-    phone: '+91 431 241 5500',
-    availableUnits: 490,
-    storageCapacityUnits: 2500,
+    address: 'Chennai-Madurai Highway, TVS Tollgate, Tiruchirappalli, Tamil Nadu 620020',
+    phone: '+91 431 330 0100',
+    availableUnits: 140,
     hasDeficit: false,
   },
   {
@@ -75,7 +111,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
 
-  // 2. Srirangam (North across Kaveri)
+  // 2. Srirangam Satellite Belt (~5.5 - 6.0 km)
   {
     id: 'SIM_HOSP_SRIRANGAM',
     name: 'Srirangam Sub-District Hospital',
@@ -94,8 +130,66 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     availableUnits: 72,
     hasDeficit: false,
   },
+  {
+    id: 'SIM_BB_SRIRANGAM_HERITAGE',
+    name: 'Srirangam Heritage Satellite Blood Center',
+    type: 'BLOOD_BANK',
+    region: 'Srirangam',
+    city: 'Srirangam',
+    latitude: 10.8620,
+    longitude: 78.6970,
+    populationServed: 180000,
+    bedCapacity: 0,
+    icuBeds: 0,
+    emergencyCapacity: 0,
+    isActive: true,
+    address: 'North Chitra Street, Srirangam, Tiruchirappalli, Tamil Nadu 620006',
+    phone: '+91 431 243 5510',
+    availableUnits: 110,
+    storageCapacityUnits: 600,
+    hasDeficit: false,
+  },
 
-  // 3. Thuvakudi (Eastern Industrial Corridor)
+  // 3. Kattur & Navalpattu Belt (~11 - 14.5 km)
+  {
+    id: 'SIM_HOSP_KATTUR',
+    name: 'Kattur Regional Blood Collection Facility',
+    type: 'BLOOD_BANK',
+    region: 'Kattur',
+    city: 'Tiruchirappalli',
+    latitude: 10.7850,
+    longitude: 78.7450,
+    populationServed: 190000,
+    bedCapacity: 0,
+    icuBeds: 0,
+    emergencyCapacity: 0,
+    isActive: true,
+    address: 'Pappakurichi Kattur Main Road, Tiruchirappalli, Tamil Nadu 620019',
+    phone: '+91 431 251 0044',
+    availableUnits: 95,
+    storageCapacityUnits: 500,
+    hasDeficit: false,
+  },
+  {
+    id: 'SIM_HOSP_NAVALPATTU',
+    name: 'Navalpattu IT Park Area Health Center',
+    type: 'HOSPITAL',
+    region: 'Navalpattu',
+    city: 'Tiruchirappalli',
+    latitude: 10.7380,
+    longitude: 78.7890,
+    populationServed: 160000,
+    bedCapacity: 130,
+    icuBeds: 8,
+    emergencyCapacity: 20,
+    isActive: true,
+    address: 'ELCOT IT Park Road, Navalpattu, Tiruchirappalli, Tamil Nadu 620026',
+    phone: '+91 431 258 0011',
+    availableUnits: 44,
+    hasDeficit: false,
+  },
+
+  // 4. Thuvakudi Eastern Corridor (~18 km)
   {
     id: 'SIM_HOSP_THUVAKUDI',
     name: 'Thuvakudi Industrial Corridor Health Center',
@@ -115,7 +209,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
 
-  // 4. Manachanallur (North-West)
+  // 5. Manachanallur North Corridor (~12 km)
   {
     id: 'SIM_HOSP_MANACHANALLUR',
     name: 'Manachanallur Community Health Center',
@@ -135,7 +229,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
 
-  // 5. Lalgudi (North-East River Belt)
+  // 6. Lalgudi North-East Belt (~18.5 km)
   {
     id: 'SIM_HOSP_LALGUDI',
     name: 'Lalgudi Taluk Hospital',
@@ -155,27 +249,7 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
 
-  // 6. Thuraiyur (North Outer Ring)
-  {
-    id: 'SIM_HOSP_THURAIYUR',
-    name: 'Thuraiyur Taluk Referral Hospital',
-    type: 'HOSPITAL',
-    region: 'Thuraiyur',
-    city: 'Thuraiyur',
-    latitude: 11.1420,
-    longitude: 78.5980,
-    populationServed: 260000,
-    bedCapacity: 160,
-    icuBeds: 10,
-    emergencyCapacity: 25,
-    isActive: true,
-    address: 'Perambalur Main Road, Thuraiyur, Tamil Nadu 621010',
-    phone: '+91 4327 222 015',
-    availableUnits: 48,
-    hasDeficit: false,
-  },
-
-  // 7. Musiri (North-West Kaveri Bank)
+  // 7. Musiri North-West River Corridor (~28.5 km)
   {
     id: 'SIM_HOSP_MUSIRI',
     name: 'Musiri Riverbank Area Hospital',
@@ -195,7 +269,25 @@ export const DEMO_ORGANIZATIONS: Organization[] = [
     hasDeficit: false,
   },
 
-  // 8. Manapparai (South-West Highway Corridor — Scenario Focus)
+  // 8. Manapparai & Viralimalai South Corridor (~27 - 30 km)
+  {
+    id: 'SIM_HOSP_VIRALIMALAI',
+    name: 'Viralimalai Industrial Highway Emergency Post',
+    type: 'HOSPITAL',
+    region: 'Viralimalai',
+    city: 'Viralimalai',
+    latitude: 10.6050,
+    longitude: 78.5450,
+    populationServed: 150000,
+    bedCapacity: 110,
+    icuBeds: 8,
+    emergencyCapacity: 20,
+    isActive: true,
+    address: 'NH 38 Madurai Bypass, Viralimalai Corridor, Tamil Nadu 621316',
+    phone: '+91 4339 220 055',
+    availableUnits: 32,
+    hasDeficit: false,
+  },
   {
     id: 'SIM_HOSP_MANAPPARAI',
     name: 'Manapparai Highway Trauma Unit',

@@ -18,14 +18,14 @@ export function LandingPage() {
   const { currentUser, switchRole } = useAuthStore();
 
   const inventoryRows = [
-    { group: 'O+', units: 186, forecast: '160 – 220', status: 'Adequate', statusType: 'adequate' },
-    { group: 'O-', units: 28, forecast: '70 – 95', status: 'At Risk', statusType: 'risk' },
-    { group: 'A+', units: 142, forecast: '120 – 180', status: 'Adequate', statusType: 'adequate' },
-    { group: 'A-', units: 34, forecast: '40 – 70', status: 'Watch', statusType: 'watch' },
-    { group: 'B+', units: 98, forecast: '80 – 130', status: 'Adequate', statusType: 'adequate' },
-    { group: 'B-', units: 22, forecast: '35 – 60', status: 'At Risk', statusType: 'risk' },
-    { group: 'AB+', units: 48, forecast: '40 – 75', status: 'Adequate', statusType: 'adequate' },
-    { group: 'AB-', units: 12, forecast: '20 – 35', status: 'Watch', statusType: 'watch' },
+    { group: 'O+', units: 186, forecast: '160 - 220', status: 'Adequate', statusType: 'adequate' },
+    { group: 'O-', units: 28, forecast: '70 - 95', status: 'At Risk', statusType: 'risk' },
+    { group: 'A+', units: 142, forecast: '120 - 180', status: 'Adequate', statusType: 'adequate' },
+    { group: 'A-', units: 34, forecast: '40 - 70', status: 'Watch', statusType: 'watch' },
+    { group: 'B+', units: 98, forecast: '80 - 130', status: 'Adequate', statusType: 'adequate' },
+    { group: 'B-', units: 22, forecast: '35 - 60', status: 'At Risk', statusType: 'risk' },
+    { group: 'AB+', units: 48, forecast: '40 - 75', status: 'Adequate', statusType: 'adequate' },
+    { group: 'AB-', units: 12, forecast: '20 - 35', status: 'Watch', statusType: 'watch' },
   ];
 
   return (
@@ -131,12 +131,12 @@ export function LandingPage() {
 
               {/* Demo Role Switcher Dropdown */}
               {showRoleMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
+                <div className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-stone-200 p-2 z-50 text-xs origin-top-right">
                   <div className="p-2.5 border-b border-stone-100 mb-1 bg-stone-50 rounded-lg">
                     <p className="font-bold text-stone-900">Demo Role Selection</p>
                     <p className="text-[10px] text-stone-500 mt-0.5">Client-side prototype evaluation mode.</p>
                     <div className="mt-1 text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                      Demo role — not production authentication
+                      Demo role - not production authentication
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -205,7 +205,7 @@ export function LandingPage() {
             </div>
 
             <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-normal">
-              BloodChain helps healthcare facilities in Tiruchirappalli and nearby districts predict demand, reduce shortages, prevent wastage, and coordinate blood transfers — with human oversight at every step.
+              BloodChain helps healthcare facilities in Tiruchirappalli and nearby districts predict demand, reduce shortages, prevent wastage, and coordinate blood transfers - with human oversight at every step.
             </p>
 
             {/* CTAs */}
@@ -229,7 +229,7 @@ export function LandingPage() {
             {/* Subtext Footnote */}
             <div className="pt-2 flex items-center gap-2 text-stone-500 text-xs">
               <PlusCircle className="w-3.5 h-3.5 text-stone-400 flex-shrink-0" />
-              <span>Synthetic demonstration data — not live blood availability.</span>
+              <span>Synthetic demonstration data - not live blood availability.</span>
             </div>
           </div>
 
@@ -239,7 +239,7 @@ export function LandingPage() {
             <div className="flex items-center justify-between mb-3 px-1">
               <div className="space-y-0.5">
                 <p className="text-[11px] uppercase tracking-[0.25em] font-semibold text-stone-800">
-                  — Tiruchirappalli —
+                  Tiruchirappalli Region
                 </p>
                 <p className="text-[10px] font-serif italic text-stone-500">
                   People · Care · Continuity

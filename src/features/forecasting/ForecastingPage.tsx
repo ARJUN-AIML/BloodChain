@@ -67,6 +67,7 @@ export function ForecastingPage() {
   const [bg, setBg] = useState<BloodGroup>('O_POSITIVE');
   const [comp, setComp] = useState<ComponentType>('RBC');
   const [period, setPeriod] = useState('7');
+  const [demandMultiplier, setDemandMultiplier] = useState<number>(1.0);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
 
   const orgs = DEMO_ORGANIZATIONS.filter(o => o.type === 'HOSPITAL' || o.type === 'BLOOD_BANK');
@@ -76,9 +77,13 @@ export function ForecastingPage() {
   const history = generateDemoHistory(orgId, bg, comp);
   const forecast = forecasts.find(f => f.bloodGroup === bg && f.componentType === comp);
 
-  const expectedUnits = forecast ? Math.round(forecast.predictedUnits) : 11;
-  const lowerRange = forecast ? Math.round(forecast.lowerBound) : 8;
-  const upperRange = forecast ? Math.round(forecast.upperBound) : 15;
+  const rawP50 = forecast ? forecast.predictedUnits : 11;
+  const rawP10 = forecast ? forecast.lowerBound : 8;
+  const rawP90 = forecast ? forecast.upperBound : 15;
+
+  const expectedUnits = Math.round(rawP50 * demandMultiplier);
+  const lowerRange = Math.round(rawP10 * demandMultiplier);
+  const upperRange = Math.round(rawP90 * demandMultiplier);
 
   const horizonDays = parseInt(period, 10);
 
@@ -86,7 +91,7 @@ export function ForecastingPage() {
     // Past 7 days of actual demand
     const data = history.slice(-7).map(h => ({
       date: h.date.slice(5),
-      actual: h.unitsUsed,
+      actual: Math.round(h.unitsUsed * demandMultiplier),
       forecast: undefined as number | undefined,
       lower: undefined as number | undefined,
       upper: undefined as number | undefined,
@@ -134,7 +139,7 @@ export function ForecastingPage() {
         {/* Clear Demonstration Data Tag */}
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 border border-stone-200 text-stone-700 text-xs font-medium self-start sm:self-auto">
           <AlertCircle className="w-3.5 h-3.5 text-[#841A2B]" />
-          <span>Synthetic data — not live availability</span>
+          <span>Synthetic data - not live availability</span>
         </div>
       </div>
 
@@ -225,7 +230,38 @@ export function ForecastingPage() {
                 </option>
               ))}
             </select>
-            <p className="text-[10px] text-stone-500">Planning time horizon</p>
+          </div>
+        </div>
+
+        {/* Interactive Emergency Demand Surge Sensitivity Slider */}
+        <div className="pt-3 border-t border-stone-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-red-50/50 p-3 rounded-lg border border-red-100">
+          <div className="space-y-0.5">
+            <label className="text-xs font-bold text-[#841A2B] flex items-center gap-1.5">
+              <TrendingUp className="w-3.5 h-3.5" /> Interactive Demand Surge Sensitivity Multiplier
+            </label>
+            <p className="text-[11px] text-stone-600">Simulate regional demand spikes (e.g. multi-vehicle collision trauma, festive drives)</p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <input
+              type="range"
+              min="0.5"
+              max="3.0"
+              step="0.1"
+              value={demandMultiplier}
+              onChange={e => setDemandMultiplier(parseFloat(e.target.value))}
+              className="w-32 accent-[#841A2B]"
+            />
+            <span className="font-mono font-bold text-xs text-white bg-[#841A2B] px-2 py-0.5 rounded shadow-2xs">
+              {demandMultiplier.toFixed(1)}x
+            </span>
+            {demandMultiplier !== 1.0 && (
+              <button
+                onClick={() => setDemandMultiplier(1.0)}
+                className="text-[10px] text-stone-500 underline hover:text-stone-900"
+              >
+                Reset 1.0x
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -274,7 +310,7 @@ export function ForecastingPage() {
           </div>
           <div>
             <span className="text-sm font-bold text-stone-900 block">
-              Automated Demand Estimation — Trichy demonstration model
+              Automated Demand Estimation - Trichy demonstration model
             </span>
             <span className="text-[11px] text-[#841A2B] font-semibold">
               Backup estimation method available

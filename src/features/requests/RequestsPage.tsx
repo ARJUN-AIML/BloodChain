@@ -375,19 +375,19 @@ export function RequestsPage() {
       </div>
 
       {/* 2. Role Capability Banner */}
-      <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#841A2B] text-white flex items-center justify-center font-bold text-xs">
+      <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-2xs flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs w-full max-w-full overflow-hidden">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="w-8 h-8 rounded-full bg-[#841A2B] text-white flex items-center justify-center font-bold text-xs shrink-0">
             {currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-stone-900">{currentUser.name}</span>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-700">
                 {currentUser.role.replace('_', ' ')}
               </span>
             </div>
-            <p className="text-stone-500 text-[11px] mt-0.5">
+            <p className="text-stone-500 text-[11px] mt-0.5 leading-relaxed">
               {hasApprovalRights
                 ? '✓ You have clinical authority to approve or reject blood transfers with mandatory reasoning.'
                 : currentUser.role === 'LOGISTICS_STAFF'
@@ -401,7 +401,7 @@ export function RequestsPage() {
           </div>
         </div>
 
-        <div className="text-[11px] text-stone-500 bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200/80">
+        <div className="text-[11px] text-stone-500 bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200/80 shrink-0">
           <strong>Security invariant:</strong> Transfers cannot be dispatched without prior clinical approval.
         </div>
       </div>
@@ -658,9 +658,9 @@ export function RequestsPage() {
 
       {/* 5. Create Transfer Request Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl border border-stone-200 max-w-lg w-full p-6 space-y-5 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+        <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 z-50 overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-stone-200 max-w-lg w-full max-h-[90vh] flex flex-col p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100 shrink-0">
               <div>
                 <h3 className="text-base font-serif font-bold text-stone-900">
                   Request Blood Transfer
@@ -672,13 +672,13 @@ export function RequestsPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="text-stone-400 hover:text-stone-700 p-1"
+                className="text-stone-400 hover:text-stone-700 p-1 rounded-lg hover:bg-stone-100 transition"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateRequestSubmit} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateRequestSubmit} className="space-y-4 text-xs overflow-y-auto flex-1 pr-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="font-semibold text-stone-700 block">Sending Facility (Source)</label>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip, useMap, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import {
   Building2, Droplets, Truck, Search, AlertTriangle, CheckCircle2,
@@ -278,6 +278,23 @@ export function FacilityGeographicMap({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
+              {/* Trichy 30km Operational Mesh Boundary */}
+              <Circle
+                center={[10.8010, 78.6920]}
+                radius={30000}
+                pathOptions={{
+                  color: '#841A2B',
+                  fillColor: '#841A2B',
+                  fillOpacity: 0.03,
+                  weight: 1.5,
+                  dashArray: '6, 6',
+                }}
+              >
+                <Tooltip sticky direction="top">
+                  <span className="font-mono text-xs font-bold text-[#841A2B]">Tiruchirappalli 30km Regional Operational Mesh Boundary</span>
+                </Tooltip>
+              </Circle>
+
               {/* Active Transfer Polyline Routes */}
               {activeTransferRoutes.map((route: any) => {
                 const isSelected = selectedFacilityId === route.sourceFacilityObj.id || selectedFacilityId === route.destinationFacilityObj.id;
@@ -441,7 +458,7 @@ export function FacilityGeographicMap({
                   <div className="bg-stone-50 p-2.5 rounded-xl border border-stone-200">
                     <span className="text-[10px] text-stone-500 block">Bed Capacity</span>
                     <span className="text-base font-mono font-bold text-stone-900">
-                      {selectedFacility.bed_capacity || selectedFacility.bedCapacity || '—'} beds
+                      {selectedFacility.bed_capacity || selectedFacility.bedCapacity || '-'} beds
                     </span>
                   </div>
                 </div>
